@@ -3,11 +3,25 @@ import { createClient } from "@/utils/supabase/client";
 import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
-  const myRef = useRef(null);
   const supabase = createClient();
+
+  const myRef = useRef(null);
   const [currentUser, setCurrentUser] = useState("User1");
   const [currentMessage, setCurrentMessage] = useState("");
   const [chats, setChats] = useState<any[]>([]);
+
+  const prompt = async () => {
+    const data = await fetch("/api/test", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(chats),
+    });
+    const res = await data.json();
+    console.log(res);
+    await supabase.from("chats").insert(res);
+  };
 
   const fetchChats = async () => {
     const { data, error } = await supabase.from("chats").select("*");
@@ -104,6 +118,12 @@ export default function Home() {
           </button>
         </div>
       </div>
+      <button
+        className="rounded-md w-28 px-2 font-bold bg-white active:bg-slate-400"
+        onClick={prompt}
+      >
+        Prompt
+      </button>
     </div>
   );
 }
