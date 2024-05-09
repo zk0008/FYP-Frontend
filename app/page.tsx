@@ -1,46 +1,49 @@
 "use client";
-import { useState } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
+  const myRef = useRef(null);
+  const supabase = createClient();
   const [currentUser, setCurrentUser] = useState("User1");
-  const chats = [
-    {
-      user: "User1",
-      message: "Message1",
-    },
-    {
-      user: "User2",
-      message:
-        "Hello there how are you doing this is a very long message just to test how good this thing is",
-    },
-    {
-      user: "User3",
-      message: "Message3",
-    },
-    {
-      user: "User2",
-      message: "Message4",
-    },
-    {
-      user: "User1",
-      message: "Message5",
-    },
-    {
-      user: "User2",
-      message: "Message6",
-    },
-    {
-      user: "User1",
-      message: "Message6",
-    },
-    {
-      user: "User1",
-      message:
-        "Hello there how are you doing this is a very long message just to test how good this thing is",
-    },
-  ];
+  const [currentMessage, setCurrentMessage] = useState("");
+  const [chats, setChats] = useState<any[]>([]);
+
+  const fetchChats = async () => {
+    const { data, error } = await supabase.from("chats").select("*");
+    if (data) {
+      setChats(data);
+    }
+  };
+
+  const addChat = async () => {
+    await supabase
+      .from("chats")
+      .insert([{ user: currentUser, message: currentMessage }]);
+    setCurrentMessage("");
+    await fetchChats();
+  };
+
+  useEffect(() => {
+    fetchChats();
+    supabase
+      .channel("chats")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "chats" },
+        (payload: any) => {
+          fetchChats();
+        }
+      )
+      .subscribe();
+  }, []);
+
+  useEffect(() => {
+    myRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [chats]);
+
   return (
-    <main className="flex flex-col h-full w-full items-center gap-5">
+    <div className="flex flex-col h-full w-full items-center gap-5">
       <div className="flex justify-between items-center py-2 p-4 h-20 bg-black border-b">
         <h1 className="flex items-center text-2xl font-semibold text-white">
           Group Chat Application
@@ -61,11 +64,11 @@ export default function Home() {
             }}
           />
         </div>
-        <div className="flex flex-col gap-5 items-center justify-start w-3/4 bg-black overflow-y-scroll p-3">
-          {chats.map((chat) => {
+        <div className="flex flex-col gap-5 items-center justify-start w-3/4 bg-black overflow-y-scroll p-3 border-2 border-black">
+          {chats.map((chat, index) => {
             return (
               <div
-                key={chat.user + chat.message}
+                key={index}
                 className={`flex w-full ${
                   currentUser == chat.user ? "justify-end" : "justify-start"
                 }`}
@@ -81,14 +84,26 @@ export default function Home() {
               </div>
             );
           })}
+          <div ref={myRef}></div>
         </div>
         <div className="bg-black h-16 w-3/4 p-2 flex justify-between items-center gap-2">
-          <input type="text" className="rounded-md p-1" />
-          <button className="rounded-md w-28 px-2 font-bold bg-white active:bg-slate-400">
+          <input
+            type="text"
+            className="rounded-md p-1"
+            value={currentMessage}
+            onChange={(e) => {
+              e.preventDefault();
+              setCurrentMessage(e.target.value);
+            }}
+          />
+          <button
+            className="rounded-md w-28 px-2 font-bold bg-white active:bg-slate-400"
+            onClick={addChat}
+          >
             Send
           </button>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
