@@ -1,9 +1,14 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from openai import OpenAI
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY")
 
 app = FastAPI()
-client = OpenAI(api_key="sk-proj-kak1pX2W2MBzYmLAeSS3T3BlbkFJ5ZHFHandKweL4aStaKa2")
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 
 class Chat(BaseModel):
