@@ -1,7 +1,43 @@
 import { createClient } from "@/utils/supabase/client";
 import { Chat } from "./types";
 
-const supabase = createClient();
+export const supabase = createClient();
+
+export async function signUpAndGetUser(
+  email: string,
+  password: string,
+  username: string
+) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        username,
+      },
+    },
+  });
+  return data.user;
+}
+
+export async function logInAndGetUser(email: string, password: string) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  return data.user;
+}
+
+export async function logOutUser() {
+  const { error } = await supabase.auth.signOut();
+}
+
+export async function getUser() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return user;
+}
 
 export function subscribeToChat(callback: () => {}) {
   supabase
@@ -17,12 +53,14 @@ export function subscribeToChat(callback: () => {}) {
 }
 
 export async function getChats() {
-  const { data, error } = await supabase.from("chats").select("user, message");
+  const { data, error } = await supabase
+    .from("chats")
+    .select("username, message");
   return data;
 }
 
-export async function insertChat(user: string, message: string) {
-  await supabase.from("chats").insert([{ user, message }]);
+export async function insertChat(username: string, message: string) {
+  await supabase.from("chats").insert([{ username, message }]);
 }
 
 export async function promptModel(promptData: Chat[]) {

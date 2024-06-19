@@ -2,16 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { logInAndGetUser } from "./utils";
+import { signUpAndGetUser } from "../utils";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const user = await logInAndGetUser(email, password);
+    const user = await signUpAndGetUser(email, password, username);
     if (user) router.push("/chat");
   };
 
@@ -27,7 +28,18 @@ export default function LoginPage() {
         onSubmit={handleSubmit}
         className="flex flex-col w-96 h-96 border p-3 justify-between items-center gap-3"
       >
-        <h1 className="text-2xl font-semibold">Log In</h1>
+        <h1 className="text-2xl font-semibold">Sign Up</h1>
+        <div className="flex flex-col items-center">
+          <label htmlFor="username">Username</label>
+          <input
+            className="rounded-md px-1 border-2 border-black w-3/4 h-10"
+            type="username"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </div>
         <div className="flex flex-col items-center">
           <label htmlFor="email">Email</label>
           <input
@@ -54,7 +66,7 @@ export default function LoginPage() {
           className="rounded-lg p-1 border-2 bg-black w-3/4 h-10 font-semibold text-white"
           type="submit"
         >
-          Log In
+          Sign Up
         </button>
       </form>
     </div>

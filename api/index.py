@@ -12,11 +12,11 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 
 
 class Chat(BaseModel):
-    user: str
+    username: str
     message: str
 
     def __str__(self):
-        return f"{self.user}: {self.message}"
+        return f"{self.username}: {self.message}"
 
 
 @app.post("/api/test")
