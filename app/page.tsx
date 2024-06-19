@@ -1,59 +1,37 @@
 "use client";
-import { createClient } from "@/utils/supabase/client";
 import { useEffect, useRef, useState } from "react";
+import { getChats, insertChat, promptModel, subscribeToChat } from "./utils";
+import { Chat } from "./types";
 
 export default function Home() {
-  const supabase = createClient();
-
-  const myRef = useRef(null);
-  const [currentUser, setCurrentUser] = useState("User1");
-  const [currentMessage, setCurrentMessage] = useState("");
-  const [chats, setChats] = useState<any[]>([]);
+  const chatBottomRef = useRef<HTMLDivElement>(null);
+  const [currentUser, setCurrentUser] = useState<string>("User1");
+  const [currentMessage, setCurrentMessage] = useState<string>("");
+  const [chats, setChats] = useState<Chat[]>([]);
 
   const prompt = async () => {
-    const data = await fetch("/api/test", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(chats),
-    });
-    const res = await data.json();
-    console.log(res);
-    await supabase.from("chats").insert(res);
+    const res = await promptModel(chats);
+    await insertChat("AI Chatbot", res);
   };
 
-  const fetchChats = async () => {
-    const { data, error } = await supabase.from("chats").select("*");
-    if (data) {
-      setChats(data);
-    }
+  const loadChats = async () => {
+    const data = await getChats();
+    if (data) setChats(data);
   };
 
-  const addChat = async () => {
-    await supabase
-      .from("chats")
-      .insert([{ user: currentUser, message: currentMessage }]);
+  const handleClick = async () => {
+    await insertChat(currentUser, currentMessage);
     setCurrentMessage("");
-    await fetchChats();
+    await loadChats();
   };
 
   useEffect(() => {
-    fetchChats();
-    supabase
-      .channel("chats")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "chats" },
-        (payload: any) => {
-          fetchChats();
-        }
-      )
-      .subscribe();
+    loadChats();
+    subscribeToChat(loadChats);
   }, []);
 
   useEffect(() => {
-    myRef.current.scrollIntoView({ behavior: "smooth" });
+    chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chats]);
 
   return (
@@ -98,7 +76,7 @@ export default function Home() {
               </div>
             );
           })}
-          <div ref={myRef}></div>
+          <div ref={chatBottomRef}></div>
         </div>
         <div className="bg-black h-16 w-3/4 p-2 flex justify-between items-center gap-2">
           <input
@@ -112,7 +90,7 @@ export default function Home() {
           />
           <button
             className="rounded-md w-28 px-2 font-bold bg-white active:bg-slate-400"
-            onClick={addChat}
+            onClick={handleClick}
           >
             Send
           </button>

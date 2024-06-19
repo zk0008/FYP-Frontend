@@ -38,4 +38,4 @@ def prompt(chats: list[Chat]):
         ],
     )
     message = completion.choices[0].message.content
-    return {"user": "AI Chatbot", "message": message}
+    return message
