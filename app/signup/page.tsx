@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signUpAndGetUser } from "../utils";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,13 +27,13 @@ export default function LoginPage() {
 
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col w-96 h-96 border p-3 justify-between items-center gap-3"
+        className="flex flex-col w-96 border p-4 justify-center items-center gap-5"
       >
         <h1 className="text-2xl font-semibold">Sign Up</h1>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center w-3/4">
           <label htmlFor="username">Username</label>
           <input
-            className="rounded-md px-1 border-2 border-black w-3/4 h-10"
+            className="rounded-md px-1 border-2 border-black w-full h-8"
             type="username"
             id="username"
             value={username}
@@ -40,10 +41,10 @@ export default function LoginPage() {
             required
           />
         </div>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center w-3/4">
           <label htmlFor="email">Email</label>
           <input
-            className="rounded-md px-1 border-2 border-black w-3/4 h-10"
+            className="rounded-md px-1 border-2 border-black w-full h-8"
             type="email"
             id="email"
             value={email}
@@ -51,10 +52,10 @@ export default function LoginPage() {
             required
           />
         </div>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center w-3/4">
           <label htmlFor="password">Password</label>
           <input
-            className="rounded-md px-1 border-2 border-black w-3/4 h-10"
+            className="rounded-md px-1 border-2 border-black w-full h-8"
             type="password"
             id="password"
             value={password}
@@ -68,6 +69,12 @@ export default function LoginPage() {
         >
           Sign Up
         </button>
+        <Link
+          href="/"
+          className="rounded-lg p-1 border-2 w-3/4 h-10 font-semibold text-center"
+        >
+          Log In
+        </Link>
       </form>
     </div>
   );

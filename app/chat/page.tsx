@@ -11,6 +11,10 @@ import {
 import { Chat } from "../types";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import "regenerator-runtime/runtime";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 export default function ChatPage() {
   const router = useRouter();
@@ -18,6 +22,12 @@ export default function ChatPage() {
   const [currentUsername, setCurrentUsername] = useState<string>("");
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [chats, setChats] = useState<Chat[]>([]);
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
 
   const handleLogOut = async () => {
     await logOutUser();
@@ -27,6 +37,8 @@ export default function ChatPage() {
   const handlePrompt = async () => {
     const res = await promptModel(chats);
     await insertChat("AI Chatbot", res);
+    const msg = new SpeechSynthesisUtterance(res);
+    window.speechSynthesis.speak(msg);
   };
 
   const loadChats = async () => {
@@ -43,6 +55,17 @@ export default function ChatPage() {
     await insertChat(currentUsername, currentMessage);
     setCurrentMessage("");
     await loadChats();
+  };
+
+  const startRecording = () => {
+    SpeechRecognition.startListening({ continuous: true });
+  };
+
+  const stopRecording = async () => {
+    await SpeechRecognition.stopListening();
+    await insertChat(currentUsername, transcript);
+    await loadChats();
+    resetTranscript();
   };
 
   useEffect(() => {
@@ -64,7 +87,7 @@ export default function ChatPage() {
       </div>
       {currentUsername ? (
         <div className="flex items-center flex-col w-full h-3/4">
-          <div className="flex justify-start items-center h-10 gap-1 w-3/4 mb-5">
+          <div className="flex justify-start items-center h-10 gap-3 w-3/4 mb-5">
             <h1 className="flex items-center font-bold text-xl w-fit">
               Welcome, {currentUsername}
             </h1>
@@ -75,6 +98,7 @@ export default function ChatPage() {
               Log out
             </button>
           </div>
+
           <div className="h-full flex flex-col gap-5 items-center justify-start w-3/4 bg-black overflow-y-scroll p-3 border-2 border-black">
             {chats.map((chat, index) => {
               return (
@@ -118,12 +142,36 @@ export default function ChatPage() {
               Send
             </button>
           </div>
-          <button
-            className="border-2 border-black rounded-md w-28 p-2 font-bold bg-white active:bg-slate-400"
-            onClick={handlePrompt}
-          >
-            Prompt
-          </button>
+          <div className="flex justify-center items-center gap-3 mt-3">
+            <p className="font-semibold text-xl">
+              Microphone: {listening ? "🟢" : "🔴"}
+            </p>
+            <button
+              className="border-2 border-black rounded-md p-2 font-bold bg-white active:bg-slate-400"
+              onClick={startRecording}
+            >
+              Start Speech
+            </button>
+            <button
+              className="border-2 border-black rounded-md p-2 font-bold bg-white active:bg-slate-400"
+              onClick={stopRecording}
+            >
+              Stop Speech
+            </button>
+            <button
+              className="border-2 border-black rounded-md p-2 font-bold bg-white active:bg-slate-400"
+              onClick={resetTranscript}
+            >
+              Reset
+            </button>
+            <button
+              className="border-2 border-black rounded-md w-28 p-2 font-bold bg-white active:bg-slate-400"
+              onClick={handlePrompt}
+            >
+              Prompt
+            </button>
+          </div>
+          <p>{transcript}</p>
         </div>
       ) : (
         <div className="flex justify-center items-center gap-2">

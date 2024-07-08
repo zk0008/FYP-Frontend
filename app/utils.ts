@@ -64,7 +64,7 @@ export async function insertChat(username: string, message: string) {
 }
 
 export async function promptModel(promptData: Chat[]) {
-  const data = await fetch("/api/test", {
+  const data = await fetch("/api/gpt35", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
