@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+from models.pdf import get_pdf_answer
 
 load_dotenv()
 OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY")
@@ -39,3 +40,11 @@ def prompt(chats: list[Chat]):
     )
     message = completion.choices[0].message.content
     return message
+
+
+@app.post("/api/pdf")
+async def pdf_prompt(request: Request):
+    body = await request.body()
+    query = body.decode("utf-8")
+    res = get_pdf_answer(query)
+    return res

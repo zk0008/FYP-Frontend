@@ -6,6 +6,7 @@ import {
   insertChat,
   logOutUser,
   promptModel,
+  promptPdf,
   subscribeToChat,
 } from "../utils";
 import { Chat } from "../types";
@@ -54,7 +55,17 @@ export default function ChatPage() {
   const handleClick = async () => {
     await insertChat(currentUsername, currentMessage);
     setCurrentMessage("");
-    await loadChats();
+  };
+
+  // TODO: refactor this to be more resuable
+  const handlePdfClick = async () => {
+    await insertChat(currentUsername, currentMessage);
+    const query = currentMessage;
+    setCurrentMessage("");
+    const res = await promptPdf(currentMessage);
+    await insertChat("AI Chatbot", res);
+    const msg = new SpeechSynthesisUtterance(res);
+    window.speechSynthesis.speak(msg);
   };
 
   const startRecording = () => {
@@ -64,7 +75,6 @@ export default function ChatPage() {
   const stopRecording = async () => {
     await SpeechRecognition.stopListening();
     await insertChat(currentUsername, transcript);
-    await loadChats();
     resetTranscript();
   };
 
@@ -140,6 +150,12 @@ export default function ChatPage() {
               onClick={handleClick}
             >
               Send
+            </button>
+            <button
+              className="h-full rounded-md w-28 px-2 font-bold bg-white active:bg-slate-400"
+              onClick={handlePdfClick}
+            >
+              PDF Query
             </button>
           </div>
           <div className="flex justify-center items-center gap-3 mt-3">

@@ -74,3 +74,15 @@ export async function promptModel(promptData: Chat[]) {
   const res = await data.json();
   return res;
 }
+
+export async function promptPdf(query: string) {
+  const data = await fetch("/api/pdf", {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain",
+    },
+    body: query,
+  });
+  const res = await data.json();
+  return res;
+}
