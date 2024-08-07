@@ -1,14 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import {
-  getChats,
-  getUser,
-  insertChat,
-  logOutUser,
-  promptModel,
-  promptPdf,
-  subscribeToChat,
-} from "../utils";
+import { getChats, insertChat, subscribeToChat } from "../utils/db";
+import { getUser, logOutUser } from "../utils/auth";
+import { promptModel, promptPdf } from "../utils/api";
 import { Chat } from "../types";
 import { useRouter } from "next/navigation";
 import Link from "next/link";

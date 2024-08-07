@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signUpAndGetUser } from "../utils";
+import { signUpAndGetUser } from "../utils/auth";
 import Link from "next/link";
 
 export default function LoginPage() {
