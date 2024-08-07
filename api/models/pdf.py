@@ -11,7 +11,7 @@ load_dotenv()
 
 
 def get_pdf_answer(query: str):
-    pdfreader = PdfReader("C:/Users/Andrew/Documents/GitHub/fyp/models/ccds.pdf")
+    pdfreader = PdfReader("C:/Users/Andrew/Documents/GitHub/fyp/api/models/ccds.pdf")
 
     # read text from pdf
     raw_text = ""
