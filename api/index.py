@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Request
 from api.models.pdf import get_pdf_answer
+from api.models.rag import get_rag_answer
 from api.models.gpt import get_answer, Chat
+from pydantic import BaseModel
 
 
 app = FastAPI()
@@ -12,9 +14,22 @@ def prompt(chats: list[Chat]):
     return res
 
 
+class PDFRequest(BaseModel):
+    topic: str
+    query: str
+
+
 @app.post("/api/pdf")
-async def pdf_prompt(request: Request):
-    body = await request.body()
-    query = body.decode("utf-8")
-    res = get_pdf_answer(query)
+async def pdf_prompt(request: PDFRequest):
+    res = get_pdf_answer(request.topic, request.query)
+    return res
+
+
+class RAGRequest(BaseModel):
+    query: str
+
+
+@app.post("/api/rag")
+async def pdf_prompt(request: RAGRequest):
+    res = get_rag_answer(request.query)
     return res

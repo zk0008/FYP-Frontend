@@ -5,13 +5,15 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import "regenerator-runtime/runtime";
 import ChatBox from "./chat";
-import { getTopics } from "../utils/db";
+import { addTopic, getTopics } from "../utils/db";
 
 export default function ChatPage() {
   const router = useRouter();
   const [currentUsername, setCurrentUsername] = useState<string>("");
   const [currentTopic, setCurrentTopic] = useState<string>("");
   const [topics, setTopics] = useState<string[]>([]);
+  const [newTopic, setNewTopic] = useState<string>("");
+  const [openAddTopic, setOpenAddTopic] = useState<boolean>(false);
 
   const handleLogOut = async () => {
     await logOutUser();
@@ -28,10 +30,22 @@ export default function ChatPage() {
     setTopics(data);
   };
 
+  const addChatRoom = async () => {
+    await addTopic(currentUsername, newTopic);
+    setCurrentTopic(newTopic);
+    setNewTopic("");
+    setOpenAddTopic(false);
+    loadTopics();
+  };
+
   useEffect(() => {
     getAndSetUsername();
     loadTopics();
   }, []);
+
+  useEffect(() => {
+    setOpenAddTopic(false);
+  }, [currentTopic]);
 
   return (
     <div className="flex flex-col h-full w-full items-center">
@@ -56,9 +70,31 @@ export default function ChatPage() {
       {currentUsername ? (
         <div className="flex items-center justify-between flex-row w-full h-[calc(100%-80px)]">
           <div className="flex flex-col h-full w-1/5 items-center bg-neutral-950 gap-2 overflow-y-auto p-2">
-            <button className="text-left p-2 w-full h-10 font-bold text-white rounded-md hover:bg-neutral-800 active:bg-neutral-900">
-              + Add chat room
+            <button
+              onClick={() => {
+                setOpenAddTopic(true);
+              }}
+              className="text-left p-2 w-full h-10 font-bold text-white rounded-md hover:bg-neutral-800 active:bg-neutral-900"
+            >
+              + Create chat room
             </button>
+            {openAddTopic && (
+              <div className="flex justify-between items-center w-full gap-2">
+                <input
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setNewTopic(e.target.value);
+                  }}
+                  className="text-left px-2 w-4/5 h-10 font-bold bg-white rounded-md"
+                />
+                <button
+                  onClick={addChatRoom}
+                  className="font-bold p-2 h-10 w-1/5 ont-bold bg-green-200 rounded-md hover:bg-green-300"
+                >
+                  Add
+                </button>
+              </div>
+            )}
             {topics.map((top, index) => (
               <button
                 className={`text-ellipsis overflow-x-clip text-left p-2 w-full h-10 font-semibold text-white rounded-md ${

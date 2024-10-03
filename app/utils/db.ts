@@ -27,8 +27,15 @@ export async function getChats(topic: string) {
   const { data, error } = await supabase
     .from("chats")
     .select("username, message")
-    .eq("topic", topic);
+    .eq("topic", topic)
+    .order("created_at", { ascending: true });
   return data;
+}
+
+export async function addTopic(username: string, topic: string) {
+  await supabase
+    .from("chats")
+    .insert([{ username, message: "Started a chat for " + topic, topic }]);
 }
 
 export async function insertChat(
