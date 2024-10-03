@@ -1,49 +1,21 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import {
-  getChats,
-  getUser,
-  insertChat,
-  logOutUser,
-  promptModel,
-  subscribeToChat,
-} from "../utils";
-import { Chat } from "../types";
+import { useEffect, useState } from "react";
+import { getUser, logOutUser } from "../utils/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import "regenerator-runtime/runtime";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
+import ChatBox from "./chat";
+import { getTopics } from "../utils/db";
 
 export default function ChatPage() {
   const router = useRouter();
-  const chatBottomRef = useRef<HTMLDivElement>(null);
   const [currentUsername, setCurrentUsername] = useState<string>("");
-  const [currentMessage, setCurrentMessage] = useState<string>("");
-  const [chats, setChats] = useState<Chat[]>([]);
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+  const [currentTopic, setCurrentTopic] = useState<string>("");
+  const [topics, setTopics] = useState<string[]>([]);
 
   const handleLogOut = async () => {
     await logOutUser();
     router.push("/");
-  };
-
-  const handlePrompt = async () => {
-    const res = await promptModel(chats);
-    await insertChat("AI Chatbot", res);
-    const msg = new SpeechSynthesisUtterance(res);
-    window.speechSynthesis.speak(msg);
-  };
-
-  const loadChats = async () => {
-    const data = await getChats();
-    if (data) setChats(data);
   };
 
   const getAndSetUsername = async () => {
@@ -51,44 +23,25 @@ export default function ChatPage() {
     setCurrentUsername(user?.user_metadata.username);
   };
 
-  const handleClick = async () => {
-    await insertChat(currentUsername, currentMessage);
-    setCurrentMessage("");
-    await loadChats();
-  };
-
-  const startRecording = () => {
-    SpeechRecognition.startListening({ continuous: true });
-  };
-
-  const stopRecording = async () => {
-    await SpeechRecognition.stopListening();
-    await insertChat(currentUsername, transcript);
-    await loadChats();
-    resetTranscript();
+  const loadTopics = async () => {
+    const data = await getTopics();
+    setTopics(data);
   };
 
   useEffect(() => {
     getAndSetUsername();
-    loadChats();
-    subscribeToChat(loadChats);
+    loadTopics();
   }, []);
 
-  useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chats]);
-
   return (
-    <div className="flex flex-col h-full w-full items-center gap-5">
+    <div className="flex flex-col h-full w-full items-center">
       <div className="flex justify-between items-center py-2 p-4 h-20 bg-black border-b w-full">
         <h1 className="flex items-center text-2xl font-semibold text-white">
-          Group Chat Application
+          GroupGPT
         </h1>
-      </div>
-      {currentUsername ? (
-        <div className="flex items-center flex-col w-full h-3/4">
-          <div className="flex justify-start items-center h-10 gap-3 w-3/4 mb-5">
-            <h1 className="flex items-center font-bold text-xl w-fit">
+        {currentUsername && (
+          <div className="flex justify-center items-center h-10 gap-3">
+            <h1 className="flex items-center font-bold text-white text-xl w-fit">
               Welcome, {currentUsername}
             </h1>
             <button
@@ -98,80 +51,31 @@ export default function ChatPage() {
               Log out
             </button>
           </div>
-
-          <div className="h-full flex flex-col gap-5 items-center justify-start w-3/4 bg-black overflow-y-scroll p-3 border-2 border-black">
-            {chats.map((chat, index) => {
-              return (
-                <div
-                  key={index}
-                  className={`flex w-full ${
-                    currentUsername == chat.username
-                      ? "justify-end"
-                      : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`w-1/2 rounded-lg flex flex-col justify-between gap-1 p-2 ${
-                      currentUsername == chat.username
-                        ? "bg-blue-200"
-                        : "bg-white"
-                    }`}
-                  >
-                    <h1 className="font-semibold text-xl">{chat.username}</h1>
-                    <p className="text-wrap break-words">{chat.message}</p>
-                  </div>
-                </div>
-              );
-            })}
-            <div ref={chatBottomRef}></div>
+        )}
+      </div>
+      {currentUsername ? (
+        <div className="flex items-center justify-between flex-row w-full h-[calc(100%-80px)]">
+          <div className="flex flex-col h-full w-1/5 items-center bg-neutral-950 gap-2 overflow-y-auto p-2">
+            <button className="text-left p-2 w-full h-10 font-bold text-white rounded-md hover:bg-neutral-800 active:bg-neutral-900">
+              + Add chat room
+            </button>
+            {topics.map((top, index) => (
+              <button
+                className={`text-ellipsis overflow-x-clip text-left p-2 w-full h-10 font-semibold text-white rounded-md ${
+                  currentTopic == top
+                    ? "bg-neutral-600"
+                    : "hover:bg-neutral-600"
+                }`}
+                key={index}
+                onClick={() => {
+                  setCurrentTopic(top);
+                }}
+              >
+                {top}
+              </button>
+            ))}
           </div>
-          <div className="bg-black h-16 w-3/4 p-2 flex justify-between items-center gap-2">
-            <input
-              type="text"
-              className="rounded-md p-1 w-full h-full"
-              value={currentMessage}
-              onChange={(e) => {
-                e.preventDefault();
-                setCurrentMessage(e.target.value);
-              }}
-            />
-            <button
-              className="h-full rounded-md w-28 px-2 font-bold bg-white active:bg-slate-400"
-              onClick={handleClick}
-            >
-              Send
-            </button>
-          </div>
-          <div className="flex justify-center items-center gap-3 mt-3">
-            <p className="font-semibold text-xl">
-              Microphone: {listening ? "🟢" : "🔴"}
-            </p>
-            <button
-              className="border-2 border-black rounded-md p-2 font-bold bg-white active:bg-slate-400"
-              onClick={startRecording}
-            >
-              Start Speech
-            </button>
-            <button
-              className="border-2 border-black rounded-md p-2 font-bold bg-white active:bg-slate-400"
-              onClick={stopRecording}
-            >
-              Stop Speech
-            </button>
-            <button
-              className="border-2 border-black rounded-md p-2 font-bold bg-white active:bg-slate-400"
-              onClick={resetTranscript}
-            >
-              Reset
-            </button>
-            <button
-              className="border-2 border-black rounded-md w-28 p-2 font-bold bg-white active:bg-slate-400"
-              onClick={handlePrompt}
-            >
-              Prompt
-            </button>
-          </div>
-          <p>{transcript}</p>
+          <ChatBox topic={currentTopic} />
         </div>
       ) : (
         <div className="flex justify-center items-center gap-2">

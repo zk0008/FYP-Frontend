@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signUpAndGetUser } from "../utils";
+import { signUpAndGetUser } from "../utils/auth";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -21,7 +21,7 @@ export default function LoginPage() {
     <div className="flex flex-col h-full w-full items-center gap-5">
       <div className="flex justify-between items-center py-2 p-4 h-20 bg-black border-b w-full">
         <h1 className="flex items-center text-2xl font-semibold text-white">
-          Group Chat Application
+          GroupGPT
         </h1>
       </div>
 
