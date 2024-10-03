@@ -31,6 +31,12 @@ export async function getChats(topic: string) {
   return data;
 }
 
+export async function addTopic(username: string, topic: string) {
+  await supabase
+    .from("chats")
+    .insert([{ username, message: "Started a chat for " + topic, topic }]);
+}
+
 export async function insertChat(
   username: string,
   message: string,

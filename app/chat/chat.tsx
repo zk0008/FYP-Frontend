@@ -100,7 +100,7 @@ export default function ChatBox({ topic }: { topic: string }) {
       {topic === "" ? (
         <div className="flex h-full w-full justify-center items-center">
           <p className="text-white font-bold text-center text-2xl">
-            Add or select a chat on the left sidebar
+            Create or select a chat room on the left sidebar
           </p>
         </div>
       ) : (
