@@ -12,13 +12,30 @@ export async function promptModel(promptData: Chat[]) {
   return res;
 }
 
-export async function promptPdf(query: string) {
+export async function promptPdf(topic: string, query: string) {
   const data = await fetch("/api/pdf", {
     method: "POST",
     headers: {
-      "Content-Type": "text/plain",
+      "Content-Type": "application/json",
     },
-    body: query,
+    body: JSON.stringify({
+      topic,
+      query,
+    }),
+  });
+  const res = await data.json();
+  return res;
+}
+
+export async function promptRag(query: string) {
+  const data = await fetch("/api/rag", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query,
+    }),
   });
   const res = await data.json();
   return res;

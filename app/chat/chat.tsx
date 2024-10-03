@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { promptModel, promptPdf } from "../utils/api";
+import { promptModel, promptPdf, promptRag } from "../utils/api";
 import { Chat } from "../types";
 import { getChats, insertChat, subscribeToChat } from "../utils/db";
 import { getUser } from "../utils/auth";
@@ -58,7 +58,17 @@ export default function ChatBox({ topic }: { topic: string }) {
     await insertChat(currentUsername, currentMessage, topic);
     const query = currentMessage;
     setCurrentMessage("");
-    const res = await promptPdf(currentMessage);
+    const res = await promptPdf(topic, currentMessage);
+    await insertChat("AI Chatbot", res, topic);
+    const msg = new SpeechSynthesisUtterance(res);
+    window.speechSynthesis.speak(msg);
+  };
+
+  const handleRagClick = async () => {
+    await insertChat(currentUsername, currentMessage, topic);
+    const query = currentMessage;
+    setCurrentMessage("");
+    const res = await promptRag(currentMessage);
     await insertChat("AI Chatbot", res, topic);
     const msg = new SpeechSynthesisUtterance(res);
     window.speechSynthesis.speak(msg);
@@ -231,7 +241,7 @@ export default function ChatBox({ topic }: { topic: string }) {
                   />
                   <button
                     onClick={uploadFile}
-                    className="border-2 border-black w-20 rounded-md p-2 font-bold bg-white active:bg-slate-400"
+                    className="border-2 border-black w-20 rounded-md p-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
                   >
                     Upload
                   </button>
@@ -243,25 +253,25 @@ export default function ChatBox({ topic }: { topic: string }) {
                     Microphone: {listening ? "🟢" : "🔴"}
                   </p>
                   <button
-                    className="border-2 border-black w-20 rounded-md p-2 font-bold bg-white active:bg-slate-400"
+                    className="border-2 border-black w-20 rounded-md p-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
                     onClick={startRecording}
                   >
                     Start
                   </button>
                   <button
-                    className="border-2 border-black w-20 rounded-md p-2 font-bold bg-white active:bg-slate-400"
+                    className="border-2 border-black w-20 rounded-md p-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
                     onClick={stopRecording}
                   >
                     Stop
                   </button>
                   <button
-                    className="border-2 border-black w-20 rounded-md p-2 font-bold bg-white active:bg-slate-400"
+                    className="border-2 border-black w-20 rounded-md p-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
                     onClick={resetTranscript}
                   >
                     Restart
                   </button>
                   <button
-                    className="border-2 border-black w-20 rounded-md p-2 font-bold bg-white active:bg-slate-400"
+                    className="border-2 border-black w-20 rounded-md p-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
                     onClick={cancelRecording}
                   >
                     Cancel
@@ -283,16 +293,28 @@ export default function ChatBox({ topic }: { topic: string }) {
               }}
             />
             <button
-              className="h-10 rounded-md w-28 px-2 font-bold bg-white active:bg-slate-400"
+              className="h-10 rounded-md w-44 px-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
               onClick={handleClick}
             >
               Send
             </button>
             <button
-              className="h-10 rounded-md w-28 px-2 font-bold bg-white active:bg-slate-400"
+              className="h-10 rounded-md w-44 px-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
+              onClick={handlePdfClick}
+            >
+              PDF Query
+            </button>
+            <button
+              className="h-10 rounded-md w-44 px-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
+              onClick={handleRagClick}
+            >
+              RAG Query
+            </button>
+            <button
+              className="h-10 rounded-md w-44 px-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
               onClick={handlePrompt}
             >
-              Prompt
+              Quick Reply
             </button>
           </div>
         </>
