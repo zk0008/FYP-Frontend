@@ -43,6 +43,10 @@ export default function ChatPage() {
     loadTopics();
   }, []);
 
+  useEffect(() => {
+    setOpenAddTopic(false);
+  }, [currentTopic]);
+
   return (
     <div className="flex flex-col h-full w-full items-center">
       <div className="flex justify-between items-center py-2 p-4 h-20 bg-black border-b w-full">

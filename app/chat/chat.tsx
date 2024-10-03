@@ -9,14 +9,19 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import "regenerator-runtime/runtime";
+import { getDocument, getDocumentNames, sendToBucket } from "../utils/storage";
 
 export default function ChatBox({ topic }: { topic: string }) {
   const chatBottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [chats, setChats] = useState<Chat[]>([]);
   const [currentUsername, setCurrentUsername] = useState<string>("");
   const [openToolbar, setOpenToolbar] = useState<boolean>(false);
+  const [openDocuments, setOpendDocuments] = useState<boolean>(false);
+  const [file, setFile] = useState<any>(null);
+  const [documentList, setDocumentList] = useState<string[]>([]);
 
   const {
     transcript,
@@ -77,9 +82,31 @@ export default function ChatBox({ topic }: { topic: string }) {
     if (data) setChats(data);
   };
 
+  const loadDocuments = async () => {
+    const data = await getDocumentNames(topic);
+    setDocumentList(data);
+  };
+
   const getAndSetUsername = async () => {
     const user = await getUser();
     setCurrentUsername(user?.user_metadata.username);
+  };
+
+  const uploadFile = async () => {
+    if (!file) return;
+
+    await sendToBucket(topic, file);
+
+    setFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+
+    loadDocuments();
+  };
+
+  const downloadDocument = async (documentName: string) => {
+    await getDocument(topic, documentName);
   };
 
   useEffect(() => {
@@ -87,8 +114,11 @@ export default function ChatBox({ topic }: { topic: string }) {
   }, []);
 
   useEffect(() => {
-    loadChats();
-    subscribeToChat(loadChats);
+    if (topic !== "") {
+      loadChats();
+      subscribeToChat(loadChats);
+      loadDocuments();
+    }
   }, [topic]);
 
   useEffect(() => {
@@ -105,7 +135,39 @@ export default function ChatBox({ topic }: { topic: string }) {
         </div>
       ) : (
         <>
-          <div className="h-full flex flex-col gap-5 items-center justify-start  overflow-y-scroll p-3 border-2 border-black">
+          <div className="flex w-full flex-col items-start pt-2 pl-2">
+            <div className="flex justify-center items-center text-white font-bold text-xl gap-1">
+              <button
+                onClick={() => {
+                  setOpendDocuments(!openDocuments);
+                }}
+              >
+                {openDocuments ? <FaAngleUp /> : <FaAngleDown />}
+              </button>
+              <p>Documents</p>
+            </div>
+            {openDocuments && (
+              <div className="flex flex-col gap-2 max-h-56 w-full p-2 overflow-y-auto">
+                {documentList.map((doc, index) => (
+                  <div
+                    key={index}
+                    className="flex gap-5 justify-between items-center"
+                  >
+                    <p className="text-white text-sm">{doc}</p>
+                    <button
+                      onClick={() => {
+                        downloadDocument(doc);
+                      }}
+                      className="font-semibold px-2 bg-green-200 rounded-md hover:bg-green-300"
+                    >
+                      Download
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="h-full flex flex-col gap-5 items-center justify-start overflow-y-scroll p-3">
             {chats.map((chat, index) => {
               return (
                 <div
@@ -156,6 +218,25 @@ export default function ChatBox({ topic }: { topic: string }) {
             </div>
             {openToolbar && (
               <>
+                {/* Upload tools */}
+                <div className="flex justify-start items-center gap-1">
+                  <p className="font-semibold text-white">File Upload: </p>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    className="text-white"
+                    onChange={(event) => {
+                      if (event.target.files) setFile(event.target.files[0]);
+                    }}
+                  />
+                  <button
+                    onClick={uploadFile}
+                    className="border-2 border-black w-20 rounded-md p-2 font-bold bg-white active:bg-slate-400"
+                  >
+                    Upload
+                  </button>
+                </div>
+
                 {/* Speech tools */}
                 <div className="flex justify-end items-center gap-1">
                   <p className="font-semibold text-white">
