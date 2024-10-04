@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { promptModel, promptPdf, promptRag } from "../utils/api";
+import { embedDocument, promptModel, promptPdf, promptRag } from "../utils/api";
 import { Chat } from "../types";
 import { getChats, insertChat, subscribeToChat } from "../utils/db";
 import { getUser } from "../utils/auth";
@@ -106,6 +106,7 @@ export default function ChatBox({ topic }: { topic: string }) {
     if (!file) return;
 
     await sendToBucket(topic, file);
+    embedDocument(topic, file.name);
 
     setFile(null);
     if (fileInputRef.current) {

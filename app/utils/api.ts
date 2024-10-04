@@ -40,3 +40,19 @@ export async function promptRag(query: string) {
   const res = await data.json();
   return res;
 }
+
+export async function embedDocument(topic: string, query: string) {
+  const data = await fetch("/api/embed", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      topic,
+      query,
+    }),
+  });
+  const res = await data.json();
+  console.log(res);
+  return res;
+}
