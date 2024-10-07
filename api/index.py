@@ -4,9 +4,19 @@ from api.models.rag import get_rag_answer
 from api.models.gpt import get_answer, Chat
 from api.models.embed import embed_document
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class APIRequest(BaseModel):
@@ -36,3 +46,9 @@ async def rag_prompt(request: APIRequest):
 async def embed(request: APIRequest, background_tasks: BackgroundTasks):
     background_tasks.add_task(embed_document, request.topic, request.query)
     return {"message": "Embedding process started."}
+
+
+# Status Check Endpoint
+@app.get("/api/status")
+async def status_check():
+    return {"status": "OK", "message": "API is running."}
