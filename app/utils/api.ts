@@ -27,13 +27,14 @@ export async function promptPdf(topic: string, query: string) {
   return res;
 }
 
-export async function promptRag(query: string) {
+export async function promptRag(topic: string, query: string) {
   const data = await fetch("/api/rag", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      topic,
       query,
     }),
   });
@@ -53,6 +54,5 @@ export async function embedDocument(topic: string, query: string) {
     }),
   });
   const res = await data.json();
-  console.log(res);
   return res;
 }

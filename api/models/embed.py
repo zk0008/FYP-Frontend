@@ -20,10 +20,10 @@ def download_pdf(topic: str, file_name: str):
     return data
 
 
-def insert_embedding_into_supabase(text: str, embedding: list):
+def insert_embedding_into_supabase(text: str, embedding: list, topic: str):
     # Insert the text and its corresponding embedding into Supabase
     supabase.table("document_vectors").insert(
-        {"text": text, "embedding": embedding}
+        {"text": text, "embedding": embedding, "topic": topic}
     ).execute()
 
 
@@ -52,7 +52,9 @@ def embed_document(topic: str, file_name: str):
     for text in texts:
         count += 1
         embedding = embeddings.embed_query(text)  # Create the embedding for the chunk
-        insert_embedding_into_supabase(text, embedding)
+        insert_embedding_into_supabase(text, embedding, topic)
         print("Embedding" + str(count))
 
+    # Delete the file after processing
+    os.remove(file_name)
     print(f"Document {topic}/{file_name} successfully embedded")

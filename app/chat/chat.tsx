@@ -68,7 +68,7 @@ export default function ChatBox({ topic }: { topic: string }) {
     await insertChat(currentUsername, currentMessage, topic);
     const query = currentMessage;
     setCurrentMessage("");
-    const res = await promptRag(currentMessage);
+    const res = await promptRag(topic, currentMessage);
     await insertChat("AI Chatbot", res, topic);
     const msg = new SpeechSynthesisUtterance(res);
     window.speechSynthesis.speak(msg);

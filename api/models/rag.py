@@ -12,25 +12,24 @@ supabase: Client = create_client(url, key)
 embeddings = OpenAIEmbeddings()
 
 
-def get_rag_answer(query: str):
+def get_rag_answer(topic: str, query: str):
     # Get the embedding for the query
     query_embedding = embeddings.embed_query(query)
 
     # Query the Supabase vector table for nearest neighbors
     response = supabase.rpc(
-        "get_similar_embeddings", {"query_embedding": query_embedding}
+        "get_similar_embeddings",
+        {"query_embedding": query_embedding, "query_topic": topic},
     ).execute()
 
     # Extract the texts from the response
-    similar_texts = [record["text"] for record in response.data]
+    similar_texts = [Document(page_content=record["text"]) for record in response.data]
 
     if not similar_texts:
         return "No relevant documents found."
 
-    print(similar_texts)
-
-    similar_docs = [Document(page_content=text) for text in similar_texts]
+    print(f"Chunks found for query: {len(similar_texts)}")
 
     # Use the similar texts for question answering
     chain = load_qa_chain(ChatOpenAI(model_name="gpt-3.5-turbo"), chain_type="stuff")
-    return chain.run(input_documents=similar_docs, question=query)
+    return chain.invoke(input_documents=similar_texts, question=query)
