@@ -24,58 +24,59 @@ export default function LoginPage() {
           GroupGPT
         </h1>
       </div>
-
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col w-96 border p-4 justify-center items-center gap-5"
-      >
-        <h1 className="text-2xl font-semibold">Sign Up</h1>
-        <div className="flex flex-col items-center w-3/4">
-          <label htmlFor="username">Username</label>
-          <input
-            className="rounded-md px-1 border-2 border-black w-full h-8"
-            type="username"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div className="flex flex-col items-center w-3/4">
-          <label htmlFor="email">Email</label>
-          <input
-            className="rounded-md px-1 border-2 border-black w-full h-8"
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="flex flex-col items-center w-3/4">
-          <label htmlFor="password">Password</label>
-          <input
-            className="rounded-md px-1 border-2 border-black w-full h-8"
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button
-          className="rounded-lg p-1 border-2 bg-black w-3/4 h-10 font-semibold text-white"
-          type="submit"
+      <div className="flex justify-center items-center h-[calc(100%-80px)]">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col w-96 border p-4 justify-center items-center gap-5"
         >
-          Sign Up
-        </button>
-        <Link
-          href="/"
-          className="rounded-lg p-1 border-2 w-3/4 h-10 font-semibold text-center"
-        >
-          Log In
-        </Link>
-      </form>
+          <h1 className="text-2xl font-semibold">Sign Up</h1>
+          <div className="flex flex-col items-center w-3/4">
+            <label htmlFor="username">Username</label>
+            <input
+              className="rounded-md px-1 border-2 border-black w-full h-8"
+              type="username"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div className="flex flex-col items-center w-3/4">
+            <label htmlFor="email">Email</label>
+            <input
+              className="rounded-md px-1 border-2 border-black w-full h-8"
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="flex flex-col items-center w-3/4">
+            <label htmlFor="password">Password</label>
+            <input
+              className="rounded-md px-1 border-2 border-black w-full h-8"
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button
+            className="rounded-lg p-1 border-2 bg-black w-3/4 h-10 font-semibold text-white"
+            type="submit"
+          >
+            Sign Up
+          </button>
+          <Link
+            href="/"
+            className="rounded-lg p-1 border-2 w-3/4 h-10 font-semibold text-center"
+          >
+            Log In
+          </Link>
+        </form>
+      </div>
     </div>
   );
 }
