@@ -32,4 +32,6 @@ def get_rag_answer(topic: str, query: str):
 
     # Use the similar texts for question answering
     chain = load_qa_chain(ChatOpenAI(model_name="gpt-3.5-turbo"), chain_type="stuff")
-    return chain.invoke(input_documents=similar_texts, question=query)
+    return chain.invoke({"input_documents": similar_texts, "question": query})[
+        "output_text"
+    ]
