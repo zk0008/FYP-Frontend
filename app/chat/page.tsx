@@ -171,14 +171,16 @@ export default function ChatPage() {
           <ChatBox topic={currentTopic} />
         </div>
       ) : (
-        <div className="flex justify-center items-center gap-2">
-          <p>You must be logged in to view this page</p>
-          <Link
-            href="/"
-            className="border-2 border-black rounded-md w-28 p-2 font-bold bg-white active:bg-slate-400"
-          >
-            Log In Here
-          </Link>
+        <div className="flex items-center justify-center flex-row w-full h-[calc(100%-80px)]">
+          <div className="flex justify-center items-center gap-3">
+            <p>You must be logged in to view this page</p>
+            <Link
+              href="/"
+              className="border-2 border-black rounded-md w-28 p-2 font-bold bg-white hover:bg-slate-200 active:bg-slate-400"
+            >
+              Log In Here
+            </Link>
+          </div>
         </div>
       )}
     </div>

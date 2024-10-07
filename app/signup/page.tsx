@@ -64,14 +64,14 @@ export default function LoginPage() {
             />
           </div>
           <button
-            className="rounded-lg p-1 border-2 bg-black w-3/4 h-10 font-semibold text-white"
+            className="rounded-lg p-1 border-2 bg-black w-3/4 h-10 font-semibold text-white hover:bg-neutral-700 active:bg-neutral-400"
             type="submit"
           >
             Sign Up
           </button>
           <Link
             href="/"
-            className="rounded-lg p-1 border-2 w-3/4 h-10 font-semibold text-center"
+            className="rounded-lg p-1 border-2 w-3/4 h-10 font-semibold text-center hover:bg-slate-200 active:bg-slate-400"
           >
             Log In
           </Link>
