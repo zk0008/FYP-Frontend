@@ -60,4 +60,4 @@ def get_pdf_answer(topic: str, query: str):
     chain = load_qa_chain(ChatOpenAI(model_name="gpt-3.5-turbo"), chain_type="stuff")
 
     docs = document_search.similarity_search(query)
-    return chain.run(input_documents=docs, question=query)
+    return chain.invoke(input_documents=docs, question=query)

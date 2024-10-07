@@ -27,13 +27,29 @@ export async function promptPdf(topic: string, query: string) {
   return res;
 }
 
-export async function promptRag(query: string) {
+export async function promptRag(topic: string, query: string) {
   const data = await fetch("/api/rag", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      topic,
+      query,
+    }),
+  });
+  const res = await data.json();
+  return res;
+}
+
+export async function embedDocument(topic: string, query: string) {
+  const data = await fetch("/api/embed", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      topic,
       query,
     }),
   });

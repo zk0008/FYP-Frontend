@@ -1,8 +1,13 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { promptModel, promptPdf, promptRag } from "../utils/api";
+import { embedDocument, promptModel, promptPdf, promptRag } from "../utils/api";
 import { Chat } from "../types";
-import { getChats, insertChat, subscribeToChat } from "../utils/db";
+import {
+  getChats,
+  insertChat,
+  sendTopicInvite,
+  subscribeToChat,
+} from "../utils/db";
 import { getUser } from "../utils/auth";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa6";
 import SpeechRecognition, {
@@ -18,10 +23,11 @@ export default function ChatBox({ topic }: { topic: string }) {
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [chats, setChats] = useState<Chat[]>([]);
   const [currentUsername, setCurrentUsername] = useState<string>("");
-  const [openToolbar, setOpenToolbar] = useState<boolean>(false);
+  const [openToolbar, setOpenToolbar] = useState<boolean>(true);
   const [openDocuments, setOpendDocuments] = useState<boolean>(false);
   const [file, setFile] = useState<any>(null);
   const [documentList, setDocumentList] = useState<string[]>([]);
+  const [invitedUser, setInvitedUser] = useState<string>("");
 
   const {
     transcript,
@@ -68,7 +74,7 @@ export default function ChatBox({ topic }: { topic: string }) {
     await insertChat(currentUsername, currentMessage, topic);
     const query = currentMessage;
     setCurrentMessage("");
-    const res = await promptRag(currentMessage);
+    const res = await promptRag(topic, currentMessage);
     await insertChat("AI Chatbot", res, topic);
     const msg = new SpeechSynthesisUtterance(res);
     window.speechSynthesis.speak(msg);
@@ -106,6 +112,7 @@ export default function ChatBox({ topic }: { topic: string }) {
     if (!file) return;
 
     await sendToBucket(topic, file);
+    embedDocument(topic, file.name);
 
     setFile(null);
     if (fileInputRef.current) {
@@ -117,6 +124,11 @@ export default function ChatBox({ topic }: { topic: string }) {
 
   const downloadDocument = async (documentName: string) => {
     await getDocument(topic, documentName);
+  };
+
+  const inviteUser = async () => {
+    await sendTopicInvite(invitedUser, topic);
+    setInvitedUser("");
   };
 
   useEffect(() => {
@@ -244,6 +256,25 @@ export default function ChatBox({ topic }: { topic: string }) {
                     className="border-2 border-black w-20 rounded-md p-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
                   >
                     Upload
+                  </button>
+                </div>
+
+                {/* Invite user tools */}
+                <div className="flex justify-start items-center gap-2">
+                  <p className="font-semibold text-white">Invite user: </p>
+                  <input
+                    value={invitedUser}
+                    onChange={(e) => {
+                      e.preventDefault();
+                      setInvitedUser(e.target.value);
+                    }}
+                    className="text-left px-2 w-40 h-10 font-bold bg-white rounded-md"
+                  />
+                  <button
+                    onClick={inviteUser}
+                    className="border-2 border-black w-20 rounded-md p-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
+                  >
+                    Add
                   </button>
                 </div>
 
