@@ -42,6 +42,22 @@ export async function promptRag(topic: string, query: string) {
   return res;
 }
 
+export async function promptAdvanced(
+  chats: Chat[],
+  topic: string,
+  query: string
+) {
+  const data = await fetch("/api/advanced", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ chats, topic, query }),
+  });
+  const res = await data.json();
+  return res;
+}
+
 export async function embedDocument(topic: string, query: string) {
   const data = await fetch("/api/embed", {
     method: "POST",

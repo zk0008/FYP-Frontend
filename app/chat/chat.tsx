@@ -1,6 +1,12 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { embedDocument, promptModel, promptPdf, promptRag } from "../utils/api";
+import {
+  embedDocument,
+  promptAdvanced,
+  promptModel,
+  promptPdf,
+  promptRag,
+} from "../utils/api";
 import { Chat } from "../types";
 import {
   getChats,
@@ -64,7 +70,7 @@ export default function ChatBox({ topic }: { topic: string }) {
     await insertChat(currentUsername, currentMessage, topic);
     const query = currentMessage;
     setCurrentMessage("");
-    const res = await promptPdf(topic, currentMessage);
+    const res = await promptPdf(topic, query);
     await insertChat("AI Chatbot", res, topic);
     const msg = new SpeechSynthesisUtterance(res);
     window.speechSynthesis.speak(msg);
@@ -74,7 +80,17 @@ export default function ChatBox({ topic }: { topic: string }) {
     await insertChat(currentUsername, currentMessage, topic);
     const query = currentMessage;
     setCurrentMessage("");
-    const res = await promptRag(topic, currentMessage);
+    const res = await promptRag(topic, query);
+    await insertChat("AI Chatbot", res, topic);
+    const msg = new SpeechSynthesisUtterance(res);
+    window.speechSynthesis.speak(msg);
+  };
+
+  const handleAdvancedClick = async () => {
+    await insertChat(currentUsername, currentMessage, topic);
+    const query = currentMessage;
+    setCurrentMessage("");
+    const res = await promptAdvanced(chats, topic, query);
     await insertChat("AI Chatbot", res, topic);
     const msg = new SpeechSynthesisUtterance(res);
     window.speechSynthesis.speak(msg);
@@ -331,6 +347,12 @@ export default function ChatBox({ topic }: { topic: string }) {
             </button>
             <button
               className="h-10 rounded-md w-44 px-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
+              onClick={handlePrompt}
+            >
+              Quick Reply
+            </button>
+            <button
+              className="h-10 rounded-md w-44 px-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
               onClick={handlePdfClick}
             >
               PDF Query
@@ -343,9 +365,9 @@ export default function ChatBox({ topic }: { topic: string }) {
             </button>
             <button
               className="h-10 rounded-md w-44 px-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
-              onClick={handlePrompt}
+              onClick={handleAdvancedClick}
             >
-              Quick Reply
+              Advanced Query
             </button>
           </div>
         </>
