@@ -34,6 +34,7 @@ export default function ChatBox({ topic }: { topic: string }) {
   const [file, setFile] = useState<any>(null);
   const [documentList, setDocumentList] = useState<string[]>([]);
   const [invitedUser, setInvitedUser] = useState<string>("");
+  const [generating, setGenerating] = useState<boolean>(false);
 
   const {
     transcript,
@@ -70,7 +71,9 @@ export default function ChatBox({ topic }: { topic: string }) {
     await insertChat(currentUsername, currentMessage, topic);
     const query = currentMessage;
     setCurrentMessage("");
+    setGenerating(true);
     const res = await promptPdf(topic, query);
+    setGenerating(false);
     await insertChat("AI Chatbot", res, topic);
     const msg = new SpeechSynthesisUtterance(res);
     window.speechSynthesis.speak(msg);
@@ -80,7 +83,9 @@ export default function ChatBox({ topic }: { topic: string }) {
     await insertChat(currentUsername, currentMessage, topic);
     const query = currentMessage;
     setCurrentMessage("");
+    setGenerating(true);
     const res = await promptRag(topic, query);
+    setGenerating(false);
     await insertChat("AI Chatbot", res, topic);
     const msg = new SpeechSynthesisUtterance(res);
     window.speechSynthesis.speak(msg);
@@ -90,15 +95,19 @@ export default function ChatBox({ topic }: { topic: string }) {
     await insertChat(currentUsername, currentMessage, topic);
     const query = currentMessage;
     setCurrentMessage("");
+    setGenerating(true);
     const res = await promptAdvanced(chats, topic, query);
+    setGenerating(false);
     await insertChat("AI Chatbot", res, topic);
     const msg = new SpeechSynthesisUtterance(res);
     window.speechSynthesis.speak(msg);
   };
 
   const handlePrompt = async () => {
+    setGenerating(true);
     const res = await promptModel(chats);
     await insertChat("AI Chatbot", res, topic);
+    setGenerating(false);
     const msg = new SpeechSynthesisUtterance(res);
     window.speechSynthesis.speak(msg);
   };
@@ -238,6 +247,18 @@ export default function ChatBox({ topic }: { topic: string }) {
                 >
                   <h1 className="font-semibold text-xl">{currentUsername}</h1>
                   <p className="text-wrap break-words">{transcript}</p>
+                </div>
+              </div>
+            )}
+            {generating && (
+              <div className={`flex w-full justify-start`}>
+                <div
+                  className={`max-w-[60%] min-w-[200px] rounded-lg flex flex-col justify-between gap-1 p-2 bg-green-100`}
+                >
+                  <h1 className="font-semibold text-xl">AI Chatbot</h1>
+                  <p className="text-wrap break-words">
+                    Generating a response...
+                  </p>
                 </div>
               </div>
             )}
