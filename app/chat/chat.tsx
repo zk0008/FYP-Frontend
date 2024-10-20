@@ -364,7 +364,7 @@ export default function ChatBox({ topic }: { topic: string }) {
               RAG Query
             </button>
             <button
-              className="h-10 rounded-md w-44 px-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
+              className="h-10 rounded-md w-64 px-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
               onClick={handleAdvancedClick}
             >
               Advanced Query
