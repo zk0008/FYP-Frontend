@@ -24,6 +24,25 @@ export async function logInAndGetUser(email: string, password: string) {
     email,
     password,
   });
+
+  // TODO: Error handling
+  if (error) {
+    console.error('Login failed:', error.message);
+    return;
+  }
+
+  const response = await fetch("/api/auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: "include",
+    body: JSON.stringify({ token: data.session.access_token }),
+  });
+
+  console.log("data", data);
+  console.log("response", await response.json());
+
   return data.user;
 }
 

@@ -1,7 +1,7 @@
 import { Chat } from "../types";
 
 export async function promptModel(promptData: Chat[]) {
-  const data = await fetch("/api/gpt35", {
+  const data = await fetch("/api/queries/gpt35", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -13,7 +13,7 @@ export async function promptModel(promptData: Chat[]) {
 }
 
 export async function promptPdf(topic: string, query: string) {
-  const data = await fetch("/api/pdf", {
+  const data = await fetch("/api/queries/pdf", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -28,7 +28,7 @@ export async function promptPdf(topic: string, query: string) {
 }
 
 export async function promptRag(topic: string, query: string) {
-  const data = await fetch("/api/rag", {
+  const data = await fetch("/api/queries/rag", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -47,7 +47,7 @@ export async function promptAdvanced(
   topic: string,
   query: string
 ) {
-  const data = await fetch("/api/advanced", {
+  const data = await fetch("/api/queries/advanced", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export async function promptAdvanced(
 }
 
 export async function embedDocument(topic: string, query: string) {
-  const data = await fetch("/api/embed", {
+  const data = await fetch("/api/queries/embed", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
