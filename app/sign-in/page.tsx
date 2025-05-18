@@ -2,19 +2,25 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signUpAndGetUser } from "../utils/auth";
 import Link from "next/link";
 
-export default function LoginPage() {
+import useAuthContext from "../_hooks/useAuthContext";
+import { signInAndGetUser } from "../utils/auth";
+
+export default function SignInPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const user = await signUpAndGetUser(email, password, username);
-    if (user) router.push("/chat");
+    const result = await signInAndGetUser(email, password);
+    if (result) {
+      localStorage.setItem("token", result.token);
+      router.push("/chat");
+    } else {
+      console.error("Sign-in failed")
+    }
   };
 
   return (
@@ -29,18 +35,7 @@ export default function LoginPage() {
           onSubmit={handleSubmit}
           className="flex flex-col w-96 border p-4 justify-center items-center gap-5"
         >
-          <h1 className="text-2xl font-semibold">Sign Up</h1>
-          <div className="flex flex-col items-center w-3/4">
-            <label htmlFor="username">Username</label>
-            <input
-              className="rounded-md px-1 border-2 border-black w-full h-8"
-              type="username"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-          </div>
+          <h1 className="text-2xl font-semibold">Log In</h1>
           <div className="flex flex-col items-center w-3/4">
             <label htmlFor="email">Email</label>
             <input
@@ -58,7 +53,6 @@ export default function LoginPage() {
               className="rounded-md px-1 border-2 border-black w-full h-8"
               type="password"
               id="password"
-              minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -68,13 +62,13 @@ export default function LoginPage() {
             className="rounded-lg p-1 border-2 bg-black w-3/4 h-10 font-semibold text-white hover:bg-neutral-700 active:bg-neutral-400"
             type="submit"
           >
-            Sign Up
+            Sign In
           </button>
           <Link
-            href="/"
+            href="/sign-up"
             className="rounded-lg p-1 border-2 w-3/4 h-10 font-semibold text-center hover:bg-slate-200 active:bg-slate-400"
           >
-            Log In
+            Sign Up
           </Link>
         </form>
       </div>

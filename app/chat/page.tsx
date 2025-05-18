@@ -1,6 +1,7 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import { getUser, logOutUser } from "../utils/auth";
+import { getUser, signOutUser } from "../utils/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import "regenerator-runtime/runtime";
@@ -24,9 +25,9 @@ export default function ChatPage() {
   const [newTopic, setNewTopic] = useState<string>("");
   const [openAddTopic, setOpenAddTopic] = useState<boolean>(false);
 
-  const handleLogOut = async () => {
-    await logOutUser();
-    router.push("/");
+  const handleSignOut = async () => {
+    await signOutUser();
+    router.push("/sign-in");
   };
 
   const getAndSetUsername = async () => {
@@ -86,7 +87,7 @@ export default function ChatPage() {
             </h1>
             <button
               className="border-2 border-black rounded-md w-28 p-2 font-bold bg-white active:bg-slate-400"
-              onClick={handleLogOut}
+              onClick={handleSignOut}
             >
               Log out
             </button>
