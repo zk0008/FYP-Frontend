@@ -1,45 +1,28 @@
 import { Chat } from "../types";
+import { fetchWithAuth } from "@/app/_utils/utils";
 
 export async function promptModel(promptData: Chat[]) {
-  const data = await fetch("/api/queries/gpt35", {
+  return fetchWithAuth("/api/queries/gpt35", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(promptData),
   });
-  const res = await data.json();
-  return res;
 }
 
 export async function promptPdf(topic: string, query: string) {
-  const data = await fetch("/api/queries/pdf", {
+  return fetchWithAuth("/api/queries/pdf", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      topic,
-      query,
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ topic, query }),
   });
-  const res = await data.json();
-  return res;
 }
 
 export async function promptRag(topic: string, query: string) {
-  const data = await fetch("/api/queries/rag", {
+  return fetchWithAuth("/api/queries/rag", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      topic,
-      query,
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ topic, query }),
   });
-  const res = await data.json();
-  return res;
 }
 
 export async function promptAdvanced(
@@ -47,28 +30,17 @@ export async function promptAdvanced(
   topic: string,
   query: string
 ) {
-  const data = await fetch("/api/queries/advanced", {
+  return fetchWithAuth("/api/queries/advanced", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chats, topic, query }),
   });
-  const res = await data.json();
-  return res;
 }
 
 export async function embedDocument(topic: string, query: string) {
-  const data = await fetch("/api/queries/embed", {
+  return fetchWithAuth("/api/queries/embed", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      topic,
-      query,
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ topic, query }),
   });
-  const res = await data.json();
-  return res;
 }
