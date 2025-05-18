@@ -19,34 +19,28 @@ export async function signUpAndGetUser(
   return data.user;
 }
 
-export async function logInAndGetUser(email: string, password: string) {
+export async function signInAndGetUser(email: string, password: string) {
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
-  // TODO: Error handling
+  // TODO: Error handling, notify user
   if (error) {
-    console.error('Login failed:', error.message);
+    console.error('Sign in failed:', error.message);
     return;
   }
 
-  const response = await fetch("/api/auth/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    credentials: "include",
-    body: JSON.stringify({ token: data.session.access_token }),
-  });
-
   console.log("data", data);
-  console.log("response", await response.json());
 
-  return data.user;
+  return {
+    user: data.user,
+    token: data.session?.access_token
+  };
 }
 
-export async function logOutUser() {
+export async function signOutUser() {
+  localStorage.removeItem("token");
   const { error } = await supabase.auth.signOut();
 }
 
