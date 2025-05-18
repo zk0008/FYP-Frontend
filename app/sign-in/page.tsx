@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-import useAuthContext from "../_hooks/useAuthContext";
 import { signInAndGetUser } from "../utils/auth";
 
 export default function SignInPage() {
