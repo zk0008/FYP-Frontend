@@ -2,7 +2,7 @@
 
 import Icon from "@/public/GroupGPT.png";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { useRouter } from "next/navigation";
 
@@ -20,29 +20,31 @@ export function TopBar({
   children
 } : TopBarProps) {
   const router = useRouter();
-  const { open, openMobile } = useSidebar();
 
   return (
     <div className="flex justify-between items-center py-2 px-4 min-h-[64px] bg-primary-foreground border-b w-full">
       {/* Left section: Sidebar trigger or logo */}
-      <TooltipWrapper
-        content={open || openMobile ? "Collapse Sidebar" : "Expand Sidebar"}
-        side="bottom"
-      >
-        <div className="flex items-center gap-2 w-12 flex-shrink-0">
-          {showSidebarTrigger && <SidebarTrigger />}
-          {showLogo && (
-            <Avatar>
-              <AvatarImage
-                src={Icon.src}
-                alt="GroupGPT Logo"
-                className="cursor-pointer"
-                onClick={() => router.push("/")}
-              />
-            </Avatar>
-          )}
-        </div>
-      </TooltipWrapper>
+      <div className="flex items-center gap-2 w-12 flex-shrink-0">
+        {showSidebarTrigger && (
+          <TooltipWrapper
+            content="Toggle Sidebar"
+            side="bottom"
+          >
+            <SidebarTrigger />
+          </TooltipWrapper>
+        )}
+
+        {showLogo && (
+          <Avatar>
+            <AvatarImage
+              src={Icon.src}
+              alt="GroupGPT Logo"
+              className="cursor-pointer"
+              onClick={() => router.push("/")}
+            />
+          </Avatar>
+        )}
+      </div>
 
       {/* Center section: Title */}
       <div className="flex-1 flex justify-center min-w-0 px-4">
