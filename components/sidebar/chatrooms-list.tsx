@@ -5,9 +5,7 @@ import {
   SidebarGroup,
   SidebarGroupAction,
   SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuSkeleton
+  SidebarMenu
 } from "@/components/ui/sidebar";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { Plus } from "lucide-react";
@@ -16,9 +14,9 @@ import { useToast } from "@/hooks/use-toast";
 import { useUser, useChatrooms } from "@/hooks";
 
 import { ChatroomItem } from "./chatroom-item";
+import { LoadingSpinner } from "../ui/loading-spinner";
 
 export function ChatroomsList() {
-  // const { userId, loading: userLoading, error: userError } = useUserId();
   const { user, loading: userLoading, error: userError } = useUser();
   const { chatrooms, loading: chatroomsLoading, error: chatroomsError } = useChatrooms({ userId: user?.userId || "" });
   const [isCreateChatroomDialogOpen, setIsCreateChatroomDialogOpen] = useState(false);
@@ -65,15 +63,10 @@ export function ChatroomsList() {
       />
 
       <SidebarMenu>
-        {userLoading || chatroomsLoading ? (
-          Array.from({ length: 5 }).map((_, index) => (
-            <SidebarMenuItem key={index}>
-              <SidebarMenuSkeleton />
-            </SidebarMenuItem>
-          ))
-        ) : (
+        {userLoading || chatroomsLoading ? <LoadingSpinner /> : (
           chatrooms.map((chatroom) => (
             <ChatroomItem
+              key={ chatroom.chatroomId }
               chatroomId={ chatroom.chatroomId }
               name={ chatroom.name }
             />

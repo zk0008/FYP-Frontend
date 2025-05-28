@@ -12,6 +12,12 @@ export function useChatroom(chatroomId: string) {
 
   useEffect(() => {
     const fetchChatroom = async () => {
+      if (!chatroomId) {
+        setChatroom(null);
+        setLoading(false);
+        return;
+      }
+
       setChatroom(null);
       setLoading(true);
       setError(null);
