@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { signUpAndGetUser } from "../utils/auth";
 import Link from "next/link";
 
-export default function SignInPage() {
+export default function SignUpPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -71,10 +71,10 @@ export default function SignInPage() {
             Sign Up
           </button>
           <Link
-            href="/sign-in"
+            href="/login"
             className="rounded-lg p-1 border-2 w-3/4 h-10 font-semibold text-center hover:bg-slate-200 active:bg-slate-400"
           >
-            Sign In
+            Log In
           </Link>
         </form>
       </div>

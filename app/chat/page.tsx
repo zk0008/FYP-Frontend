@@ -27,7 +27,7 @@ export default function ChatPage() {
 
   const handleSignOut = async () => {
     await signOutUser();
-    router.push("/sign-in");
+    router.push("/");
   };
 
   const getAndSetUsername = async () => {
@@ -89,7 +89,7 @@ export default function ChatPage() {
               className="border-2 border-black rounded-md w-28 p-2 font-bold bg-white active:bg-slate-400"
               onClick={handleSignOut}
             >
-              Log out
+              Sign out
             </button>
           </div>
         )}

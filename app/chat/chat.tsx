@@ -136,6 +136,9 @@ export default function ChatBox({ topic }: { topic: string }) {
   const uploadFile = async () => {
     if (!file) return;
 
+    console.log("topic", topic);
+    console.log("file", file);
+
     await sendToBucket(topic, file);
     embedDocument(topic, file.name);
 

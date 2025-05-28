@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import { signInAndGetUser } from "../utils/auth";
 
-export default function SignInPage() {
+export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,10 +15,11 @@ export default function SignInPage() {
     e.preventDefault();
     const result = await signInAndGetUser(email, password);
     if (result) {
-      localStorage.setItem("token", result.token);
+      // localStorage.setItem("token", result.token);
+      // document.cookie = `sb-access-token=${result.token}; path=/`
       router.push("/chat");
     } else {
-      console.error("Sign-in failed")
+      console.error("Log in failed")
     }
   };
 

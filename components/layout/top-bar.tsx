@@ -1,0 +1,62 @@
+"use client";
+
+import Icon from "@/public/GroupGPT.png";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import { useRouter } from "next/navigation";
+
+interface TopBarProps {
+  showSidebarTrigger?: boolean;
+  showLogo?: boolean;
+  title: string;
+  children?: React.ReactNode;
+}
+
+export function TopBar({
+  showSidebarTrigger = false,
+  showLogo = false,
+  title, 
+  children
+} : TopBarProps) {
+  const router = useRouter();
+  const { open, openMobile } = useSidebar();
+
+  return (
+    <div className="flex justify-between items-center py-2 px-4 min-h-[64px] bg-primary-foreground border-b w-full">
+      {/* Left section: Sidebar trigger or logo */}
+      <TooltipWrapper
+        content={open || openMobile ? "Collapse Sidebar" : "Expand Sidebar"}
+        side="bottom"
+      >
+        <div className="flex items-center gap-2 w-12 flex-shrink-0">
+          {showSidebarTrigger && <SidebarTrigger />}
+          {showLogo && (
+            <Avatar>
+              <AvatarImage
+                src={Icon.src}
+                alt="GroupGPT Logo"
+                className="cursor-pointer"
+                onClick={() => router.push("/")}
+              />
+            </Avatar>
+          )}
+        </div>
+      </TooltipWrapper>
+
+      {/* Center section: Title */}
+      <div className="flex-1 flex justify-center min-w-0 px-4">
+        {title && (
+          <span className="font-bold text-xl leading-none whitespace-nowrap overflow-hidden text-ellipsis block max-w-full">
+            { title }
+          </span>
+        )}
+      </div>
+
+      {/* Right section: Any child component (e.g., buttons) */}
+      <div className="flex items-center gap-2 w-12 flex-shrink-0">
+        { children }
+      </div>
+    </div>
+  );
+}

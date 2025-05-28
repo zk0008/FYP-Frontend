@@ -1,4 +1,5 @@
-import { createClient } from "@/supabase/client";
+import { createClient } from "@/utils/supabase/client";
+import { cookies } from "next/headers";
 
 export const supabase = createClient();
 
@@ -40,7 +41,8 @@ export async function signInAndGetUser(email: string, password: string) {
 }
 
 export async function signOutUser() {
-  localStorage.removeItem("token");
+  document.cookie = "sb-access-token=; path=/; max-age=0;";
+  // localStorage.removeItem("token");
   const { error } = await supabase.auth.signOut();
 }
 
