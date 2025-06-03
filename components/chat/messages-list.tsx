@@ -11,14 +11,6 @@ import {
 
 import { MessageBubble } from "./message-bubble";
 
-type MessagePayload = {
-  chatroom_id: string;
-  content: string;
-  message_id: string;
-  sender_id: string;
-  sent_at: string;
-}
-
 export function MessagesList() {
   const chatroom = useChatroomContext();
   const { toast } = useToast();
