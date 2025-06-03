@@ -1,7 +1,7 @@
 "use client";
 
 import { ChatBubble, ChatBubbleAvatar, ChatBubbleMessage } from "@/components/ui/chat/chat-bubble";
-import { getInitials } from "@/utils/strings/strings";
+import { getInitials } from "@/utils";
 import ReactMarkdown from "react-markdown";
 import Icon from "@/public/GroupGPT.png";
 import { useUserContext } from "@/hooks/use-user-context";
