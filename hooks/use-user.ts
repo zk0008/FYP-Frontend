@@ -4,7 +4,6 @@ import { User } from "@/types";
 
 export function useUser() {
   const [user, setUser] = useState<User | null>(null);
-  const [userId, setUserId] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
@@ -54,7 +53,6 @@ export function useUser() {
       }
     };
 
-    // fetchUserIds();
     fetchUserData();
   }, []);
 
