@@ -49,7 +49,7 @@ export function TopBar({
       {/* Center section: Title */}
       <div className="flex-1 flex justify-center min-w-0 px-4">
         {title && (
-          <span className="font-bold text-xl leading-none whitespace-nowrap overflow-hidden text-ellipsis block max-w-full">
+          <span className="font-bold text-xl whitespace-nowrap overflow-hidden text-ellipsis block max-w-full">
             { title }
           </span>
         )}
