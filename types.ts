@@ -1,14 +1,20 @@
 export interface Chatroom {
   chatroomId: string;
-  name: string
-  // TODO: Chatroom created timestamp
+  name: string;
+}
+
+export interface Document {
+  documentId: string;
+  uploaderId: string;
+  chatroomId: string;
+  filename: string;
 }
 
 export interface Message {
   messageId: string;
   username: string;
   content: string;
-  // TODO: Message sent timestamp
+  sentAt: string;
 }
 
 export interface User {
