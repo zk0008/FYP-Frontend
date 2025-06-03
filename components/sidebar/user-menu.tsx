@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/utils/supabase/client";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { useState } from "react";
@@ -9,15 +10,18 @@ import { CircleUser, ChevronsUpDown } from "lucide-react";
 
 import { AccountSettingsDialog, ManageInvitesDialog } from "@/components/dialogs/index";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useUserContext } from "@/hooks/use-user-context";
+import { useRouter } from "next/navigation";
+import { useToast, useUserContext } from "@/hooks";
+
+const supabase = createClient();
 
 export function UserMenu() {
   const [isAccountSettingsDialogOpen, setIsAccountSettingsDialogOpen] = useState(false);
   const [isManageInvitesDialogOpen, setIsManageInvitesDialogOpen] = useState(false);
   const { open, openMobile } = useSidebar();
-
+  const { toast } = useToast();
   const user = useUserContext();
-  // const { user } = { user: { username: "JohnDoe" } };
+  const router = useRouter();
 
   return (
     <SidebarMenu>
@@ -73,6 +77,25 @@ export function UserMenu() {
               <Button
                 variant="ghost"
                 className="w-full justify-start p-2"
+                onClick={async () => {
+                  const { error } = await supabase.auth.signOut();
+
+                  if (error) {
+                    console.error("Error logging out:", error.message);
+                    toast({
+                      title: "Error",
+                      description: "There was an error logging you out. Please try again.",
+                      variant: "destructive",
+                    })
+                    return;
+                  } else {
+                    toast({
+                      title: "Logged Out",
+                      description: "You have successfully logged out. See you soon!",
+                    });
+                    router.push("/");
+                  }
+                }}
               >
                 <span>Log Out</span>
               </Button>
