@@ -2,28 +2,60 @@
 
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { useMessages } from "@/hooks/use-messages";
-import { useSearchParams } from "next/navigation";
+import { ToastAction } from "@radix-ui/react-toast";
+import {
+  useChatroomContext,
+  useMessagesWithRealtime,
+  useToast
+} from "@/hooks";
 
 import { MessageBubble } from "./message-bubble";
-import { useChatroomContext } from "@/hooks/use-chatroom-context";
+
+type MessagePayload = {
+  chatroom_id: string;
+  content: string;
+  message_id: string;
+  sender_id: string;
+  sent_at: string;
+}
 
 export function MessagesList() {
   const chatroom = useChatroomContext();
-  // const searchParams = useSearchParams();
-  // const chatroomId = searchParams.get("chatroom-id") || "";
+  const { toast } = useToast();
 
-  const { messages, loading, error } = useMessages({ chatroomId: chatroom?.chatroomId || "" });
+  const { messages, loading, error } = useMessagesWithRealtime({ chatroomId: chatroom?.chatroomId || "" });
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <LoadingSpinner />
+      </div>
+    )
+  }
+
+  if (error) {
+    console.error("Error fetching messages:", error);
+    toast({
+      title: "Error",
+      description: "Failed to fetch messages. Please try again.",
+      variant: "destructive",
+      action: <ToastAction altText="Refresh" onClick={() => window.location.reload()}>
+        Refresh
+      </ToastAction>,
+    });
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-red-500">Failed to load messages.</p>
+      </div>
+    );
+  }
 
   return (
     <ChatMessageList>
-      {loading ? (
-        <div className="flex items-center justify-center h-full">
-          <LoadingSpinner />
-        </div>
-      ) : messages.length > 0 ? (
+      {messages.length > 0 ? (
         messages.map((message) => (
           <MessageBubble
+            key={ message.messageId }
             messageId={ message.messageId }
             username={ message.username }
             content={ message.content }
