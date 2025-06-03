@@ -4,19 +4,10 @@ import { Button } from "@/components/ui/button";
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { Mic, Paperclip, SendHorizonal } from "lucide-react";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useState } from "react";
+import { useChatInput } from "@/hooks";
 
 export function ChatInputForm() {
-  const [input, setInput] = useState<string>("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-
-    // TODO: Message sending logic with auto-check for GroupGPT call
-    console.log("Message sent:", input);
-    setInput("");
-  };
+  const { input, setInput, isSubmitting, handleSubmit } = useChatInput();
 
   return (
     <form
@@ -24,10 +15,11 @@ export function ChatInputForm() {
       onSubmit={ handleSubmit }
     >
       <ChatInput
-        placeholder="Type your message here..."
+        placeholder="Type your message here... (Use @GroupGPT for AI)"
         className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0"
         value={ input }
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value) }
+        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
+        disabled={ isSubmitting }
       />
       <div className="flex items-center p-3 pt-0">
         <TooltipWrapper content="Attach File" side="top">
@@ -50,7 +42,7 @@ export function ChatInputForm() {
             size="icon"
             className="ml-auto gap-1.5"
             type="submit"
-            disabled={ !input.trim() }
+            disabled={ !input.trim() || isSubmitting }
           >
             <SendHorizonal />
             <span className="sr-only">Send Message</span>
