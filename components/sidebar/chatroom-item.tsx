@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Chatroom } from "@/types";
-import { getInitials } from "@/utils/strings/strings";
+import { getInitials } from "@/utils";
 import { SidebarMenuItem, SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { useRouter } from "next/navigation";
