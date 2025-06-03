@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/client";
 import { useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks";
 
 import { Message } from "@/types";
 

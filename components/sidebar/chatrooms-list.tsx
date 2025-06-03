@@ -10,8 +10,7 @@ import {
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { useUser, useChatrooms } from "@/hooks";
+import { useChatrooms, useToast, useUser } from "@/hooks";
 
 import { ChatroomItem } from "./chatroom-item";
 import { LoadingSpinner } from "../ui/loading-spinner";
@@ -51,7 +50,7 @@ export function ChatroomsList() {
       >
         <SidebarGroupAction
           title="Create New Chatroom"
-          onClick={() => setIsCreateChatroomDialogOpen(true) }
+          onClick={() => setIsCreateChatroomDialogOpen(true)}
         >
           <Plus />
           <span className="sr-only">Create New Chatroom</span>
