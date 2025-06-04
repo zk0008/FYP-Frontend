@@ -40,7 +40,7 @@ export function UserMenu() {
           </TooltipWrapper>
 
           <DropdownMenuContent
-            side="right"
+            side="top"
             sideOffset={ 12 }
             className="w-60 bg-sidebar-primary-foreground text-sidebar-primary shadow-lg"
           >

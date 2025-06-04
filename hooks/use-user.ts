@@ -45,7 +45,7 @@ export function useUser() {
           email: authUser.email || ""
         });
       } catch (err: any) {
-        console.error("Error fetching user ID:", err.message);
+        console.error("Error fetching user data:", err.message);
         setError(err.message);
         setUser(null);
       } finally {
