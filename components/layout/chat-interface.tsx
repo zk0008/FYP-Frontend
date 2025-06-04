@@ -11,7 +11,7 @@ export function ChatInterface() {
 
       <ChatInputForm />
 
-      <span className="text-xs text-center mt-1 pb-1">
+      <span className="text-xs text-center mt-1">
         GroupGPT can make mistakes. Please verify important information.
       </span>
     </div>

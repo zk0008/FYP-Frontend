@@ -15,7 +15,7 @@ export default function ChatsPage() {
       />
       {chatroom ? (
         // Exclude TopBar height (64px) from ChatInterface height
-        <div className="flex flex-col h-[calc(100vh-4rem)] w-full">
+        <div className="flex flex-col h-[calc(100vh-4rem)] w-full p-2">
           <ChatInterface />
         </div>
       ) : (
