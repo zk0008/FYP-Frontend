@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import { signInAndGetUser } from "../utils/auth";
 
-export default function LoginPage() {
+export default function SignInPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,7 +19,7 @@ export default function LoginPage() {
       // document.cookie = `sb-access-token=${result.token}; path=/`
       router.push("/chat");
     } else {
-      console.error("Log in failed")
+      console.error("Sign in failed")
     }
   };
 
@@ -35,7 +35,7 @@ export default function LoginPage() {
           onSubmit={handleSubmit}
           className="flex flex-col w-96 border p-4 justify-center items-center gap-5"
         >
-          <h1 className="text-2xl font-semibold">Log In</h1>
+          <h1 className="text-2xl font-semibold">Sign In</h1>
           <div className="flex flex-col items-center w-3/4">
             <label htmlFor="email">Email</label>
             <input
