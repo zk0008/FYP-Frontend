@@ -1,5 +1,3 @@
-import { createClient } from "./supabase/client";
-
 export function getInitials(name: string): string {
   const initials = name
     .split(" ")
