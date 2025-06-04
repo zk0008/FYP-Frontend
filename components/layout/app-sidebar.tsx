@@ -12,7 +12,7 @@ import { ChatroomsList, ExitChatroomButton, UserMenu } from "@/components/sideba
 
 export function AppSidebar() {
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar>
       <SidebarHeader>
         <ExitChatroomButton />
       </SidebarHeader>

@@ -1,19 +1,20 @@
 "use client";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Chatroom } from "@/types";
 import { getInitials } from "@/utils";
-import { SidebarMenuItem, SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
+import { SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export function ChatroomItem({
   chatroomId,
   name
 }: Chatroom) {
   const router = useRouter();
-  const { open, openMobile } = useSidebar();
+  const searchParams = useSearchParams();
+  const currentChatroomId = searchParams.get("chatroom-id");
+  const isCurrentChatroom = currentChatroomId === chatroomId;
 
   const avatarElement = (
     <Avatar>
@@ -31,28 +32,19 @@ export function ChatroomItem({
     <SidebarMenuItem key={ chatroomId }>
       <TooltipWrapper
         content={ `Enter ${name}` }
-        side={ open || openMobile ? "bottom" : "right" }
+        side="right"
       >
-        {open || openMobile ? (
           <SidebarMenuButton
             size="lg"
             className="w-full justify-start"
+            variant={ isCurrentChatroom ? "outline" : "default" }
             onClick={ handleChatroomClick }
           >
             <div className="flex items-center gap-2">
               { avatarElement }
-              <span>{ name }</span>
+              <span className="whitespace-nowrap">{ name }</span>
             </div>
           </SidebarMenuButton>
-        ) : (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={ handleChatroomClick }
-          >
-            { avatarElement }
-          </Button>
-        )}
       </TooltipWrapper>
     </SidebarMenuItem>
   );

@@ -49,7 +49,6 @@ export function ChatroomsList() {
         side="left"
       >
         <SidebarGroupAction
-          title="Create New Chatroom"
           onClick={() => setIsCreateChatroomDialogOpen(true)}
         >
           <Plus />

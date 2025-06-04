@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { useState } from "react";
 
 import { CircleUser, ChevronsUpDown } from "lucide-react";
@@ -18,7 +18,6 @@ const supabase = createClient();
 export function UserMenu() {
   const [isAccountSettingsDialogOpen, setIsAccountSettingsDialogOpen] = useState(false);
   const [isManageInvitesDialogOpen, setIsManageInvitesDialogOpen] = useState(false);
-  const { open, openMobile } = useSidebar();
   const { toast } = useToast();
   const user = useUserContext();
   const router = useRouter();
@@ -29,7 +28,7 @@ export function UserMenu() {
         <DropdownMenu>
           <TooltipWrapper
             content="Show User Menu"
-            side={ open || openMobile ? "top" : "right" }
+            side="right"
           >
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton>
@@ -41,7 +40,7 @@ export function UserMenu() {
           </TooltipWrapper>
 
           <DropdownMenuContent
-            side={ open || openMobile ? "top" : "right" }
+            side="right"
             sideOffset={ 12 }
             className="w-60 bg-sidebar-primary-foreground text-sidebar-primary shadow-lg"
           >
