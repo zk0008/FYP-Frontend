@@ -47,8 +47,6 @@ export async function login({ email, password } : loginProps) {
   if (userError && userError.code === "PGRST116") {
     // No user found (PGRST116 = no rows returned), so insert new user entry
     const username = data.user.user_metadata.username;
-    console.log(data.user.id);
-    console.log(username);
 
     const { error: insertError } = await supabase
       .from("users")
