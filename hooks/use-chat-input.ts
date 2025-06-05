@@ -16,10 +16,6 @@ type GroupGPTRequest = {
   content: string;
 };
 
-type GroupGPTResponse = {
-  response: string;
-};
-
 export function useChatInput() {
   const [input, setInput] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
