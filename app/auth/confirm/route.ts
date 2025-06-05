@@ -16,7 +16,6 @@ export async function GET(request: NextRequest) {
 
     // Account created successfully, redirect to login page
     if (!error) {
-      console.log("Account created successfully, redirecting to login page");
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("confirmed", "true");
       redirect(loginUrl.toString());
