@@ -1,6 +1,7 @@
+import { useState, useCallback } from "react";
+
 import { createClient } from "@/utils/supabase/client";
 import { fetchWithAuth } from "@/utils";
-import { useState, useCallback } from "react";
 import {
   useChatroomContext,
   useUserContext,
@@ -56,29 +57,32 @@ export function useChatInput() {
     }
   }, [chatroom, user, toast]);
 
-  const sendToSupabase = useCallback(async (content: string) : Promise<boolean> => {
+  const sendToSupabase = useCallback(async (content: string) : Promise<{ success: boolean; messageId?: string }> => {
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("messages")
         .insert({
           chatroom_id: chatroom!.chatroomId,
           content: content.trim(),
           sender_id: user!.userId,
-        });
+        })
+        .select();
 
       if (error) {
         throw new Error(error.message);
       }
 
-      return true;
+      return { success: true, messageId: data[0].message_id };
     } catch (error: any) {
       console.error("Error sending message:", error.message);
+
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
         variant: "destructive",
       });
-      return false;
+
+      return { success: false };
     }
   }, [chatroom, user, toast]);
 
@@ -92,30 +96,48 @@ export function useChatInput() {
 
       if (isGroupGPTMessage) {
         // For GroupGPT messages, send to both Supabase and backend server
-        const [groupGPTSuccess, supabaseSuccess] = await Promise.all([
+        const [groupGPTSuccess, supabaseResult] = await Promise.all([
           sendToGroupGPT(content.trim()),
           sendToSupabase(content.trim())
         ]);
 
-        // Clear input if Supabase insert was successful
-        if (supabaseSuccess) {
-          setInput("");
-        }
+        // If GroupGPT invocation failed, remove message from Supabase and show error
+        if (supabaseResult.success && !groupGPTSuccess && supabaseResult.messageId) {
+          const { error } = await supabase
+            .from("messages")
+            .delete()
+            .eq("message_id", supabaseResult.messageId);
 
-        // Show additional feedback if GroupGPT invocation failed but message was saved
-        if (supabaseSuccess && !groupGPTSuccess) {
+          if (error) {
+            console.error("Error deleting message after GroupGPT failure:", error.message);
+
+            toast({
+              title: "Message sent",
+              description: "Message saved but GroupGPT invocation failed. Please try again.",
+              variant: "default",
+              // TODO: Add action to retry GroupGPT (NOT RESEND)
+            });
+          }
+
           toast({
-            title: "Message sent",
-            description: "Message saved but GroupGPT invocation failed. You can try again.",
-            variant: "default",
-            // TODO: Add action to retry GroupGPT (NOT RESEND)
+            title: "Message not sent",
+            description: "Failed to send message. Please try again.",
+            variant: "destructive",
           });
+        } else if (supabaseResult.success && groupGPTSuccess) {
+          setInput("");
         }
       } else {
         // Regular message - only send to Supabase
         const success = await sendToSupabase(content);
         if (success) {
           setInput("");
+        } else {
+          toast({
+            title: "Message not sent",
+            description: "Failed to send message. Please try again.",
+            variant: "destructive",
+          });
         }
       }
     } catch (error) {

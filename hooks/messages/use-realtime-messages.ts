@@ -16,10 +16,12 @@ const supabase = createClient();
 
 export function useRealtimeMessages({
   chatroomId,
-  onNewMessage
+  onNewMessage,
+  onDeleteMessage
 } : {
   chatroomId: string;
   onNewMessage: (message: Message) => void;
+  onDeleteMessage: (messageId: string) => void;
 }) {
   const { toast } = useToast();
 
@@ -63,7 +65,14 @@ export function useRealtimeMessages({
           }
         }
       )
-      //.on()  // TODO: Listen to UPDATE, DELETE events as well?
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "messages" },
+        (payload) => {
+          const deletedMessageId = payload.old.message_id;
+          onDeleteMessage(deletedMessageId);
+        }
+      )
       .subscribe();
 
     return () => {
