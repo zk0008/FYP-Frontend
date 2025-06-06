@@ -1,26 +1,21 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { createClient } from "@/utils/supabase/client";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { useState } from "react";
-
 import { CircleUser, ChevronsUpDown } from "lucide-react";
 
 import { AccountSettingsDialog, ManageInvitesDialog } from "@/components/dialogs/index";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useRouter } from "next/navigation";
-import { useToast, useUserContext } from "@/hooks";
+import { useUserContext } from "@/hooks";
 
-const supabase = createClient();
+import { LogoutButton } from "./logout-button";
 
 export function UserMenu() {
   const [isAccountSettingsDialogOpen, setIsAccountSettingsDialogOpen] = useState<boolean>(false);
   const [isManageInvitesDialogOpen, setIsManageInvitesDialogOpen] = useState<boolean>(false);
-  const { toast } = useToast();
   const user = useUserContext();
-  const router = useRouter();
 
   return (
     <SidebarMenu>
@@ -73,31 +68,7 @@ export function UserMenu() {
             </DropdownMenuItem>
 
             <DropdownMenuItem>
-              <Button
-                variant="ghost"
-                className="w-full justify-start p-2"
-                onClick={async () => {
-                  const { error } = await supabase.auth.signOut();
-
-                  if (error) {
-                    console.error("Error logging out:", error.message);
-                    toast({
-                      title: "Error",
-                      description: "There was an error logging you out. Please try again.",
-                      variant: "destructive",
-                    })
-                    return;
-                  } else {
-                    toast({
-                      title: "Logged Out",
-                      description: "You have successfully logged out. See you soon!",
-                    });
-                    router.push("/");
-                  }
-                }}
-              >
-                <span>Log Out</span>
-              </Button>
+              <LogoutButton />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
