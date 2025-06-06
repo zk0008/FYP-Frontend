@@ -24,7 +24,7 @@ export function TopBar({
   return (
     <div className="flex justify-between items-center py-2 px-4 min-h-[64px] bg-primary-foreground border-b w-full">
       {/* Left section: Sidebar trigger or logo */}
-      <div className="flex items-center gap-2 w-12 flex-shrink-0">
+      <div className="flex justify-start w-1/6 min-w-24 flex-shrink-0">
         {showSidebarTrigger && (
           <TooltipWrapper
             content="Toggle Sidebar"
@@ -37,7 +37,7 @@ export function TopBar({
         {showLogo && (
           <Avatar>
             <AvatarImage
-              src={Icon.src}
+              src={ Icon.src }
               alt="GroupGPT Logo"
               className="cursor-pointer"
               onClick={() => router.push("/")}
@@ -56,7 +56,7 @@ export function TopBar({
       </div>
 
       {/* Right section: Any child component (e.g., buttons) */}
-      <div className="flex items-center gap-2 w-12 flex-shrink-0">
+      <div className="flex justify-end gap-2 w-1/6 min-w-24 flex-shrink-0">
         { children }
       </div>
     </div>

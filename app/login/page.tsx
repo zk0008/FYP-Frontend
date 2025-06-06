@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
-import { TopBar } from "@/components/layout/top-bar";
+import { TopBar } from "@/components/top-bar";
 import { LoginForm } from "@/components/forms";
 import { useToast } from "@/hooks";
 

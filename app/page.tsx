@@ -1,6 +1,6 @@
 "use client";
 
-import { TopBar } from "@/components/layout/top-bar";
+import { TopBar } from "@/components/top-bar/top-bar";
 
 export default function HomePage() {
   return (

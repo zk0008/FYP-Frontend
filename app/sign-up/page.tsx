@@ -1,6 +1,6 @@
 "use client";
 
-import { TopBar } from "@/components/layout/top-bar";
+import { TopBar } from "@/components/top-bar";
 import { SignUpForm } from "@/components/forms";
 
 export default function SignUpPage() {

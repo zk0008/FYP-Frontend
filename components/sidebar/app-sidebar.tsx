@@ -8,7 +8,9 @@ import {
   SidebarSeparator
 } from "@/components/ui/sidebar";
 
-import { ChatroomsList, ExitChatroomButton, UserMenu } from "@/components/sidebar";
+import { ChatroomsList } from "./chatrooms-list";
+import { ExitChatroomButton } from "./exit-chatroom-button";
+import { UserMenu } from "./user-menu";
 
 export function AppSidebar() {
   return (
