@@ -46,7 +46,7 @@ export function ChatroomsList() {
       <SidebarGroupLabel>Chatrooms</SidebarGroupLabel>
       <TooltipWrapper
         content="Create New Chatroom"
-        side="left"
+        side="right"
       >
         <SidebarGroupAction
           onClick={() => setIsCreateChatroomDialogOpen(true)}

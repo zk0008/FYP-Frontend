@@ -1,16 +1,20 @@
 "use client";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Chatroom } from "@/types";
 import { getInitials } from "@/utils";
 import { SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { useRouter, useSearchParams } from "next/navigation";
 
+interface ChatroomItemProps {
+  chatroomId: string;
+  name: string;
+}
+
 export function ChatroomItem({
   chatroomId,
   name
-}: Chatroom) {
+} : ChatroomItemProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentChatroomId = searchParams.get("chatroom-id");

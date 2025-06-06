@@ -16,8 +16,8 @@ import { useToast, useUserContext } from "@/hooks";
 const supabase = createClient();
 
 export function UserMenu() {
-  const [isAccountSettingsDialogOpen, setIsAccountSettingsDialogOpen] = useState(false);
-  const [isManageInvitesDialogOpen, setIsManageInvitesDialogOpen] = useState(false);
+  const [isAccountSettingsDialogOpen, setIsAccountSettingsDialogOpen] = useState<boolean>(false);
+  const [isManageInvitesDialogOpen, setIsManageInvitesDialogOpen] = useState<boolean>(false);
   const { toast } = useToast();
   const user = useUserContext();
   const router = useRouter();
@@ -53,8 +53,8 @@ export function UserMenu() {
                 <span>Account Settings</span>
               </Button>
               <AccountSettingsDialog
-                open={isAccountSettingsDialogOpen}
-                onOpenChange={setIsAccountSettingsDialogOpen}
+                open={ isAccountSettingsDialogOpen }
+                onOpenChange={ setIsAccountSettingsDialogOpen }
               />
             </DropdownMenuItem>
 
@@ -67,8 +67,8 @@ export function UserMenu() {
                 <span>Manage Pending Invites</span>
               </Button>
               <ManageInvitesDialog
-                open={isManageInvitesDialogOpen}
-                onOpenChange={setIsManageInvitesDialogOpen}
+                open={ isManageInvitesDialogOpen }
+                onOpenChange={ setIsManageInvitesDialogOpen }
               />
             </DropdownMenuItem>
 

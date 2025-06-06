@@ -2,7 +2,7 @@
 
 import { BaseDialog } from "./base-dialog";
 
-export function ManageInvitesDialog({
+export function InviteUserDialog({
   open,
   onOpenChange,
   children
@@ -15,8 +15,8 @@ export function ManageInvitesDialog({
     <BaseDialog
       open={ open }
       onOpenChange={ onOpenChange }
-      title="Manage Pending Invites"
-      description="Here you can manage your pending chatroom invites."
+      title="Invite a User"
+      description="Here you can invite a user to join your chatroom."
     >
       { children }
     </BaseDialog>

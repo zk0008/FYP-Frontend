@@ -2,7 +2,7 @@
 
 import { BaseDialog } from "./base-dialog";
 
-export function ManageInvitesDialog({
+export function ManageFilesDialog({
   open,
   onOpenChange,
   children
@@ -15,8 +15,8 @@ export function ManageInvitesDialog({
     <BaseDialog
       open={ open }
       onOpenChange={ onOpenChange }
-      title="Manage Pending Invites"
-      description="Here you can manage your pending chatroom invites."
+      title="Manage Uploaded Files"
+      description="Here you can manage files uploaded in the chatroom."
     >
       { children }
     </BaseDialog>

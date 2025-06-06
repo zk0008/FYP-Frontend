@@ -1,6 +1,7 @@
 "use client";
 
-import { ChatInputForm, MessagesList } from "@/components/chat";
+import { ChatInputForm } from "./chat-input-form"
+import { MessagesList } from "./messages-list";
 
 export function ChatInterface() {
   return (
