@@ -5,6 +5,11 @@ export { useUser } from "./use-user";
 
 export { useMessagesWithRealtime } from "./messages/use-messages-with-realtime";
 
+export { useRealtimeDocuments } from "./use-realtime-documents";
+
+export { useDragAndDrop } from "./use-drag-and-drop";
+export { useUploadFile } from "./use-upload-file";
+
 // Context hooks
 export { useChatroomContext } from "./use-chatroom-context";
 export { useUserContext } from "./use-user-context";

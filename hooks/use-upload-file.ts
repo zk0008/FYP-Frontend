@@ -1,0 +1,115 @@
+import { useState, useCallback } from "react";
+
+import { fetchWithAuth } from "@/utils";
+import { MAX_FILE_SIZE_MB } from "@/utils/constants";
+import {
+  useChatroomContext,
+  useUserContext,
+  useToast
+} from "@/hooks";
+
+export function useUploadFile() {
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const chatroom = useChatroomContext();
+  const user = useUserContext();
+  const { toast } = useToast();
+
+  const validateFile = useCallback((file: File): string | null => {
+    const allowedTypes = [
+      "application/pdf",
+      "image/jpeg",
+      "image/png"
+    ];
+
+    if (file.size / 1_000_000 > MAX_FILE_SIZE_MB) {
+      return `File size exceeds ${MAX_FILE_SIZE_MB} MB limit. Please upload a smaller file.`;
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      return "Unsupported file type. Please upload a PDF, JPEG, or PNG file.";
+    }
+
+    return null;
+  }, []);
+
+  const uploadToFastAPI = useCallback(async (file: File): Promise<boolean> => {
+    try {
+      const formData = new FormData();
+      formData.append("uploaded_file", file);
+      formData.append("uploader_id", user!.userId);
+      formData.append("chatroom_id", chatroom!.chatroomId);
+
+      const response = await fetchWithAuth("/api/files/upload", {
+        method: "POST",
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error, status: ${response.status}`);
+      }
+
+      return true;
+    } catch (error: any) {
+      console.error("Error uploading file:", error.message);
+
+      toast({
+        title: "File Upload Error",
+        description: error.message || "An error occurred while uploading the file to FastAPI.",
+        variant: "destructive"
+      });
+
+      return false;
+    }
+  }, [chatroom, user, toast]);
+
+  const uploadFile = useCallback(async (file: File): Promise<void> => {
+    if (!file || !chatroom?.chatroomId || !user?.userId) return;
+
+    const validationError = validateFile(file);
+    if (validationError) {
+      toast({
+        title: "Upload Error",
+        description: validationError,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      const fastAPISuccess = await uploadToFastAPI(file);
+      if (!fastAPISuccess) return;
+
+      toast({
+        title: "File Upload Started",
+        description: "Your file is being processed and will be added to the knowledge base shortly.",
+      })
+
+      // Use realtime listening on Supabase to alert user when file has been uploaded and added to knowledge base
+    } catch (error: any) {
+      console.error("Unexpected error during file upload:", error);
+
+      toast({
+        title: "Unexpected Error Uploading File",
+        description: error.message || "Something went wrong. Please try again",
+        variant: "destructive"
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  }, [chatroom, user, toast]);
+
+  const uploadMultipleFiles = useCallback(async (files: File[]): Promise<void> => {
+    for (let i = 0; i < files.length; i++) {
+      await uploadFile(files[i]);
+    }
+  }, [uploadFile]);
+
+  return {
+    uploadFile,
+    uploadMultipleFiles,
+    isUploading,
+    validateFile
+  }
+}

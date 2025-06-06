@@ -2,19 +2,22 @@
 
 import { ChatInputForm } from "./chat-input-form"
 import { MessagesList } from "./messages-list";
+import { FileDropZone } from "./file-drop-zone";
 
 export function ChatInterface() {
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto p-4">
-        <MessagesList />
-      </div>
+      <FileDropZone className="flex flex-col h-full">
+        <div className="flex-1 overflow-y-auto p-4">
+          <MessagesList />
+        </div>
 
-      <ChatInputForm />
+        <ChatInputForm />
 
-      <span className="text-xs text-center mt-1">
-        GroupGPT can make mistakes. Please verify important information.
-      </span>
+        <span className="text-xs text-center mt-1">
+          GroupGPT can make mistakes. Please verify important information.
+        </span>
+      </FileDropZone>
     </div>
   );
 }

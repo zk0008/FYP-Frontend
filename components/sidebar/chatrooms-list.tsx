@@ -1,5 +1,8 @@
 "use client";
 
+import { LoaderCircle, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+
 import { CreateChatroomDialog } from "@/components/dialogs/create-chatroom";
 import {
   SidebarGroup,
@@ -8,12 +11,9 @@ import {
   SidebarMenu
 } from "@/components/ui/sidebar";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
 import { useChatrooms, useToast, useUser } from "@/hooks";
 
 import { ChatroomItem } from "./chatroom-item";
-import { LoadingSpinner } from "../ui/loading-spinner";
 
 export function ChatroomsList() {
   const { user, loading: userLoading, error: userError } = useUser();
@@ -61,7 +61,7 @@ export function ChatroomsList() {
       />
 
       <SidebarMenu>
-        {userLoading || chatroomsLoading ? <LoadingSpinner /> : (
+        {userLoading || chatroomsLoading ? <LoaderCircle className="w-6 h-6 animate-spin" /> : (
           chatrooms.map((chatroom) => (
             <ChatroomItem
               key={ chatroom.chatroomId }

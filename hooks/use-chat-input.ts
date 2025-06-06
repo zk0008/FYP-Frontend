@@ -73,8 +73,8 @@ export function useChatInput() {
       console.error("Error sending message:", error.message);
 
       toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
+        title: "Message Not Sent",
+        description: error.message || "An error occurred while sending the message.",
         variant: "destructive",
       });
 
@@ -108,15 +108,15 @@ export function useChatInput() {
             console.error("Error deleting message after GroupGPT failure:", error.message);
 
             toast({
-              title: "Message sent",
+              title: "Invocation Failed",
               description: "Message saved but GroupGPT invocation failed. Please try again.",
-              variant: "default",
+              variant: "destructive",
               // TODO: Add action to retry GroupGPT (NOT RESEND)
             });
           }
 
           toast({
-            title: "Message not sent",
+            title: "Message Not Sent",
             description: "Failed to send message. Please try again.",
             variant: "destructive",
           });
@@ -130,17 +130,17 @@ export function useChatInput() {
           setInput("");
         } else {
           toast({
-            title: "Message not sent",
+            title: "Message Not Sent",
             description: "Failed to send message. Please try again.",
             variant: "destructive",
           });
         }
       }
-    } catch (error) {
-      console.error("Unexpected error in sendMessage():", error);
+    } catch (error: any) {
+      console.error("Unexpected error during message sending:", error);
       toast({
-        title: "Unexpected error",
-        description: "Something went wrong. Please try again.",
+        title: "Unexpected Error Sending Message",
+        description: error.message || "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {
