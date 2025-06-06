@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { BaseDialog } from "./base-dialog";
 
 interface CreateChatroomDialogProps {
   open: boolean;
@@ -14,17 +14,13 @@ export function CreateChatroomDialog({
   children
 }: CreateChatroomDialogProps) {
   return (
-    <Dialog open={ open } onOpenChange={ onOpenChange }>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Create New Chatroom</DialogTitle>
-          <DialogDescription>
-            Here you can create a new chatroom to start chatting with your friends.
-          </DialogDescription>
-        </DialogHeader>
-
-        { children }
-      </DialogContent>
-    </Dialog>
+    <BaseDialog
+      open={ open }
+      onOpenChange={ onOpenChange }
+      title="Create New Chatroom"
+      description="Here you can create a new chatroom to start chatting with your friends."
+    >
+      { children }
+    </BaseDialog>
   );
 }
