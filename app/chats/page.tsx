@@ -2,10 +2,13 @@
 
 import { ChatInterface } from "@/components/chat/chat-interface";
 import { ChatroomMenu, TopBar } from "@/components/top-bar";
-import { useChatroomContext } from "@/hooks";
+import { useChatroomContext, useRealtimeDocuments } from "@/hooks";
 
 export default function ChatsPage() {
   const chatroom = useChatroomContext();
+
+  // Initialize realtime document updates for the logged-in user
+  useRealtimeDocuments();
 
   if (!chatroom) {
     return (

@@ -1,7 +1,8 @@
 "use client";
 
+import { LoaderCircle } from "lucide-react";
+
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { ToastAction } from "@radix-ui/react-toast";
 import {
   useChatroomContext,
@@ -20,7 +21,7 @@ export function MessagesList() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <LoadingSpinner />
+        <LoaderCircle className="h-6 w-6 animate-spin" />
       </div>
     )
   }
