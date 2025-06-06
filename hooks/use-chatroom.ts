@@ -25,7 +25,7 @@ export function useChatroom(chatroomId: string) {
       try {
         const { data, error } = await supabase
           .from("chatrooms")
-          .select("chatroom_id, name")
+          .select("chatroom_id, name, creator_id")
           .eq("chatroom_id", chatroomId)
           .single();
 
@@ -39,7 +39,8 @@ export function useChatroom(chatroomId: string) {
 
         setChatroom({
           chatroomId: data.chatroom_id,
-          name: data.name
+          name: data.name,
+          creatorId: data.creator_id,
         });
       } catch (err: any) {
         console.error("Error fetching chatroom:", err.message);

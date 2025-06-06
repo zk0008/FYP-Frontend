@@ -1,6 +1,7 @@
 export interface Chatroom {
   chatroomId: string;
   name: string;
+  creatorId: string;
 }
 
 export interface Document {
