@@ -28,21 +28,26 @@ export function TopBar({
         {showSidebarTrigger && (
           <TooltipWrapper
             content="Toggle Sidebar"
-            side="bottom"
+            side="right"
           >
             <SidebarTrigger />
           </TooltipWrapper>
         )}
 
         {showLogo && (
-          <Avatar>
-            <AvatarImage
-              src={ Icon.src }
-              alt="GroupGPT Logo"
-              className="cursor-pointer"
-              onClick={() => router.push("/")}
-            />
-          </Avatar>
+          <TooltipWrapper
+            content="Go to Home"
+            side="right"
+          >
+            <Avatar>
+              <AvatarImage
+                src={ Icon.src }
+                alt="GroupGPT Logo"
+                className="cursor-pointer"
+                onClick={() => router.push("/")}
+              />
+            </Avatar>
+          </TooltipWrapper>
         )}
       </div>
 
