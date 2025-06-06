@@ -3,6 +3,7 @@
 import { LoaderCircle } from "lucide-react";
 
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
+
 import { ToastAction } from "@radix-ui/react-toast";
 import {
   useChatroomContext,
@@ -44,7 +45,7 @@ export function MessagesList() {
   }
 
   return (
-    <ChatMessageList>
+    <ChatMessageList className="p-0">
       {messages.length > 0 ? (
         messages.map((message) => (
           <MessageBubble

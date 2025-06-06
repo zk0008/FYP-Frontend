@@ -17,7 +17,7 @@ export default function ChatsPage() {
           showSidebarTrigger
           title="Welcome!"
         />
-        <div className="flex flex-col h-full w-full p-2 items-center justify-center">
+        <div className="flex flex-col h-full w-full items-center justify-center">
           <span>Select a chatroom to start chatting</span>
         </div>
       </div>
@@ -34,7 +34,7 @@ export default function ChatsPage() {
         <ChatroomMenu />
       </TopBar>
       {/* Exclude TopBar height (64px) from ChatInterface height */}
-      <div className="flex flex-col h-[calc(100vh-4rem)] w-full p-2">
+      <div className="flex flex-col h-[calc(100vh-4rem)] w-full">
         <ChatInterface />
       </div>
     </div>

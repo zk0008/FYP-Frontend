@@ -54,7 +54,7 @@ export function ChatInputForm() {
       <ChatInput
         ref={ inputRef }
         placeholder="Type your message here... (Use @GroupGPT for AI)"
-        className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0"
+        className="min-h-12 resize-none rounded-lg bg-background border-0 p-4 shadow-none focus-visible:ring-0"
         value={ input }
         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
         disabled={ isSubmitting }
