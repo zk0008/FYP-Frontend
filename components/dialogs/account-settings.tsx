@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "@/components/ui/dialog";
+import { BaseDialog } from "./base-dialog";
 
 interface AccountSettingsDialogProps {
   open: boolean;
@@ -14,17 +14,13 @@ export function AccountSettingsDialog({
   children
 } : AccountSettingsDialogProps) {
   return (
-    <Dialog open={ open } onOpenChange={ onOpenChange }>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Account Settings</DialogTitle>
-          <DialogDescription>
-            Here you can manage your account settings and preferences.
-          </DialogDescription>
-        </DialogHeader>
-
-        { children }
-      </DialogContent>
-    </Dialog>
+    <BaseDialog
+      open={ open }
+      onOpenChange={ onOpenChange }
+      title="Account Settings"
+      description="Here you can manage your account settings and preferences."
+    >
+      { children }
+    </BaseDialog>
   );
 }

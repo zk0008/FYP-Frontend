@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { BaseDialog } from "./base-dialog";
 
 export function ManageInvitesDialog({
   open,
@@ -12,17 +12,13 @@ export function ManageInvitesDialog({
   children?: React.ReactNode;
 }) {
   return (
-    <Dialog open={ open } onOpenChange={ onOpenChange }>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Manage Pending Invites</DialogTitle>
-          <DialogDescription>
-            Here you can manage your pending chatroom invites.
-          </DialogDescription>
-        </DialogHeader>
-
-        { children }
-      </DialogContent>
-    </Dialog>
+    <BaseDialog
+      open={ open }
+      onOpenChange={ onOpenChange }
+      title="Manage Pending Invites"
+      description="Here you can manage your pending chatroom invites."
+    >
+      { children }
+    </BaseDialog>
   );
 }
