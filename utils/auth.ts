@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/utils/supabase/server";
 
-interface loginProps {
+interface signInProps {
   email: string;
   password: string;
 }
@@ -16,7 +16,7 @@ interface signUpProps {
   confirmPassword: string;
 }
 
-export async function login({ email, password } : loginProps) {
+export async function signIn({ email, password } : signInProps) {
   if (!email || !password) {
     return { error: "Email and password are required." };
   }
@@ -32,7 +32,7 @@ export async function login({ email, password } : loginProps) {
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   
   if (error) {
-    console.error("Login error:", error);
+    console.error("signIn error:", error);
     return { error: "Invalid credentials. Please check your credentials." };
   }
 
@@ -67,7 +67,7 @@ export async function login({ email, password } : loginProps) {
     return { error: "An error occurred while accessing user data. Please try again." };
   }
 
-  // User already exists, proceed with login as per normal
+  // User already exists, proceed with signIn as per normal
   revalidatePath("/");
   return { user: data.user };
 }

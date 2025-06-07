@@ -15,36 +15,36 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 
-import { login } from "@/utils/auth";
+import { signIn } from "@/utils/auth";
 
-const loginFormSchema = z.object({
+const signInFormSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
 })
 
-export function LoginForm() {
+export function SignInForm() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof loginFormSchema>>({
-    resolver: zodResolver(loginFormSchema),
+  const form = useForm<z.infer<typeof signInFormSchema>>({
+    resolver: zodResolver(signInFormSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof loginFormSchema>) => {
-    const { user, error } = await login({ email: data.email, password: data.password });
+  const onSubmit = async (data: z.infer<typeof signInFormSchema>) => {
+    const { user, error } = await signIn({ email: data.email, password: data.password });
     if (user) {
       router.push("/chats");
       toast({
-        title: "Logged In",
+        title: "Signed In",
         description: `Hello ${user?.user_metadata?.username || "there"}, welcome back!`,
       })
     } else if (error) {
       toast({
-        title: "Login failed",
+        title: "Sign In Failed",
         description: error,
         variant: "destructive",
       })
@@ -93,7 +93,7 @@ export function LoginForm() {
         />
 
         <Button type="submit" className="w-full">
-          Log in
+          Sign In
         </Button>
       </form>
     </Form>

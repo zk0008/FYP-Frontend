@@ -8,23 +8,23 @@ import { useToast } from "@/hooks";
 
 const supabase = createClient();
 
-export function LogoutButton() {
+export function SignOutButton() {
   const { toast } = useToast();
   const router = useRouter();
 
-  const handleLogout = async () => {
+  const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      console.error("Error logging out:", error.message);
+      console.error("Error signing out:", error.message);
       toast({
         title: "Error",
-        description: "There was an error logging you out. Please try again.",
+        description: "There was an error signing you out. Please try again.",
         variant: "destructive",
       });
     } else {
       toast({
-        title: "Logged Out",
-        description: "You have successfully logged out. See you soon!",
+        title: "Signed Out",
+        description: "You have successfully signed out. See you soon!",
       });
       router.push("/");
     }
@@ -34,9 +34,9 @@ export function LogoutButton() {
     <Button
       variant="ghost"
       className="w-full justify-start p-2"
-      onClick={ handleLogout }
+      onClick={ handleSignOut }
     >
-      <span>Log Out</span>
+      <span>Sign Out</span>
     </Button>
   );
 }

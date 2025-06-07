@@ -4,8 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 const PUBLIC_PATHS = [
   "/",
   "/auth/confirm",
-  "/login",
-  "/sign-up",
+  "/signin",
+  "/signup",
 ];
 
 export default async function middleware(request: NextRequest) {
