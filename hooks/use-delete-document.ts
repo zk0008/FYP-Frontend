@@ -73,7 +73,7 @@ export function useDeleteDocument({
     if (entryDeleted && fileDeleted) {
       toast({
         title: "Document Deleted",
-        description: "The document has been successfully deleted.",
+        description: `"${filename}" has been successfully deleted.`,
       });
       return true;
     }
