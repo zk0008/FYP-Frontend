@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
+import { DialogClose } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -92,8 +93,13 @@ export function EditChatroomForm() {
           )}
         />
 
-        <div className="flex justify-end">
-          <Button variant="default" onClick={ () => onSubmit(form.getValues()) }>
+        <div className="flex justify-end space-x-2">
+          <DialogClose asChild>
+            <Button variant="outline">
+              Cancel
+            </Button>
+          </DialogClose>
+          <Button variant="default" onClick={() => onSubmit(form.getValues())}>
             Save Changes
           </Button>
         </div>

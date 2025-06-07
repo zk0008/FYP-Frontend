@@ -2,7 +2,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import { User } from "@/types";
 
-export function useUser() {
+export function useFetchUser() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,9 +44,9 @@ export function useUser() {
           username: userData.username,
           email: authUser.email || ""
         });
-      } catch (err: any) {
-        console.error("Error fetching user data:", err.message);
-        setError(err.message);
+      } catch (error: any) {
+        console.error("Error fetching user data:", error.message);
+        setError(error.message);
         setUser(null);
       } finally {
         setLoading(false);

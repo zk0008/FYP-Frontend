@@ -2,7 +2,7 @@
 
 import { Chatroom } from "@/types";
 import { createContext } from "react";
-import { useChatroom } from "@/hooks/use-chatroom";
+import { useFetchChatroom } from "@/hooks/use-fetch-chatroom";
 
 interface ChatroomContextType {
   chatroom: Chatroom | null;
@@ -15,7 +15,7 @@ export const ChatroomContext = createContext<ChatroomContextType>({
 });
 
 export function ChatroomProvider({ children, chatroomId } : { children: React.ReactNode, chatroomId: string }) {
-  const { chatroom, loading, error, refresh } = useChatroom(chatroomId);
+  const { chatroom, loading, error, refresh } = useFetchChatroom(chatroomId);
 
   const contextValue: ChatroomContextType = { chatroom, refresh };
 

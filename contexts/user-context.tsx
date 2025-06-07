@@ -3,12 +3,12 @@
 import { createContext } from "react";
 
 import { User } from "@/types"
-import { useUser } from "@/hooks/use-user";
+import { useFetchUser } from "@/hooks/use-fetch-user";
 
 export const UserContext = createContext<User | null>(null);
 
 export function UserProvider({ children } : { children: React.ReactNode }) {
-  const { user, loading, error } = useUser(); // Use the enhanced hook
+  const { user, loading, error } = useFetchUser(); // Use the enhanced hook
 
   // TODO: Handle loading and error states
 

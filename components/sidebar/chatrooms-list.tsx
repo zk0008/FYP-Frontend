@@ -3,7 +3,7 @@
 import { LoaderCircle, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { CreateChatroomDialog } from "@/components/dialogs/create-chatroom";
+import { CreateChatroomDialog } from "@/components/dialogs/create-chatroom-dialog";
 import {
   SidebarGroup,
   SidebarGroupAction,
@@ -11,12 +11,12 @@ import {
   SidebarMenu
 } from "@/components/ui/sidebar";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useChatrooms, useToast, useUser } from "@/hooks";
+import { useChatrooms, useToast, useFetchUser } from "@/hooks";
 
 import { ChatroomItem } from "./chatroom-item";
 
 export function ChatroomsList() {
-  const { user, loading: userLoading, error: userError } = useUser();
+  const { user, loading: userLoading, error: userError } = useFetchUser();
   const { chatrooms, loading: chatroomsLoading, error: chatroomsError } = useChatrooms({ userId: user?.userId || "" });
   const [isCreateChatroomDialogOpen, setIsCreateChatroomDialogOpen] = useState(false);
   const { toast } = useToast();

@@ -6,9 +6,9 @@ export interface Chatroom {
 
 export interface Document {
   documentId: string;
-  uploaderId: string;
-  chatroomId: string;
   filename: string;
+  username: string;
+  uploadedAt: string;   // ISO string format
 }
 
 export interface Message {

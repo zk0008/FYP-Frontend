@@ -5,7 +5,7 @@ import { createClient } from "@/utils/supabase/client";
 
 const supabase = createClient();
 
-export function useChatroom(chatroomId: string) {
+export function useFetchChatroom(chatroomId: string) {
   const [chatroom, setChatroom] = useState<Chatroom | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,9 +41,9 @@ export function useChatroom(chatroomId: string) {
         name: data.name,
         creatorId: data.creator_id,
       });
-    } catch (err: any) {
-      console.error("Error fetching chatroom:", err.message);
-      setError(err.message);
+    } catch (error: any) {
+      console.error("Error fetching chatroom:", error.message);
+      setError(error.message);
       setChatroom(null);
     } finally {
       setLoading(false);

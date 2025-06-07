@@ -36,9 +36,9 @@ export function useMessages({ chatroomId }: { chatroomId: string }) {
           }));
           setMessages(messagesData);
         }
-      } catch (err: any) {
-        console.error("Error fetching messages:", err.message);
-        setError(err.message);
+      } catch (error: any) {
+        console.error("Error fetching messages:", error.message);
+        setError(error.message);
         setMessages([]);
       } finally {
         setLoading(false);

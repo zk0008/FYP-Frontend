@@ -1,10 +1,10 @@
 
 import { useCallback, useState } from "react";;
 
-import { useUploadFile } from "./use-upload-file";
+import { useUploadDocument } from "./use-upload-document";
 
 export function useDragAndDrop() {
-  const { uploadFile, uploadMultipleFiles } = useUploadFile();
+  const { uploadDocument, uploadMultipleDocuments } = useUploadDocument();
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
@@ -13,11 +13,11 @@ export function useDragAndDrop() {
 
     const files = event.dataTransfer.files;
     if (files.length === 1) {
-      uploadFile(files[0]);
+      uploadDocument(files[0]);
     } else if (files.length > 1) {
-      uploadMultipleFiles(Array.from(files));
+      uploadMultipleDocuments(Array.from(files));
     }
-  }, [uploadFile, uploadMultipleFiles]);
+  }, [uploadDocument, uploadMultipleDocuments]);
 
   const handleDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();

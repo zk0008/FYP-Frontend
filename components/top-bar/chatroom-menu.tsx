@@ -19,7 +19,7 @@ import {
   EditChatroomDialog,
   InviteUserDialog,
   LeaveChatroomDialog,
-  ManageFilesDialog
+  ManageDocumentsDialog
 } from "@/components/dialogs";
 
 export function ChatroomMenu() {
@@ -50,7 +50,7 @@ export function ChatroomMenu() {
       <DropdownMenuContent
         side="bottom"
         sideOffset={ 16 }
-        className="w-60 bg-sidebar-primary-foreground text-sidebar-primary shadow-lg"
+        className="w-64 bg-sidebar-primary-foreground text-sidebar-primary shadow-lg"
       >
         <DropdownMenuGroup>
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
@@ -87,9 +87,9 @@ export function ChatroomMenu() {
               className="w-full justify-start p-2"
               onClick={() => setIsManageFilesDialogOpen(true)}
             >
-              <span>Manage Uploaded Files</span>
+              <span>Manage Uploaded Documents</span>
             </Button>
-            <ManageFilesDialog
+            <ManageDocumentsDialog
               open={ isManageFilesDialogOpen }
               onOpenChange={ setIsManageFilesDialogOpen }
             />
