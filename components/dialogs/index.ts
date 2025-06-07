@@ -1,8 +1,8 @@
-export { AccountSettingsDialog } from "./account-settings";
-export { CreateChatroomDialog } from "./create-chatroom";
-export { DeleteChatroomDialog } from "./delete-chatroom";
-export { EditChatroomDialog } from "./edit-chatroom";
-export { InviteUserDialog } from "./invite-user";
-export { LeaveChatroomDialog } from "./leave-chatroom";
-export { ManageFilesDialog } from "./manage-files";
-export { ManageInvitesDialog } from "./manage-invites";
+export { AccountSettingsDialog } from "./account-settings-dialog";
+export { CreateChatroomDialog } from "./create-chatroom-dialog";
+export { DeleteChatroomDialog } from "./delete-chatroom-dialog";
+export { EditChatroomDialog } from "./edit-chatroom-dialog";
+export { InviteUserDialog } from "./invite-user-dialog";
+export { LeaveChatroomDialog } from "./leave-chatroom-dialog";
+export { ManageDocumentsDialog } from "./manage-documents-dialog";
+export { ManageInvitesDialog } from "./manage-invites-dialog";

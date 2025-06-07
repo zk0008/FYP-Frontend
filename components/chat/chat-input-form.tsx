@@ -2,12 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { ChatInput } from "@/components/ui/chat/chat-input";
-import { Mic, Paperclip, SendHorizonal, Upload } from "lucide-react";
+import { Mic, SendHorizonal } from "lucide-react";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { useChatInput } from "@/hooks";
 import { useEffect, useRef } from "react";
 
-import { UploadFileButton } from "./upload-file-button";
+import { UploadDocumentButton } from "./upload-document-button";
 
 export function ChatInputForm() {
   const { input, setInput, isSubmitting, handleSubmit } = useChatInput();
@@ -62,7 +62,7 @@ export function ChatInputForm() {
         autoFocus
       />
       <div className="flex items-center p-3 pt-0">
-        <UploadFileButton />
+        <UploadDocumentButton />
 
         <TooltipWrapper content="Use Microphone" side="top">
           <Button variant="ghost" size="icon" disabled>

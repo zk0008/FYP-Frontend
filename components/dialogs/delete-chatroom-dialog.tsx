@@ -22,7 +22,7 @@ export function DeleteChatroomDialog({
         <Button variant="outline" onClick={() => onOpenChange(false)}>
           Cancel
         </Button>
-        <Button variant="destructive" onClick={() => { console.log("Delete chatroom"); }}>
+        <Button variant="destructive" onClick={() => console.log("Delete chatroom")}>
           Delete
         </Button>
       </div>

@@ -8,13 +8,13 @@ import {
   useToast
 } from "@/hooks";
 
-export function useUploadFile() {
+export function useUploadDocument() {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const { chatroom } = useChatroomContext();
   const user = useUserContext();
   const { toast } = useToast();
 
-  const validateFile = useCallback((file: File): string | null => {
+  const validateDocument = useCallback((file: File): string | null => {
     const allowedTypes = [
       "application/pdf",
       "image/jpeg",
@@ -62,10 +62,10 @@ export function useUploadFile() {
     }
   }, [chatroom, user, toast]);
 
-  const uploadFile = useCallback(async (file: File): Promise<void> => {
+  const uploadDocument = useCallback(async (file: File): Promise<void> => {
     if (!file || !chatroom?.chatroomId || !user?.userId) return;
 
-    const validationError = validateFile(file);
+    const validationError = validateDocument(file);
     if (validationError) {
       toast({
         title: "Upload Error",
@@ -100,16 +100,16 @@ export function useUploadFile() {
     }
   }, [chatroom, user, toast]);
 
-  const uploadMultipleFiles = useCallback(async (files: File[]): Promise<void> => {
+  const uploadMultipleDocuments = useCallback(async (files: File[]): Promise<void> => {
     for (let i = 0; i < files.length; i++) {
-      await uploadFile(files[i]);
+      await uploadDocument(files[i]);
     }
-  }, [uploadFile]);
+  }, [uploadDocument]);
 
   return {
-    uploadFile,
-    uploadMultipleFiles,
+    uploadDocument,
+    uploadMultipleDocuments,
     isUploading,
-    validateFile
+    validateDocument
   }
 }

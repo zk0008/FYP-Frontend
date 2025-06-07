@@ -133,7 +133,7 @@ export default function ChatBox({ topic }: { topic: string }) {
     setCurrentUsername(user?.user_metadata.username);
   };
 
-  const uploadFile = async () => {
+  const uploadDocument = async () => {
     if (!file) return;
 
     console.log("topic", topic);
@@ -292,7 +292,7 @@ export default function ChatBox({ topic }: { topic: string }) {
                     }}
                   />
                   <button
-                    onClick={uploadFile}
+                    onClick={uploadDocument}
                     className="border-2 border-black w-20 rounded-md p-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
                   >
                     Upload

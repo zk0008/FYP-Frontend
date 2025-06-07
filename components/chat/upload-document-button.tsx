@@ -3,26 +3,26 @@ import { LoaderCircle, Paperclip } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useUploadFile } from "@/hooks";
+import { useUploadDocument } from "@/hooks";
 
-export function UploadFileButton() {
+export function UploadDocumentButton() {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { uploadFile, uploadMultipleFiles, isUploading } = useUploadFile();
+  const { uploadDocument, uploadMultipleDocuments, isUploading } = useUploadDocument();
 
   const handleFileSelect = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
     if (files.length === 1) {
-      uploadFile(files[0]);
+      uploadDocument(files[0]);
     } else {
-      uploadMultipleFiles(Array.from(files));
+      uploadMultipleDocuments(Array.from(files));
     }
 
     if (fileInputRef.current) {
       fileInputRef.current.value = ""; // Clear the input after selection
     }
-  }, [uploadFile, uploadMultipleFiles]);
+  }, [uploadDocument, uploadMultipleDocuments]);
 
   const handleButtonClick = useCallback(() => {
     fileInputRef.current?.click();
@@ -31,7 +31,7 @@ export function UploadFileButton() {
   return (
     <div className="inline-block">
       <TooltipWrapper
-        content="Upload File"
+        content="Upload Document"
         side="top"
       >
         <Button 
@@ -45,7 +45,7 @@ export function UploadFileButton() {
           ) : (
             <Paperclip />
           )}
-          <span className="sr-only">Upload File</span>
+          <span className="sr-only">Upload Document</span>
         </Button>
       </TooltipWrapper>
       

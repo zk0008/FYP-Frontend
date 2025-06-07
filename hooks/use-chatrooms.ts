@@ -37,9 +37,9 @@ export function useChatrooms({ userId }: { userId: string }) {
           }));
           setChatrooms(chatroomsData);
         }
-      } catch (err: any) {
-        console.error("Error fetching chatrooms:", err.message);
-        setError(err.message);
+      } catch (error: any) {
+        console.error("Error fetching chatrooms:", error.message);
+        setError(error.message);
         setChatrooms([]);
       } finally {
         setLoading(false);
