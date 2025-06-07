@@ -10,7 +10,7 @@ import {
 
 export function useUploadFile() {
   const [isUploading, setIsUploading] = useState<boolean>(false);
-  const chatroom = useChatroomContext();
+  const { chatroom } = useChatroomContext();
   const user = useUserContext();
   const { toast } = useToast();
 

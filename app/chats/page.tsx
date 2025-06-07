@@ -5,7 +5,7 @@ import { ChatroomMenu, TopBar } from "@/components/top-bar";
 import { useChatroomContext, useRealtimeDocuments } from "@/hooks";
 
 export default function ChatsPage() {
-  const chatroom = useChatroomContext();
+  const { chatroom } = useChatroomContext();
 
   // Initialize realtime document updates for the logged-in user
   useRealtimeDocuments();

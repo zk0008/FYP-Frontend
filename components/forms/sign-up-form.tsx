@@ -1,5 +1,10 @@
 "use client";
 
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -9,13 +14,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/hooks";
-
 import { signUp } from "@/utils/auth";
+import { useToast } from "@/hooks";
 
 const signUpFormSchema = z.object({
   username: z.string()

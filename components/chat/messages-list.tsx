@@ -14,7 +14,7 @@ import {
 import { MessageBubble } from "./message-bubble";
 
 export function MessagesList() {
-  const chatroom = useChatroomContext();
+  const { chatroom } = useChatroomContext();
   const { toast } = useToast();
 
   const { messages, loading, error } = useMessagesWithRealtime({ chatroomId: chatroom?.chatroomId || "" });
