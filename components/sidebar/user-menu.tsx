@@ -12,7 +12,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { useUserContext } from "@/hooks";
 
-import { LogoutButton } from "./logout-button";
+import { SignOutButton } from "./sign-out-button";
 
 export function UserMenu() {
   const [isAccountSettingsDialogOpen, setIsAccountSettingsDialogOpen] = useState<boolean>(false);
@@ -78,7 +78,7 @@ export function UserMenu() {
             </DropdownMenuItem>
 
             <DropdownMenuItem>
-              <LogoutButton />
+              <SignOutButton />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

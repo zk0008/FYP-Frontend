@@ -65,7 +65,7 @@ export default function LoginPage() {
             Sign In
           </button>
           <Link
-            href="/sign-up"
+            href="/signup"
             className="rounded-lg p-1 border-2 w-3/4 h-10 font-semibold text-center hover:bg-slate-200 active:bg-slate-400"
           >
             Sign Up

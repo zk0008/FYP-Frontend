@@ -4,10 +4,10 @@ import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { TopBar } from "@/components/top-bar";
-import { LoginForm } from "@/components/forms";
+import { SignInForm } from "@/components/forms";
 import { useToast } from "@/hooks";
 
-export default function LoginPage() {
+export default function SignInPage() {
   const searchParams = useSearchParams();
   const { toast } = useToast();
   const confirmed = searchParams.get("confirmed") === "true";
@@ -23,8 +23,16 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col h-full w-full items-center gap-5">
-      <TopBar showLogo title="Login" />
-      <LoginForm />
+      <TopBar showLogo />
+      <div className="pt-16">
+        <h1 className="text-center my-2 font-semibold text-xl">Sign in to GroupGPT</h1>
+        <SignInForm />
+        <p className="text-center mt-2">Don't have an account?&nbsp;
+          <a href="/signup" className="text-blue-500 hover:underline">
+            Sign Up
+          </a>
+        </p>
+      </div>
     </div>
   )
 }

@@ -9,20 +9,20 @@ import { useRouter } from "next/navigation";
 interface TopBarProps {
   showSidebarTrigger?: boolean;
   showLogo?: boolean;
-  title: string;
+  title?: string;
   children?: React.ReactNode;
 }
 
 export function TopBar({
   showSidebarTrigger = false,
   showLogo = false,
-  title, 
+  title = "", 
   children
 } : TopBarProps) {
   const router = useRouter();
 
   return (
-    <div className="flex justify-between items-center py-2 px-4 min-h-[64px] bg-primary-foreground border-b w-full">
+    <div className="fixed top-0 right-0 left-0 flex justify-between items-center py-2 px-4 min-h-[64px] bg-primary-foreground border-b w-full">
       {/* Left section: Sidebar trigger or logo */}
       <div className="flex justify-start w-1/6 min-w-24 flex-shrink-0">
         {showSidebarTrigger && (

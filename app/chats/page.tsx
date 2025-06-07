@@ -34,7 +34,7 @@ export default function ChatsPage() {
         <ChatroomMenu />
       </TopBar>
       {/* Exclude TopBar height (64px) from ChatInterface height */}
-      <div className="flex flex-col h-[calc(100vh-4rem)] w-full">
+      <div className="flex flex-col pt-16 h-full w-full">
         <ChatInterface />
       </div>
     </div>
