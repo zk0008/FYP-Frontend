@@ -34,7 +34,7 @@ export default function HomePage() {
         </Button>
       </TopBar>
 
-      <div className="flex justify-center items-center h-[calc(100%-80px)] pt-16">
+      <div className="flex justify-center items-center h-[calc(100%-80px)]">
         <p className="font-semibold">Welcome to GroupGPT</p>
       </div>
     </div>
