@@ -2,7 +2,7 @@
 
 import { BaseDialog } from "./base-dialog";
 
-import { EditChatroomForm } from "@/components/forms/edit-chatroom-form";
+import { EditChatroomForm } from "@/components/forms";
 
 export function EditChatroomDialog({
   open,
