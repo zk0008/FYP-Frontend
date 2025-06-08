@@ -18,7 +18,7 @@ export function MessageBubble({
   username,
   content,
 }: MessageBubbleProps) {
-  const user = useUserContext();
+  const { user } = useUserContext();
   const isOwnMessage = username === user?.username;
 
   return (

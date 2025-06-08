@@ -23,7 +23,7 @@ import {
 } from "@/components/dialogs";
 
 export function ChatroomMenu() {
-  const user = useUserContext();
+  const { user } = useUserContext();
   const { chatroom } = useChatroomContext();
 
   const [isEditChatroomDialogOpen, setIsEditChatroomDialogOpen] = useState<boolean>(false);

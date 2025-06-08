@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useToast, useUserContext } from "@/hooks";
 
-type DocumentPayload = {
+interface DocumentPayload {
   document_id: string;
   uploader_id: string;
   chatroom_id: string;
@@ -14,7 +14,7 @@ type DocumentPayload = {
 const supabase = createClient();
 
 export function useRealtimeDocuments() {
-  const user = useUserContext();
+  const { user } = useUserContext();
   const { toast } = useToast();
 
   useEffect(() => {

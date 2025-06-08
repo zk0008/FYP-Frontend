@@ -17,7 +17,7 @@ import { SignOutButton } from "./sign-out-button";
 export function UserMenu() {
   const [isAccountSettingsDialogOpen, setIsAccountSettingsDialogOpen] = useState<boolean>(false);
   const [isManageInvitesDialogOpen, setIsManageInvitesDialogOpen] = useState<boolean>(false);
-  const user = useUserContext();
+  const { user } = useUserContext();
 
   const userIcon = user?.username ? (
     <Avatar className="h-6 w-6">

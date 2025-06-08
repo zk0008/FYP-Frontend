@@ -1,5 +1,5 @@
 export { useChatInput } from "./use-chat-input";
-export { useChatrooms } from "./use-chatrooms";
+export { useFetchChatrooms } from "./use-fetch-chatrooms";
 // export { useInvites } from "./use-invites";
 export { useFetchUser } from "./use-fetch-user";
 
@@ -15,6 +15,7 @@ export { useUploadDocument } from "./use-upload-document";
 
 // Context hooks
 export { useChatroomContext } from "./use-chatroom-context";
+export { useChatroomsContext } from "./use-chatrooms-context";
 export { useUserContext } from "./use-user-context";
 
 // Built-in UI hooks

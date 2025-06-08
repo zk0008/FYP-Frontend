@@ -4,7 +4,7 @@ import { useToast } from "@/hooks";
 
 import { Message } from "@/types";
 
-type MessagePayload = {
+interface MessagePayload {
   chatroom_id: string;
   content: string;
   message_id: string;
