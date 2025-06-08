@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,10 +21,21 @@ import { useToast } from "@/hooks";
 const signUpFormSchema = z.object({
   username: z.string()
     .min(2, "Username must be at least 2 characters long")
-    .max(20, "Username must be at most 20 characters long"),
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters long"),
-  confirmPassword: z.string().min(8, "Confirm password must be at least 8 characters long")
+    .max(20, "Username must be at most 20 characters long")
+    .regex(/^[a-zA-Z0-9_.]+$/, "Username must only contain letters, numbers, underscores, and periods")
+    .regex(/^\S+$/, "Username must not contain spaces"),
+  email: z.string()
+    .email("Please enter a valid email address")
+    .regex(/^\S+$/, "Email must not contain spaces"),
+  password: z.string()
+    .min(8, "Password must be at least 8 characters long")
+    .max(20, "Password must be at most 20 characters long")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/\d/, "Password must contain at least one digit")
+    .regex(/[^a-zA-Z0-9]/, "Password must contain at least one special character")
+    .regex(/^\S+$/, "Password must not contain spaces"),
+  confirmPassword: z.string()
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],
@@ -68,7 +80,7 @@ export function SignUpForm() {
 
   return (
     <Form { ...form }>
-      <form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-8">
+      <form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-4 max-w-xs">
         <FormField
           control={ form.control }
           name="username"
@@ -83,6 +95,10 @@ export function SignUpForm() {
                   { ...field }
                 />
               </FormControl>
+              <FormDescription>
+                <span className="block">• Username must be between 2 and 20 characters long</span>
+                <span className="block">• Username must only contain letters, numbers, underscores, and periods</span>
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -102,6 +118,9 @@ export function SignUpForm() {
                   { ...field }
                 />
               </FormControl>
+              <FormDescription>
+                <span className="block">• Email address must be valid; a confirmation email will be sent to this email address</span>
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -121,6 +140,10 @@ export function SignUpForm() {
                   { ...field }
                 />
               </FormControl>
+              <FormDescription>
+                <span className="block">• Password must be between 8 and 20 characters long</span>
+                <span className="block">• Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character</span>
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -145,9 +168,9 @@ export function SignUpForm() {
           )}
         />
 
-        <Button type="submit" className="w-full">
-          Sign Up
-        </Button>
+        <div className="pt-4">
+          <Button type="submit" className="w-full">Sign Up</Button>
+        </div>
       </form>
     </Form>
   );
