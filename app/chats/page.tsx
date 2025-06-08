@@ -26,7 +26,10 @@ export default function ChatsPage() {
 
   // Chatroom selected; render chat interface
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div
+      className="flex flex-col overflow-hidden"
+      style={{ height: "100dvh" }}
+    >
       <TopBar
         showSidebarTrigger
         title={ chatroom.name }
@@ -34,7 +37,13 @@ export default function ChatsPage() {
         <ChatroomMenu />
       </TopBar>
       {/* Exclude TopBar height (64px) from ChatInterface height */}
-      <div className="flex flex-col h-[calc(100vh-4rem)] w-full">
+      <div
+        className="flex flex-col w-full"
+        style={{
+          height: `calc(100dvh - 4rem)`,
+          paddingBottom: "env(safe-area-inset-bottom)"
+        }}
+      >
         <ChatInterface />
       </div>
     </div>

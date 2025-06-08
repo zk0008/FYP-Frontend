@@ -16,56 +16,69 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useToast, useChatroomContext, useChatroomsContext } from "@/hooks";
+import { useToast, useChatroomContext, useChatroomsContext, useUserContext } from "@/hooks";
 
-const editChatroomFormSchema = z.object({
+const createChatroomFormSchema = z.object({
   name: z.string().min(2, "Chatroom name must be at least 2 characters long").max(64, "Chatroom name must be at most 64 characters long")
 });
 
 const supabase = createClient();
 
-export function EditChatroomForm() {
-  const { chatroom, refresh: refreshCurrentChatroom } = useChatroomContext();
+export function CreateChatroomForm() {
+  const { user } = useUserContext();
   const { refresh: refreshChatroomsList } = useChatroomsContext();
   const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof editChatroomFormSchema>>({
-    resolver: zodResolver(editChatroomFormSchema),
+  const form = useForm<z.infer<typeof createChatroomFormSchema>>({
+    resolver: zodResolver(createChatroomFormSchema),
     defaultValues: {
       name: "",
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof editChatroomFormSchema>) => {
-    if (!chatroom) {
+  const onSubmit = async (data: z.infer<typeof createChatroomFormSchema>) => {
+    if (!user) {
       toast({
-        title: "Error Editing Chatroom",
-        description: "No chatroom selected.",
+        title: "Error Creating Chatroom",
+        description: "User not found.",
         variant: "destructive",
       });
       return;
     }
 
-    const { error } = await supabase
+    // Insert new chatroom into database
+    const { data: chatroomData, error: chatroomError } = await supabase
       .from("chatrooms")
-      .update({ name: data.name })
-      .eq("chatroom_id", chatroom.chatroomId);
+      .insert({
+        creator_id: user.userId,
+        name: data.name
+      })
+      .select("chatroom_id");
 
-    if (error) {
+    // Add creator as member of the chatroom
+    const { error: memberError } = await supabase
+      .from("members")
+      .insert({
+        user_id: user.userId,
+        chatroom_id: chatroomData?.[0]?.chatroom_id
+      });
+
+    if (chatroomError || memberError) {
+      const error = chatroomError || memberError;
+
       toast({
-        title: "Error Editing Chatroom",
-        description: error.message || "An error occurred while editing the chatroom.",
+        title: "Error Creating Chatroom",
+        description: error?.message || "An error occurred while creating the chatroom.",
         variant: "destructive",
       });
       return;
     }
 
     toast({
-      title: "Chatroom Edited",
-      description: `Chatroom name changed to "${data.name}".`,
+      title: "Chatroom Created",
+      description: `"${data.name}" chatroom has been created.`,
     });
 
-    refreshCurrentChatroom();       // Refresh the chatroom context to reflect changes
     refreshChatroomsList();         // Refresh the chatrooms list to reflect changes
     form.reset();                   // Reset the form after successful submission
   }
@@ -82,7 +95,7 @@ export function EditChatroomForm() {
               <FormControl>
                 <input
                   type="text"
-                  placeholder={ chatroom ? chatroom.name : "Enter chatroom name" }
+                  placeholder="Enter chatroom name"
                   className="rounded-md px-1 border-2 border-black w-full h-8"
                   { ...field }
                   onKeyDown={(e) => e.stopPropagation()} // Required to allow spaces in input
@@ -103,7 +116,7 @@ export function EditChatroomForm() {
             </Button>
           </DialogClose>
           <Button variant="default" type="submit">
-            Save Changes
+            Create Chatroom
           </Button>
         </div>
       </form>
