@@ -11,25 +11,16 @@ import {
   SidebarMenu
 } from "@/components/ui/sidebar";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useChatrooms, useToast, useFetchUser } from "@/hooks";
+import { useChatroomsContext, useToast } from "@/hooks";
 
 import { ChatroomItem } from "./chatroom-item";
 
+
 export function ChatroomsList() {
-  const { user, loading: userLoading, error: userError } = useFetchUser();
-  const { chatrooms, loading: chatroomsLoading, error: chatroomsError } = useChatrooms({ userId: user?.userId || "" });
+  const { chatrooms, loading: chatroomsLoading, error: chatroomsError } = useChatroomsContext();
+  // const { chatrooms, loading: chatroomsLoading, error: chatroomsError } = useFetchChatrooms({ userId: user?.userId || "" });
   const [isCreateChatroomDialogOpen, setIsCreateChatroomDialogOpen] = useState(false);
   const { toast } = useToast();
-
-  useEffect(() => {
-    if (userError) {
-      toast({
-        title: "Error occurred when loading user",
-        description: userError,
-        variant: "destructive"
-      });
-    }
-  }, [userError]);
 
   useEffect(() => {
     if (chatroomsError) {
@@ -61,8 +52,8 @@ export function ChatroomsList() {
       />
 
       <SidebarMenu>
-        {userLoading || chatroomsLoading ? <LoaderCircle className="w-6 h-6 animate-spin" /> : (
-          chatrooms.map((chatroom) => (
+        {chatroomsLoading ? <LoaderCircle className="w-6 h-6 animate-spin mx-auto" /> : (
+          (chatrooms ?? []).map((chatroom) => (
             <ChatroomItem
               key={ chatroom.chatroomId }
               chatroomId={ chatroom.chatroomId }

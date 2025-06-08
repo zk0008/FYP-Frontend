@@ -10,7 +10,7 @@ import {
 
 const supabase = createClient();
 
-type GroupGPTRequest = {
+interface GroupGPTRequest {
   username: string;
   chatroom_id: string;
   content: string;
@@ -20,7 +20,7 @@ export function useChatInput() {
   const [input, setInput] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { chatroom } = useChatroomContext();
-  const user = useUserContext();
+  const { user } = useUserContext();
   const { toast } = useToast();
 
   const sendToGroupGPT = useCallback(async (content: string) : Promise<boolean> => {

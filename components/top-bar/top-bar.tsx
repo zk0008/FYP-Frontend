@@ -22,7 +22,7 @@ export function TopBar({
   const router = useRouter();
 
   return (
-    <div className="fixed top-0 right-0 left-0 flex justify-between items-center py-2 px-4 min-h-[64px] bg-primary-foreground border-b w-full">
+    <div className="sticky top-0 right-0 left-0 flex justify-between items-center py-2 px-4 min-h-[64px] bg-primary-foreground border-b w-full">
       {/* Left section: Sidebar trigger or logo */}
       <div className="flex justify-start w-1/6 min-w-24 flex-shrink-0">
         {showSidebarTrigger && (

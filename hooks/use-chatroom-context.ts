@@ -3,10 +3,12 @@
 import { useContext } from "react";
 
 import { Chatroom } from "@/types";
-import { ChatroomContext } from "@/contexts/chatroom-context";
+import { ChatroomContext } from "@/contexts";
 
 interface ChatroomContextType {
   chatroom: Chatroom | null;
+  loading: boolean;
+  error: string | null;
   refresh: () => null;
 }
 

@@ -16,7 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useToast, useChatroomContext } from "@/hooks";
+import { useToast, useChatroomContext, useChatroomsContext } from "@/hooks";
 
 const editChatroomFormSchema = z.object({
   name: z.string().min(2, "Chatroom name must be at least 2 characters long").max(64, "Chatroom name must be at most 64 characters long")
@@ -25,7 +25,8 @@ const editChatroomFormSchema = z.object({
 const supabase = createClient();
 
 export function EditChatroomForm() {
-  const { chatroom, refresh } = useChatroomContext();
+  const { chatroom, refresh: refreshCurrentChatroom } = useChatroomContext();
+  const { refresh: refreshChatroomsList } = useChatroomsContext();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof editChatroomFormSchema>>({
@@ -64,8 +65,9 @@ export function EditChatroomForm() {
       description: `Chatroom name changed to "${data.name}".`,
     });
 
-    refresh();      // Refresh the chatroom context to reflect changes
-    form.reset();   // Reset the form after successful submission
+    refreshCurrentChatroom();       // Refresh the chatroom context to reflect changes
+    refreshChatroomsList();         // Refresh the chatrooms list to reflect changes
+    form.reset();                   // Reset the form after successful submission
   }
 
   return (

@@ -1,5 +1,5 @@
 import { AppSidebar } from "@/components/sidebar"
-import { SidebarProvider } from "@/components/ui/sidebar"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
 import { Providers } from "./providers"
 
@@ -9,9 +9,11 @@ export default function Layout({ children } : { children: React.ReactNode }) {
     <SidebarProvider>
       <Providers>
         <AppSidebar />
-        <main className="flex-1 w-full">
-          {children}
-        </main>
+        <SidebarInset>
+          <main className="flex-1 w-full">
+            {children}
+          </main>
+        </SidebarInset>
       </Providers>
     </SidebarProvider>
   )

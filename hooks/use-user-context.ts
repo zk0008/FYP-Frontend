@@ -3,14 +3,21 @@
 import { useContext } from "react";
 
 import { User } from "@/types";
-import { UserContext } from "@/contexts/user-context";
+import { UserContext } from "@/contexts";
 
-export function useUserContext(): User | null {
+interface UserContextType {
+  user: User | null;
+  loading: boolean;
+  error: string | null;
+  refresh: () => void;
+};
+
+export function useUserContext(): UserContextType {
   const userContext = useContext(UserContext);
 
   if (userContext === undefined) {
     throw new Error("useUserContext must be used within a UserProvider");
   }
 
-  return userContext;
+  return userContext as UserContextType;
 }
