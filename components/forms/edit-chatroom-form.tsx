@@ -102,7 +102,7 @@ export function EditChatroomForm() {
               Cancel
             </Button>
           </DialogClose>
-          <Button variant="default" onClick={() => onSubmit(form.getValues())}>
+          <Button variant="default" type="submit">
             Save Changes
           </Button>
         </div>
