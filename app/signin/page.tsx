@@ -24,15 +24,16 @@ export default function SignInPage() {
   return (
     <div className="flex flex-col h-full w-full items-center gap-5">
       <TopBar showLogo />
-      <div className="pt-16">
-        <h1 className="text-center my-2 font-semibold text-xl">Sign in to GroupGPT</h1>
-        <SignInForm />
-        <p className="text-center mt-2">Don't have an account?&nbsp;
-          <a href="/signup" className="text-blue-500 hover:underline">
-            Sign Up
-          </a>
-        </p>
-      </div>
+
+      <h1 className="text-center my-2 font-semibold text-xl">Sign in to GroupGPT</h1>
+
+      <SignInForm />
+
+      <p className="text-center mt-2">Don't have an account?&nbsp;
+        <a href="/signup" className="text-blue-500 hover:underline">
+          Sign Up
+        </a>
+      </p>
     </div>
   )
 }
