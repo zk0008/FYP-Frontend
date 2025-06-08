@@ -2,16 +2,16 @@
 
 import { BaseDialog } from "./base-dialog";
 
+import { CreateChatroomForm } from "@/components/forms";
+
 interface CreateChatroomDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  children?: React.ReactNode;
 }
 
 export function CreateChatroomDialog({
   open,
-  onOpenChange,
-  children
+  onOpenChange
 }: CreateChatroomDialogProps) {
   return (
     <BaseDialog
@@ -20,7 +20,7 @@ export function CreateChatroomDialog({
       title="Create New Chatroom"
       description="Here you can create a new chatroom to start chatting with your friends."
     >
-      { children }
+      <CreateChatroomForm />
     </BaseDialog>
   );
 }
