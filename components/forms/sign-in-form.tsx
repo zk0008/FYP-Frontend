@@ -18,8 +18,11 @@ import { signIn } from "@/utils/auth";
 import { useToast } from "@/hooks/use-toast";
 
 const signInFormSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
+  email: z.string()
+    .email("Please enter a valid email address"),
+  password: z.string()
+    .min(8, "Password must be at least 8 characters long")
+    .max(20, "Password must be at most 20 characters long"),
 });
 
 export function SignInForm() {
@@ -53,7 +56,7 @@ export function SignInForm() {
 
   return (
     <Form { ...form }>
-      <form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-8">
+      <form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-4 max-w-xs">
         <FormField
           control={ form.control }
           name="email"
@@ -92,9 +95,9 @@ export function SignInForm() {
           )}
         />
 
-        <Button type="submit" className="w-full">
-          Sign In
-        </Button>
+        <div className="pt-4">
+          <Button type="submit" className="w-full">Sign In</Button>
+        </div>
       </form>
     </Form>
   )

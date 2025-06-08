@@ -22,10 +22,10 @@ export default function SignInPage() {
   }, []);   // Alert should only be shown once on page load
 
   return (
-    <div className="flex flex-col h-full w-full items-center gap-5">
+    <div className="flex flex-col h-full w-full items-center">
       <TopBar showLogo />
 
-      <h1 className="text-center my-2 font-semibold text-xl">Sign in to GroupGPT</h1>
+      <h1 className="text-center my-4 font-semibold text-xl">Sign in to GroupGPT</h1>
 
       <SignInForm />
 
