@@ -1,53 +1,23 @@
 "use client";
 
-import { ClipboardCheck, ClipboardCopy } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import { useState } from "react";
 
 import {
   ChatBubble,
-  ChatBubbleAction,
   ChatBubbleActionWrapper,
   ChatBubbleAvatar,
   ChatBubbleMessage
 } from "@/components/ui/chat/chat-bubble";
+import { CopyMessageButton } from "@/components/buttons";
 import { getInitials } from "@/utils";
 import Icon from "@/public/GroupGPT.png";
 import { useUserContext } from "@/hooks/use-user-context";
+
 
 interface MessageBubbleProps {
   messageId: string,
   username: string,
   content: string,
-}
-
-export function CopyMessageAction({ messageId, content }: { messageId: string, content: string }) {
-  const [isCopied, setIsCopied] = useState(false);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(content);
-    } catch (error) {
-      console.error("Failed to copy text: ", error);
-    }
-  };
-
-  const handleClick = () => {
-    if (isCopied) return;
-    handleCopy();
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000); // Reset after 2 seconds
-  };
-
-  return (
-    <ChatBubbleAction
-      onClick={ handleClick }
-      className="cursor-pointer"
-      key={ `copy-${messageId}` }
-      icon={ isCopied ? <ClipboardCheck className="h-4 w-4" /> : <ClipboardCopy className="h-4 w-4" /> }
-      title={ isCopied ? "Copied!" : "Copy message" }
-    />
-  );
 }
 
 export function MessageBubble({
@@ -81,7 +51,7 @@ export function MessageBubble({
         <ChatBubbleActionWrapper className={`absolute bottom-0 top-auto translate-x-0 translate-y-0 px-2 ${
           isOwnMessage ? "-left-12" : "-right-12"
         }`}>
-          <CopyMessageAction messageId={ messageId } content={ content } />
+          <CopyMessageButton messageId={ messageId } content={ content } />
         </ChatBubbleActionWrapper>
       </div>
     </ChatBubble>
