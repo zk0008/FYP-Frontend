@@ -1,7 +1,14 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
+import {
+  useChatroomContext,
+  useChatroomsContext,
+  useLeaveChatroom,
+  useUserContext
+} from "@/hooks";
 import { BaseDialog } from "./base-dialog";
 
 export function LeaveChatroomDialog({
@@ -11,6 +18,26 @@ export function LeaveChatroomDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { chatroom } = useChatroomContext();
+  const { refresh } = useChatroomsContext();
+  const { leaveChatroom, isLoading } = useLeaveChatroom();
+  const { user } = useUserContext();
+  const router = useRouter();
+
+  const handleLeave = async () => {
+    const result = await leaveChatroom({
+      userId: user?.userId || "",
+      chatroomId: chatroom?.chatroomId || "",
+      name: chatroom?.name || ""
+    });
+
+    if (result.success) {
+      refresh();                // Refresh chatrooms list
+      onOpenChange(false);      // Close dialog
+      router.push("/chats");    // Exit chatroom
+    }
+  };
+
   return (
     <BaseDialog
       open={ open }
@@ -22,8 +49,8 @@ export function LeaveChatroomDialog({
         <Button variant="outline" onClick={() => onOpenChange(false)}>
           Cancel
         </Button>
-        <Button variant="destructive" onClick={() => { console.log("Leave chatroom"); }}>
-          Leave
+        <Button variant="destructive" onClick={ handleLeave } disabled={ isLoading }>
+          Leave Chatroom
         </Button>
       </div>
     </BaseDialog>

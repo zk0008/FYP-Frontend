@@ -11,6 +11,7 @@ export { useFetchDocuments } from "./use-fetch-documents";
 export { useRealtimeDocuments } from "./use-realtime-documents";
 
 export { useDeleteChatroom } from "./use-delete-chatroom";
+export { useLeaveChatroom } from "./use-leave-chatroom";
 
 export { useDragAndDrop } from "./use-drag-and-drop";
 export { useUploadDocument } from "./use-upload-document";
