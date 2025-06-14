@@ -13,6 +13,10 @@ export function CreateChatroomDialog({
   open,
   onOpenChange
 }: CreateChatroomDialogProps) {
+  const handleFormSuccess = () => {
+    onOpenChange(false);    // Close dialog after form submission
+  };
+  // TODO: Fix bug where dialog does not close after creating chatroom
   return (
     <BaseDialog
       open={ open }
@@ -20,7 +24,7 @@ export function CreateChatroomDialog({
       title="Create New Chatroom"
       description="Here you can create a new chatroom to start chatting with your friends."
     >
-      <CreateChatroomForm />
+      <CreateChatroomForm onSuccess={ handleFormSuccess } />
     </BaseDialog>
   );
 }

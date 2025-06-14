@@ -24,7 +24,7 @@ const editChatroomFormSchema = z.object({
 
 const supabase = createClient();
 
-export function EditChatroomForm() {
+export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
   const { chatroom, refresh: refreshCurrentChatroom } = useChatroomContext();
   const { refresh: refreshChatroomsList } = useChatroomsContext();
   const { toast } = useToast();
@@ -65,9 +65,9 @@ export function EditChatroomForm() {
       description: `Chatroom name changed to "${data.name}".`,
     });
 
-    refreshCurrentChatroom();       // Refresh the chatroom context to reflect changes
-    refreshChatroomsList();         // Refresh the chatrooms list to reflect changes
-    form.reset();                   // Reset the form after successful submission
+    refreshCurrentChatroom();   // Refresh the chatroom context to reflect changes
+    refreshChatroomsList();     // Refresh the chatrooms list to reflect changes
+    onSuccess?.();              // Call the success callback if provided
   }
 
   return (

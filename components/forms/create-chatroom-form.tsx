@@ -24,7 +24,7 @@ const createChatroomFormSchema = z.object({
 
 const supabase = createClient();
 
-export function CreateChatroomForm() {
+export function CreateChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
   const { user } = useUserContext();
   const { refresh: refreshChatroomsList } = useChatroomsContext();
   const { toast } = useToast();
@@ -79,8 +79,9 @@ export function CreateChatroomForm() {
       description: `"${data.name}" chatroom has been created.`,
     });
 
-    refreshChatroomsList();         // Refresh the chatrooms list to reflect changes
-    form.reset();                   // Reset the form after successful submission
+    refreshChatroomsList();   // Refresh the chatrooms list to reflect changes
+    onSuccess?.();             // Call the success callback if provided
+    // form.reset();             // Reset the form after successful submission
   }
 
   return (

@@ -4,13 +4,19 @@ import { BaseDialog } from "./base-dialog";
 
 import { EditChatroomForm } from "@/components/forms";
 
+interface EditChatroomDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
 export function EditChatroomDialog({
   open,
   onOpenChange
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void
-}) {
+}: EditChatroomDialogProps) {
+  const handleFormSuccess = () => {
+    onOpenChange(false);    // Close dialog after form submission
+  };
+
   return (
     <BaseDialog
       open={ open }
@@ -18,7 +24,7 @@ export function EditChatroomDialog({
       title="Edit Chatroom"
       description="Here you can edit the details of your chatroom."
     >
-      <EditChatroomForm />
+      <EditChatroomForm onSuccess={ handleFormSuccess } />
     </BaseDialog>
   );
 }
