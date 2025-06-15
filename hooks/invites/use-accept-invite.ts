@@ -1,6 +1,3 @@
-// Accept invite: change invite status to "ACCEPTED" based on inviteId, update invites context (invites context should only hold the list of pending invites)
-// Add entry to members table, then refresh chatrooms context to include the newly-joined chatroom
-
 import { useCallback } from "react";
 
 import { createClient } from "@/utils/supabase/client";

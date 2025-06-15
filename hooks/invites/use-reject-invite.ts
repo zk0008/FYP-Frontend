@@ -1,5 +1,3 @@
-// Reject invite: change invite status to "REJECTED" based on inviteId, update invites context (invites context should only hold the list of pending invites)
-
 import { useCallback } from "react";
 
 import { createClient } from "@/utils/supabase/client";
