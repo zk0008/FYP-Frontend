@@ -3,7 +3,7 @@
 import { createContext } from "react";
 
 import { User } from "@/types"
-import { useFetchUser } from "@/hooks/use-fetch-user";
+import { useFetchUser } from "@/hooks";
 
 interface UserContextType {
   user: User | null;

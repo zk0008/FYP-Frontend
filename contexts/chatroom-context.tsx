@@ -1,8 +1,9 @@
 "use client";
 
-import { Chatroom } from "@/types";
 import { createContext } from "react";
-import { useFetchChatroom } from "@/hooks/use-fetch-chatroom";
+
+import { Chatroom } from "@/types";
+import { useFetchChatroom } from "@/hooks";
 
 interface ChatroomContextType {
   chatroom: Chatroom | null;

@@ -11,7 +11,7 @@ import {
 import { CopyMessageButton } from "@/components/buttons";
 import { getInitials } from "@/utils";
 import Icon from "@/public/GroupGPT.png";
-import { useUserContext } from "@/hooks/use-user-context";
+import { useUserContext } from "@/hooks";
 
 
 interface MessageBubbleProps {
