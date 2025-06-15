@@ -8,7 +8,12 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { getInitials } from "@/utils";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarSeparator
+} from "@/components/ui/sidebar";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { useUserContext } from "@/hooks";
 
@@ -76,6 +81,8 @@ export function UserMenu() {
                 onOpenChange={ setIsManageInvitesDialogOpen }
               />
             </DropdownMenuItem>
+
+            <SidebarSeparator className="my-1" />
 
             <DropdownMenuItem>
               <SignOutButton />
