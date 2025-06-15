@@ -1,8 +1,8 @@
-import { createClient } from "@/utils/supabase/client";
 import { useEffect } from "react";
-import { useToast } from "@/hooks";
 
+import { createClient } from "@/utils/supabase/client";
 import { Message } from "@/types";
+import { useToast } from "@/hooks";
 
 interface MessagePayload {
   chatroom_id: string;
@@ -55,7 +55,7 @@ export function useRealtimeMessages({
             };
 
             onNewMessage(message);
-          } catch (error) {
+          } catch (error: any) {
             console.error("Error fetching sender username:", error);
             toast({
               title: "Error",

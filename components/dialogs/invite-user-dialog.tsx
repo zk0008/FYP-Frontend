@@ -2,15 +2,21 @@
 
 import { BaseDialog } from "./base-dialog";
 
-export function InviteUserDialog({
-  open,
-  onOpenChange,
-  children
-}: {
+import { InviteUserForm } from "@/components/forms/invite-user-form";
+
+interface InviteUserDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  children?: React.ReactNode;
-}) {
+}
+
+export function InviteUserDialog({
+  open,
+  onOpenChange
+}: InviteUserDialogProps) {
+  const handleFormSuccess = () => {
+    onOpenChange(false);    // Close dialog after form submission
+  };
+
   return (
     <BaseDialog
       open={ open }
@@ -18,7 +24,7 @@ export function InviteUserDialog({
       title="Invite a User"
       description="Here you can invite a user to join your chatroom."
     >
-      { children }
+      <InviteUserForm onSuccess={ handleFormSuccess } />
     </BaseDialog>
   );
 }

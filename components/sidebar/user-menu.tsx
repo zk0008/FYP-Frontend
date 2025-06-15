@@ -1,16 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { CircleUser, ChevronsUpDown } from "lucide-react";
+import { CircleUser, ChevronsUpDown, Dot } from "lucide-react";
 
 import { AccountSettingsDialog, ManageInvitesDialog } from "@/components/dialogs/index";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { getInitials } from "@/utils";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarSeparator
+} from "@/components/ui/sidebar";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useUserContext } from "@/hooks";
+import { useInvitesContext, useUserContext } from "@/hooks";
 
 import { SignOutButton } from "./sign-out-button";
 
@@ -18,6 +23,7 @@ export function UserMenu() {
   const [isAccountSettingsDialogOpen, setIsAccountSettingsDialogOpen] = useState<boolean>(false);
   const [isManageInvitesDialogOpen, setIsManageInvitesDialogOpen] = useState<boolean>(false);
   const { user } = useUserContext();
+  const { invites } = useInvitesContext();
 
   const userIcon = user?.username ? (
     <Avatar className="h-6 w-6">
@@ -39,7 +45,10 @@ export function UserMenu() {
               <SidebarMenuButton>
                 { userIcon }
                 { user?.username }
-                <ChevronsUpDown className="ml-auto" />
+                <div className="flex items-center ml-auto">
+                  { invites.length > 0 && <Dot className="h-8 w-8 text-red-500" /> }
+                  <ChevronsUpDown />
+                </div>
               </SidebarMenuButton>
             </DropdownMenuTrigger>
           </TooltipWrapper>
@@ -70,12 +79,15 @@ export function UserMenu() {
                 onClick={() => setIsManageInvitesDialogOpen(true)}
               >
                 <span>Manage Pending Invites</span>
+                { invites.length > 0 && <Dot className="h-8 w-8 text-red-500" /> }
               </Button>
               <ManageInvitesDialog
                 open={ isManageInvitesDialogOpen }
                 onOpenChange={ setIsManageInvitesDialogOpen }
               />
             </DropdownMenuItem>
+
+            <SidebarSeparator className="my-1" />
 
             <DropdownMenuItem>
               <SignOutButton />

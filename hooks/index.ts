@@ -1,25 +1,53 @@
-export { useChatInput } from "./use-chat-input";
-export { useFetchChatrooms } from "./use-fetch-chatrooms";
-// export { useInvites } from "./use-invites";
-export { useFetchUser } from "./use-fetch-user";
+// hooks/index.ts - Main export file
 
+// =============================================================================
+// CONTEXTS (Global State Management)
+// =============================================================================
+export { useChatroomContext } from "./contexts/use-chatroom-context";
+export { useChatroomsContext } from "./contexts/use-chatrooms-context";
+export { useInvitesContext } from "./contexts/use-invites-context";
+export { useUserContext } from "./contexts/use-user-context";
+
+// =============================================================================
+// AUTHENTICATION & USER
+// =============================================================================
+export { useFetchUser } from "./auth/use-fetch-user";
+
+// =============================================================================
+// CHATROOMS
+// =============================================================================
+export { useFetchChatroom } from "./chatrooms/use-fetch-chatroom";
+export { useFetchChatrooms } from "./chatrooms/use-fetch-chatrooms";
+export { useDeleteChatroom } from "./chatrooms/use-delete-chatroom";
+export { useLeaveChatroom } from "./chatrooms/use-leave-chatroom";
+
+// =============================================================================
+// MESSAGES
+// =============================================================================
 export { useMessagesWithRealtime } from "./messages/use-messages-with-realtime";
+export { useSendMessage } from "./messages/use-send-message";
 
-export { useDeleteDocument } from "./use-delete-document";
-export { useDownloadDocument } from "./use-download-document";
-export { useFetchDocuments } from "./use-fetch-documents";
-export { useRealtimeDocuments } from "./use-realtime-documents";
+// =============================================================================
+// INVITES
+// =============================================================================
+export { useFetchInvites } from "./invites/use-fetch-invites";
+export { useRealtimeInvites } from "./invites/use-realtime-invites";
+export { useAcceptInvite } from "./invites/use-accept-invite";
+export { useRejectInvite } from "./invites/use-reject-invite";
 
-export { useDeleteChatroom } from "./use-delete-chatroom";
-export { useLeaveChatroom } from "./use-leave-chatroom";
+// =============================================================================
+// DOCUMENTS
+// =============================================================================
+export { useFetchDocuments } from "./documents/use-fetch-documents";
+export { useRealtimeDocuments } from "./documents/use-realtime-documents";
+export { useUploadDocument } from "./documents/use-upload-document";
+export { useDeleteDocument } from "./documents/use-delete-document";
+export { useDownloadDocument } from "./documents/use-download-document";
+export { useDragAndDrop } from "./documents/use-drag-and-drop";
 
-export { useDragAndDrop } from "./use-drag-and-drop";
-export { useUploadDocument } from "./use-upload-document";
-
-// Context hooks
-export { useChatroomContext } from "./use-chatroom-context";
-export { useChatroomsContext } from "./use-chatrooms-context";
-export { useUserContext } from "./use-user-context";
-
-// Built-in UI hooks
-export { useToast } from "./use-toast";
+// =============================================================================
+// UI & UTILITIES
+// =============================================================================
+export { useChatInput } from "./ui/use-chat-input";
+export { useIsMobile } from "./ui/use-mobile";
+export { useToast } from "./ui/use-toast";

@@ -1,6 +1,11 @@
 "use client";
 
-import { ChatroomProvider, ChatroomsProvider, UserProvider } from "@/contexts"
+import {
+  ChatroomProvider,
+  ChatroomsProvider,
+  InvitesProvider,
+  UserProvider
+} from "@/contexts"
 
 import { useSearchParams } from "next/navigation"
 
@@ -10,11 +15,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <UserProvider>
-      <ChatroomsProvider>
-        <ChatroomProvider chatroomId={ chatroomId }>
-          { children }
-        </ChatroomProvider>
-      </ChatroomsProvider>
+      <InvitesProvider>
+        <ChatroomsProvider>
+          <ChatroomProvider chatroomId={ chatroomId }>
+            { children }
+          </ChatroomProvider>
+        </ChatroomsProvider>
+      </InvitesProvider>
     </UserProvider>
   )
 }

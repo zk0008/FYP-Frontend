@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { signIn } from "@/utils/auth";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks";
 
 const signInFormSchema = z.object({
   email: z.string()

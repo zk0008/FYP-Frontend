@@ -81,7 +81,6 @@ export function CreateChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
 
     refreshChatroomsList();   // Refresh the chatrooms list to reflect changes
     onSuccess?.();             // Call the success callback if provided
-    // form.reset();             // Reset the form after successful submission
   }
 
   return (

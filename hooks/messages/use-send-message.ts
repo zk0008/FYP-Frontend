@@ -2,11 +2,7 @@ import { useState, useCallback } from "react";
 
 import { createClient } from "@/utils/supabase/client";
 import { fetchWithAuth } from "@/utils";
-import {
-  useChatroomContext,
-  useUserContext,
-  useToast
-} from "@/hooks";
+import { useChatroomContext, useUserContext, useToast } from "@/hooks";
 
 const supabase = createClient();
 
@@ -16,17 +12,15 @@ interface GroupGPTRequest {
   content: string;
 };
 
-export function useChatInput() {
-  const [input, setInput] = useState<string>("");
+export function useSendMessage() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { chatroom } = useChatroomContext();
   const { user } = useUserContext();
   const { toast } = useToast();
 
-  const sendToGroupGPT = useCallback(async (content: string) : Promise<boolean> => {
+  const sendToGroupGPT = useCallback(async (content: string): Promise<boolean> => {
     try {
       const contentWithoutMention = content.replace(/@groupgpt/i, "");
-
       const payload: GroupGPTRequest = {
         username: user!.username,
         chatroom_id: chatroom!.chatroomId,
@@ -48,12 +42,11 @@ export function useChatInput() {
       return true;
     } catch (error: any) {
       console.error("Error sending message to GroupGPT:", error.message);
-      // Error toast is handled in sendMessage()
       return false;
     }
-  }, [chatroom, user, toast]);
+  }, [chatroom, user]);
 
-  const sendToSupabase = useCallback(async (content: string) : Promise<{ success: boolean; messageId?: string }> => {
+  const sendToSupabase = useCallback(async (content: string): Promise<{ success: boolean; messageId?: string }> => {
     try {
       const { data, error } = await supabase
         .from("messages")
@@ -71,19 +64,17 @@ export function useChatInput() {
       return { success: true, messageId: data[0].message_id };
     } catch (error: any) {
       console.error("Error sending message:", error.message);
-
       toast({
         title: "Message Not Sent",
         description: error.message || "An error occurred while sending the message.",
         variant: "destructive",
       });
-
       return { success: false };
     }
   }, [chatroom, user, toast]);
 
-  const sendMessage = useCallback(async (content: string) : Promise<void> => {
-    if (!content.trim() || !chatroom?.chatroomId || !user?.userId) return;
+  const sendMessage = useCallback(async (content: string): Promise<boolean> => {
+    if (!content.trim() || !chatroom?.chatroomId || !user?.userId) return false;
 
     setIsSubmitting(true);
 
@@ -106,7 +97,6 @@ export function useChatInput() {
 
           if (error) {
             console.error("Error deleting message after GroupGPT failure:", error.message);
-
             toast({
               title: "Invocation Failed",
               description: "Message saved but GroupGPT invocation failed. Please try again.",
@@ -120,20 +110,22 @@ export function useChatInput() {
             description: "Failed to send message. Please try again.",
             variant: "destructive",
           });
+          return false;
         } else if (supabaseResult.success && groupGPTSuccess) {
-          setInput("");
+          return true;
         }
       } else {
         // Regular message - only send to Supabase
-        const success = await sendToSupabase(content);
-        if (success) {
-          setInput("");
+        const result = await sendToSupabase(content);
+        if (result.success) {
+          return true;
         } else {
           toast({
             title: "Message Not Sent",
             description: "Failed to send message. Please try again.",
             variant: "destructive",
           });
+          return false;
         }
       }
     } catch (error: any) {
@@ -143,21 +135,13 @@ export function useChatInput() {
         description: error.message || "Something went wrong. Please try again.",
         variant: "destructive",
       });
+      return false;
     } finally {
       setIsSubmitting(false);
     }
-  }, [chatroom, user, toast]);
 
-  const handleSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    sendMessage(input);
-  }, [input, sendMessage]);
+    return false;
+  }, [chatroom, user, toast, sendToGroupGPT, sendToSupabase]);
 
-  return {
-    input,
-    setInput,
-    isSubmitting,
-    handleSubmit,
-    sendMessage,
-  };
+  return { isSubmitting, sendMessage };
 }

@@ -23,3 +23,12 @@ export interface User {
   username: string;
   email: string;
 }
+
+export interface Invite {
+  inviteId: string;
+  senderUsername: string;
+  chatroomId: string;
+  chatroomName: string;
+  status: "PENDING" | "ACCEPTED" | "REJECTED";
+  createdAt: string;
+}
