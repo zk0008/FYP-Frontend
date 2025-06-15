@@ -24,8 +24,6 @@ export function useRejectInvite({ invite }: RejectInviteParams) {
       return;
     }
 
-    console.log("Rejecting invite:", invite, "for user:", user);
-
     try {
       // Update invite status to REJECTED
       const { error } = await supabase
