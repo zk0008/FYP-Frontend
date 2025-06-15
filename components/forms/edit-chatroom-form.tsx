@@ -19,7 +19,9 @@ import {
 import { useToast, useChatroomContext, useChatroomsContext } from "@/hooks";
 
 const editChatroomFormSchema = z.object({
-  name: z.string().min(2, "Chatroom name must be at least 2 characters long").max(64, "Chatroom name must be at most 64 characters long")
+  name: z.string()
+    .min(2, "Chatroom name must be at least 2 characters long")
+    .max(64, "Chatroom name must be at most 64 characters long")
 });
 
 const supabase = createClient();
