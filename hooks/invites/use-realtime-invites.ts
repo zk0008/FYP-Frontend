@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { createClient } from "@/utils/supabase/client";
 import { Invite } from "@/types";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/ui/use-toast";
 
 interface InvitePayload {
   invite_id: string;
