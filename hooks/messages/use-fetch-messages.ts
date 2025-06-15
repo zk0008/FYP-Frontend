@@ -5,7 +5,7 @@ import { Message } from "@/types";
 
 const supabase = createClient();
 
-export function useMessages({ chatroomId }: { chatroomId: string }) {
+export function useFetchMessages({ chatroomId }: { chatroomId: string }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

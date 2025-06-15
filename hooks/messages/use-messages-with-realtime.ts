@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useMessages } from "./use-messages";
-import { useRealtimeMessages } from "./use-realtime-messages";
 
 import { Message } from "@/types";
 
+import { useFetchMessages } from "./use-fetch-messages";
+import { useRealtimeMessages } from "./use-realtime-messages";
+
 export function useMessagesWithRealtime({ chatroomId } : { chatroomId: string }) {
-  const { messages: initialMessages, loading, error } = useMessages({ chatroomId });
+  const { messages: initialMessages, loading, error } = useFetchMessages({ chatroomId });
   const [realtimeMessages, setRealtimeMessages] = useState<Message[]>(initialMessages);
   const [deletedMessageIds, setDeletedMessageIds] = useState<Set<string>>(new Set());
 
