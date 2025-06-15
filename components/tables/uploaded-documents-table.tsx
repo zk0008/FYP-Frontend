@@ -9,13 +9,15 @@ import {
 import { Document } from "@/types";
 import { DownloadDocumentButton, DeleteDocumentButton } from "@/components/buttons";
 
+interface UploadedDocumentsTableProps {
+  documents: Document[];
+  onDocumentDeleted: () => void;
+}
+
 export function UploadedDocumentsTable({
   documents,
   onDocumentDeleted
-}: {
-  documents: Document[];
-  onDocumentDeleted: () => void;
-}) {
+}: UploadedDocumentsTableProps) {
   return (
     <Table>
       <TableHeader>
