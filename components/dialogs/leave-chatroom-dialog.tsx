@@ -41,7 +41,7 @@ export function LeaveChatroomDialog({
       open={ open }
       onOpenChange={ onOpenChange }
       title="Leave Chatroom"
-      description="Are you sure you want to leave this chatroom? You will no longer receive messages or notifications from this chatroom."
+      description="This action cannot be undone. You will no longer be able to access it until you have been re-invited."
     >
       <div className="flex justify-end space-x-2">
         <Button variant="outline" onClick={() => onOpenChange(false)}>
