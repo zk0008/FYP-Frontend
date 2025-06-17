@@ -4,6 +4,11 @@ import { Chatroom } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 import { useToast } from "@/hooks";
 
+interface useRealtimeChatroomProps {
+  onUpdateChatroom: (chatroom: Chatroom) => void;
+  onDeleteChatroom: (chatroomId: string) => void;
+}
+
 interface ChatroomPayload {
   chatroom_id: string;
   creator_id: string;
@@ -13,7 +18,10 @@ interface ChatroomPayload {
 
 const supabase = createClient();
 
-export function useRealtimeChatroom({ onUpdateChatroom }: { onUpdateChatroom: (chatroom: Chatroom) => void }) {
+export function useRealtimeChatroom({
+  onUpdateChatroom,
+  onDeleteChatroom
+}: useRealtimeChatroomProps) {
   const { toast } = useToast();
 
   useEffect(() => {
@@ -23,7 +31,6 @@ export function useRealtimeChatroom({ onUpdateChatroom }: { onUpdateChatroom: (c
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "chatrooms" },
         async (payload: { new: ChatroomPayload }) => {
-          console.log("Chatroom updated:", payload);
           const updatedChatroom = payload.new;
 
           const chatroomData: Chatroom = {
@@ -35,10 +42,18 @@ export function useRealtimeChatroom({ onUpdateChatroom }: { onUpdateChatroom: (c
           onUpdateChatroom(chatroomData);
         }
       )
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "chatrooms" },
+        (payload) => {
+          const deletedChatroomId = payload.old.chatroom_id;
+          onDeleteChatroom(deletedChatroomId);
+        }
+      )
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [onUpdateChatroom, toast]);
+  }, [onUpdateChatroom, onDeleteChatroom, toast]);
 }

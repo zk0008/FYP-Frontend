@@ -58,9 +58,20 @@ export function useFetchChatrooms({ userId }: { userId: string }) {
     });
   }, []);
 
+  const removeChatroom = useCallback((chatroomId: string) => {
+    setChatrooms(prev => prev.filter(chatroom => chatroom.chatroomId !== chatroomId));
+  }, []);
+
   useEffect(() => {
     fetchChatrooms();
   }, [userId]);
 
-  return { chatrooms, loading, error, refresh: fetchChatrooms, updateChatrooms };
+  return {
+    chatrooms,
+    loading,
+    error,
+    refresh: fetchChatrooms,
+    updateChatrooms,
+    removeChatroom
+  };
 }
