@@ -7,8 +7,7 @@ const supabase = createClient();
 
 export function useDownloadDocument({ filename }: { filename: string }) {
   const { currentChatroom } = useUnifiedChatroomContext();
-  ;;;
-  const { toast } = useToast();
+    const { toast } = useToast();
   const [isDownloading, setIsDownloading] = useState(false);
 
   const downloadDocument = useCallback(async () => {

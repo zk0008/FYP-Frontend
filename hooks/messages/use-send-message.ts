@@ -15,8 +15,7 @@ interface GroupGPTRequest {
 export function useSendMessage() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { currentChatroom } = useUnifiedChatroomContext();
-  ;;;
-  const { user } = useUserContext();
+    const { user } = useUserContext();
   const { toast } = useToast();
 
   const sendToGroupGPT = useCallback(async (content: string): Promise<boolean> => {

@@ -8,8 +8,7 @@ import { useUnifiedChatroomContext, useRealtimeDocuments } from "@/hooks";
 
 export default function ChatsPage() {
   const { currentChatroom } = useUnifiedChatroomContext();
-  ;;;
-
+  
   // Initialize realtime document updates for the logged-in user
   useRealtimeDocuments();
 

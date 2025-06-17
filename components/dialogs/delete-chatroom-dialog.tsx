@@ -18,8 +18,7 @@ export function DeleteChatroomDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const { refresh, currentChatroom } = useUnifiedChatroomContext();
-  ;;;
-  const { deleteChatroom, isLoading } = useDeleteChatroom();
+    const { deleteChatroom, isLoading } = useDeleteChatroom();
   const router = useRouter();
 
   const handleDelete = async () => {

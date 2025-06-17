@@ -18,8 +18,7 @@ export function LeaveChatroomDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const { refresh, currentChatroom } = useUnifiedChatroomContext();
-  ;;;
-  const { leaveChatroom, isLoading } = useLeaveChatroom();
+    const { leaveChatroom, isLoading } = useLeaveChatroom();
   const { user } = useUserContext();
   const router = useRouter();
 

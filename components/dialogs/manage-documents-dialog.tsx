@@ -16,8 +16,7 @@ export function ManageDocumentsDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const { currentChatroom } = useUnifiedChatroomContext();
-  ;;;
-  const { documents, refresh } = useFetchDocuments(currentChatroom?.chatroomId || "");
+    const { documents, refresh } = useFetchDocuments(currentChatroom?.chatroomId || "");
 
   return (
     <BaseDialog

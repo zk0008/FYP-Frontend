@@ -25,8 +25,7 @@ import {
 export function ChatroomMenu() {
   const { user } = useUserContext();
   const { currentChatroom } = useUnifiedChatroomContext();
-  ;;;
-
+  
   const [isEditChatroomDialogOpen, setIsEditChatroomDialogOpen] = useState<boolean>(false);
   const [isInviteUserDialogOpen, setIsInviteUserDialogOpen] = useState<boolean>(false);
   const [isManageFilesDialogOpen, setIsManageFilesDialogOpen] = useState<boolean>(false);

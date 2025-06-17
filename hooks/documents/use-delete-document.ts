@@ -13,8 +13,7 @@ export function useDeleteDocument({
   filename: string
 }) {
   const { currentChatroom } = useUnifiedChatroomContext();
-  ;;;
-  const { toast } = useToast();
+    const { toast } = useToast();
 
   const deleteDocumentEntry = useCallback(async () => {
     try {
