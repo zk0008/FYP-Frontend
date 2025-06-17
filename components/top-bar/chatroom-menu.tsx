@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useChatroomContext, useUserContext } from "@/hooks";
+import { useUnifiedChatroomContext, useUserContext } from "@/hooks";
 import {
   DeleteChatroomDialog,
   EditChatroomDialog,
@@ -24,7 +24,8 @@ import {
 
 export function ChatroomMenu() {
   const { user } = useUserContext();
-  const { chatroom } = useChatroomContext();
+  const { currentChatroom } = useUnifiedChatroomContext();
+  ;;;
 
   const [isEditChatroomDialogOpen, setIsEditChatroomDialogOpen] = useState<boolean>(false);
   const [isInviteUserDialogOpen, setIsInviteUserDialogOpen] = useState<boolean>(false);
@@ -32,7 +33,7 @@ export function ChatroomMenu() {
   const [isLeaveChatroomDialogOpen, setIsLeaveChatroomDialogOpen] = useState<boolean>(false);
   const [isDeleteChatroomDialogOpen, setIsDeleteChatroomDialogOpen] = useState<boolean>(false);
 
-  const isCreator = user?.userId === chatroom?.creatorId;
+  const isCreator = user?.userId === currentChatroom?.creatorId;
 
   return (
     <DropdownMenu>

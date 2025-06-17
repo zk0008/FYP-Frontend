@@ -3,7 +3,7 @@ import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Invite } from "@/types";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useAcceptInvite, useChatroomsContext } from "@/hooks";
+import { useAcceptInvite, useUnifiedChatroomContext } from "@/hooks";
 
 interface AcceptInviteButtonProps {
   invite: Invite;
@@ -15,7 +15,7 @@ export function AcceptInviteButton({
   onAccepted
 }: AcceptInviteButtonProps) {
   const { acceptInvite } = useAcceptInvite({ invite });
-  const { refresh: refreshChatrooms } = useChatroomsContext();
+  const { refresh: refreshChatrooms } = useUnifiedChatroomContext();
 
   const handleAccept = async () => {
     await acceptInvite();

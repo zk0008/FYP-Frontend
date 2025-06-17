@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { UploadedDocumentsTable } from "@/components/tables/uploaded-documents-table";
 
 import { BaseDialog } from "./base-dialog";
-import { useChatroomContext, useFetchDocuments } from "@/hooks";
+import { useUnifiedChatroomContext, useFetchDocuments } from "@/hooks";
 
 export function ManageDocumentsDialog({
   open,
@@ -15,8 +15,9 @@ export function ManageDocumentsDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const { chatroom } = useChatroomContext();
-  const { documents, refresh } = useFetchDocuments(chatroom?.chatroomId || "");
+  const { currentChatroom } = useUnifiedChatroomContext();
+  ;;;
+  const { documents, refresh } = useFetchDocuments(currentChatroom?.chatroomId || "");
 
   return (
     <BaseDialog

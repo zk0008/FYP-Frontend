@@ -16,7 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useToast, useChatroomContext, useChatroomsContext } from "@/hooks";
+import { useToast, useUnifiedChatroomContext } from "@/hooks";
 
 const editChatroomFormSchema = z.object({
   name: z.string()
@@ -27,8 +27,8 @@ const editChatroomFormSchema = z.object({
 const supabase = createClient();
 
 export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
-  const { chatroom, refresh: refreshCurrentChatroom } = useChatroomContext();
-  const { refresh: refreshChatroomsList } = useChatroomsContext();
+  const { refresh, currentChatroom } = useUnifiedChatroomContext();
+  ;;;
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof editChatroomFormSchema>>({
@@ -39,7 +39,7 @@ export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
   });
 
   const onSubmit = async (data: z.infer<typeof editChatroomFormSchema>) => {
-    if (!chatroom) {
+    if (!currentChatroom) {
       toast({
         title: "Error Editing Chatroom",
         description: "No chatroom selected.",
@@ -51,7 +51,7 @@ export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
     const { error } = await supabase
       .from("chatrooms")
       .update({ name: data.name })
-      .eq("chatroom_id", chatroom.chatroomId);
+      .eq("chatroom_id", currentChatroom.chatroomId);
 
     if (error) {
       toast({
@@ -67,8 +67,9 @@ export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
       description: `Chatroom name changed to "${data.name}".`,
     });
 
-    refreshCurrentChatroom();   // Refresh the chatroom context to reflect changes
-    refreshChatroomsList();     // Refresh the chatrooms list to reflect changes
+    refresh();
+    // refreshCurrentChatroom();   // Refresh the chatroom context to reflect changes
+    // refreshChatroomsList();     // Refresh the chatrooms list to reflect changes
     onSuccess?.();              // Call the success callback if provided
   }
 
@@ -84,7 +85,7 @@ export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
               <FormControl>
                 <input
                   type="text"
-                  placeholder={ chatroom ? chatroom.name : "Enter chatroom name" }
+                  placeholder={ currentChatroom ? currentChatroom.name : "Enter chatroom name" }
                   className="rounded-md px-1 border-2 border-black w-full h-8"
                   { ...field }
                   onKeyDown={(e) => e.stopPropagation()} // Required to allow spaces in input

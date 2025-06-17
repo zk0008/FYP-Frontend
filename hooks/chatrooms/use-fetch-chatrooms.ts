@@ -41,9 +41,25 @@ export function useFetchChatrooms({ userId }: { userId: string }) {
     }
   }, [userId]);
 
+  const updateChatrooms = useCallback((updatedChatroom: Chatroom) => {
+    setChatrooms(prev => {
+      // Real-time updates will relay every single chatroom update, even if the chatroom is not in the user's chatrooms list
+      // So, first check if the chatroomId is in the current chatrooms list
+      // If not, return the previous state unchanged
+      if (!prev.some(chatroom => chatroom.chatroomId === updatedChatroom.chatroomId)) return prev;
+
+      // If updatedChatroom is in the current chatrooms list, return updated chatrooms list with the updated chatroom
+      return prev.map(chatroom =>
+        chatroom.chatroomId === updatedChatroom.chatroomId
+          ? { ...chatroom, ...updatedChatroom } // updatedChatroom's properties will override chatroom's, if conflicting
+          : chatroom
+      );
+    });
+  }, []);
+
   useEffect(() => {
     fetchChatrooms();
   }, [userId]);
 
-  return { chatrooms, loading, error, refresh: fetchChatrooms };
+  return { chatrooms, loading, error, refresh: fetchChatrooms, updateChatrooms };
 }

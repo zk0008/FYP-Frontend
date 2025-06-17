@@ -1,9 +1,9 @@
 "use client";
 
-import { createContext } from "react";
+import { createContext, useCallback } from "react";
 
 import { Chatroom } from "@/types";
-import { useFetchChatroom } from "@/hooks";
+import { useFetchChatroom, useRealtimeChatroom } from "@/hooks";
 
 interface ChatroomContextType {
   chatroom: Chatroom | null;
@@ -20,7 +20,20 @@ export const ChatroomContext = createContext<ChatroomContextType>({
 });
 
 export function ChatroomProvider({ children, chatroomId } : { children: React.ReactNode, chatroomId: string }) {
-  const { chatroom, loading, error, refresh } = useFetchChatroom(chatroomId);
+  const {
+    chatroom,
+    loading,
+    error,
+    refresh,
+    updateChatroom
+  } = useFetchChatroom(chatroomId);
+
+  const handleChatroomUpdate = useCallback((updatedChatroom: Chatroom) => {
+    updateChatroom(updatedChatroom);
+  }, [updateChatroom]);
+
+  // Subscribe to real-time updates
+  useRealtimeChatroom({ onUpdateChatroom: handleChatroomUpdate });
 
   const contextValue: ChatroomContextType = { chatroom, loading, error, refresh };
 

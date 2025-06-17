@@ -1,24 +1,25 @@
 import { useCallback, useState } from "react";
 
 import { createClient } from "@/utils/supabase/client";
-import { useChatroomContext, useToast } from "@/hooks";
+import { useUnifiedChatroomContext, useToast } from "@/hooks";
 
 const supabase = createClient();
 
 export function useDownloadDocument({ filename }: { filename: string }) {
-  const { chatroom } = useChatroomContext();
+  const { currentChatroom } = useUnifiedChatroomContext();
+  ;;;
   const { toast } = useToast();
   const [isDownloading, setIsDownloading] = useState(false);
 
   const downloadDocument = useCallback(async () => {
-    if (!filename || !chatroom?.chatroomId) return;
+    if (!filename || !currentChatroom?.chatroomId) return;
 
     setIsDownloading(true);
 
     try {
       const { data, error } = await supabase.storage
         .from("uploaded-documents")
-        .download(`${chatroom!.chatroomId}/${filename}`);
+        .download(`${currentChatroom!.chatroomId}/${filename}`);
 
       if (error) {
         throw new Error(error.message);
@@ -52,7 +53,7 @@ export function useDownloadDocument({ filename }: { filename: string }) {
     } finally {
       setIsDownloading(false);
     }
-  }, [filename, chatroom, toast]);
+  }, [filename, currentChatroom, toast]);
 
   return { isDownloading, downloadDocument };
 }

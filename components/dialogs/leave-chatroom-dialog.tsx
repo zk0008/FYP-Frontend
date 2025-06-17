@@ -4,8 +4,7 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
-  useChatroomContext,
-  useChatroomsContext,
+  useUnifiedChatroomContext,
   useLeaveChatroom,
   useUserContext
 } from "@/hooks";
@@ -18,8 +17,8 @@ export function LeaveChatroomDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const { chatroom } = useChatroomContext();
-  const { refresh } = useChatroomsContext();
+  const { refresh, currentChatroom } = useUnifiedChatroomContext();
+  ;;;
   const { leaveChatroom, isLoading } = useLeaveChatroom();
   const { user } = useUserContext();
   const router = useRouter();
@@ -27,8 +26,8 @@ export function LeaveChatroomDialog({
   const handleLeave = async () => {
     const result = await leaveChatroom({
       userId: user?.userId || "",
-      chatroomId: chatroom?.chatroomId || "",
-      name: chatroom?.name || ""
+      chatroomId: currentChatroom?.chatroomId || "",
+      name: currentChatroom?.name || ""
     });
 
     if (result.success) {

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { Chatroom } from "@/types";
 import { createClient } from "@/utils/supabase/client";
+import { set } from "react-hook-form";
 
 const supabase = createClient();
 
@@ -50,9 +51,17 @@ export function useFetchChatroom(chatroomId: string) {
     }
   }, [chatroomId]);
 
+  const updateChatroom = useCallback((updatedChatroom: Chatroom) => {
+    setChatroom(prev => {
+      if (prev?.chatroomId !== updatedChatroom.chatroomId) return prev;
+
+      return { ...prev, ...updatedChatroom };   // updatedChatroom's properties will override prev's, if conflicting
+    });
+  }, []);
+
   useEffect(() => {
     fetchChatroom();
   }, [chatroomId, fetchChatroom]);
 
-  return { chatroom, loading, error, refresh: fetchChatroom };
+  return { chatroom, loading, error, refresh: fetchChatroom, updateChatroom };
 }

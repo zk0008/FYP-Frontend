@@ -3,14 +3,15 @@ import { useState, useCallback } from "react";
 import { fetchWithAuth } from "@/utils";
 import { MAX_FILE_SIZE_MB } from "@/utils/constants";
 import {
-  useChatroomContext,
+  useUnifiedChatroomContext,
   useUserContext,
   useToast
 } from "@/hooks";
 
 export function useUploadDocument() {
   const [isUploading, setIsUploading] = useState<boolean>(false);
-  const { chatroom } = useChatroomContext();
+  const { currentChatroom } = useUnifiedChatroomContext();
+  ;;;
   const { user } = useUserContext();
   const { toast } = useToast();
 
@@ -37,7 +38,7 @@ export function useUploadDocument() {
       const formData = new FormData();
       formData.append("uploaded_file", file);
       formData.append("uploader_id", user!.userId);
-      formData.append("chatroom_id", chatroom!.chatroomId);
+      formData.append("chatroom_id", currentChatroom!.chatroomId);
 
       const response = await fetchWithAuth("/api/files/upload", {
         method: "POST",
@@ -60,10 +61,10 @@ export function useUploadDocument() {
 
       return false;
     }
-  }, [chatroom, user, toast]);
+  }, [currentChatroom, user, toast]);
 
   const uploadDocument = useCallback(async (file: File): Promise<void> => {
-    if (!file || !chatroom?.chatroomId || !user?.userId) return;
+    if (!file || !currentChatroom?.chatroomId || !user?.userId) return;
 
     const validationError = validateDocument(file);
     if (validationError) {
@@ -98,7 +99,7 @@ export function useUploadDocument() {
     } finally {
       setIsUploading(false);
     }
-  }, [chatroom, user, toast]);
+  }, [currentChatroom, user, toast]);
 
   const uploadMultipleDocuments = useCallback(async (files: File[]): Promise<void> => {
     for (let i = 0; i < files.length; i++) {

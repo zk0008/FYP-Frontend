@@ -6,7 +6,7 @@ import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 
 import { ToastAction } from "@radix-ui/react-toast";
 import {
-  useChatroomContext,
+  useUnifiedChatroomContext,
   useMessagesWithRealtime,
   useToast
 } from "@/hooks";
@@ -14,10 +14,11 @@ import {
 import { MessageBubble } from "./message-bubble";
 
 export function MessagesList() {
-  const { chatroom } = useChatroomContext();
+  const { currentChatroom } = useUnifiedChatroomContext();
+  ;;;
   const { toast } = useToast();
 
-  const { messages, loading, error } = useMessagesWithRealtime({ chatroomId: chatroom?.chatroomId || "" });
+  const { messages, loading, error } = useMessagesWithRealtime({ chatroomId: currentChatroom?.chatroomId || "" });
 
   if (loading) {
     return (

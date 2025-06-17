@@ -1,8 +1,9 @@
 "use client";
 
+import { createContext, useCallback } from "react";
+
 import { Chatroom } from "@/types";
-import { createContext } from "react";
-import { useFetchChatrooms, useUserContext } from "@/hooks";
+import { useFetchChatrooms, useRealtimeChatroom, useUserContext } from "@/hooks";
 
 interface ChatroomsContextType {
   chatrooms: Chatroom[];
@@ -20,7 +21,21 @@ export const ChatroomsContext = createContext<ChatroomsContextType>({
 
 export function ChatroomsProvider({ children }: { children: React.ReactNode }) {
   const { user } = useUserContext();
-  const { chatrooms, loading, error, refresh } = useFetchChatrooms({ userId: user?.userId || "" });
+  // TODO: When one user edits a chatroom, the update should be reflected across all users through realtime
+  const {
+    chatrooms,
+    loading,
+    error,
+    refresh,
+    updateChatrooms
+  } = useFetchChatrooms({ userId: user?.userId || "" });
+
+  const handleChatroomUpdate = useCallback((updatedChatroom: Chatroom) => {
+    updateChatrooms(updatedChatroom);
+  }, [updateChatrooms]);
+
+  // Subscribe to real-time updates
+  useRealtimeChatroom({ onUpdateChatroom: handleChatroomUpdate });
 
   const contextValue: ChatroomsContextType = { chatrooms, loading, error, refresh };
 

@@ -16,7 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useToast, useChatroomsContext, useUserContext } from "@/hooks";
+import { useToast, useUnifiedChatroomContext, useUserContext } from "@/hooks";
 
 const createChatroomFormSchema = z.object({
   name: z.string().min(2, "Chatroom name must be at least 2 characters long").max(64, "Chatroom name must be at most 64 characters long")
@@ -26,7 +26,7 @@ const supabase = createClient();
 
 export function CreateChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
   const { user } = useUserContext();
-  const { refresh: refreshChatroomsList } = useChatroomsContext();
+  const { refresh: refreshChatroomsList } = useUnifiedChatroomContext();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof createChatroomFormSchema>>({

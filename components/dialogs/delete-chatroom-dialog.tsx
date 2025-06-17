@@ -4,8 +4,7 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
-  useChatroomContext,
-  useChatroomsContext,
+  useUnifiedChatroomContext,
   useDeleteChatroom
 } from "@/hooks";
 
@@ -18,15 +17,15 @@ export function DeleteChatroomDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const { chatroom } = useChatroomContext();
-  const { refresh } = useChatroomsContext();
+  const { refresh, currentChatroom } = useUnifiedChatroomContext();
+  ;;;
   const { deleteChatroom, isLoading } = useDeleteChatroom();
   const router = useRouter();
 
   const handleDelete = async () => {
     const result = await deleteChatroom({
-      chatroomId: chatroom?.chatroomId || "",
-      name: chatroom?.name || ""
+      chatroomId: currentChatroom?.chatroomId || "",
+      name: currentChatroom?.name || ""
     });
 
     if (result.success) {
