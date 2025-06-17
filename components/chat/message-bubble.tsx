@@ -8,7 +8,7 @@ import {
   ChatBubbleAvatar,
   ChatBubbleMessage
 } from "@/components/ui/chat/chat-bubble";
-import { CopyMessageButton } from "@/components/buttons";
+import { CopyMessageButton, DeleteMessageButton } from "@/components/buttons";
 import { getInitials } from "@/utils";
 import Icon from "@/public/GroupGPT.png";
 import { useUserContext } from "@/hooks";
@@ -49,9 +49,10 @@ export function MessageBubble({
           </div>
         </ChatBubbleMessage>
         <ChatBubbleActionWrapper className={`absolute bottom-0 top-auto translate-x-0 translate-y-0 px-2 ${
-          isOwnMessage ? "-left-12" : "-right-12"
+          isOwnMessage ? "-left-20" : "-right-20"
         }`}>
           <CopyMessageButton messageId={ messageId } content={ content } />
+          <DeleteMessageButton messageId={ messageId } />
         </ChatBubbleActionWrapper>
       </div>
     </ChatBubble>

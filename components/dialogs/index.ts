@@ -6,3 +6,4 @@ export { InviteUserDialog } from "./invite-user-dialog";
 export { LeaveChatroomDialog } from "./leave-chatroom-dialog";
 export { ManageDocumentsDialog } from "./manage-documents-dialog";
 export { ManageInvitesDialog } from "./manage-invites-dialog";
+export { DeleteMessageDialog } from "./delete-message-dialog";

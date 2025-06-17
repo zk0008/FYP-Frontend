@@ -18,7 +18,7 @@ export function LeaveChatroomDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const { refresh, currentChatroom } = useUnifiedChatroomContext();
-    const { leaveChatroom, isLoading } = useLeaveChatroom();
+  const { leaveChatroom, isLoading } = useLeaveChatroom();
   const { user } = useUserContext();
   const router = useRouter();
 
@@ -48,7 +48,7 @@ export function LeaveChatroomDialog({
           Cancel
         </Button>
         <Button variant="destructive" onClick={ handleLeave } disabled={ isLoading }>
-          Leave Chatroom
+          Leave
         </Button>
       </div>
     </BaseDialog>

@@ -34,7 +34,7 @@ const supabase = createClient();
 
 export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
   const { currentChatroom } = useUnifiedChatroomContext();
-    const { toast } = useToast();
+  const { toast } = useToast();
   const { user } = useUserContext();
 
   const form = useForm<z.infer<typeof inviteUserFormSchema>>({

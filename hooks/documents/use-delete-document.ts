@@ -15,7 +15,7 @@ export function useDeleteDocument({
   filename
 }: useDeleteDocumentProps) {
   const { currentChatroom } = useUnifiedChatroomContext();
-    const { toast } = useToast();
+  const { toast } = useToast();
 
   const deleteDocumentEntry = useCallback(async () => {
     try {

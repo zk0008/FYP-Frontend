@@ -18,7 +18,6 @@ import { ChatroomItem } from "./chatroom-item";
 
 export function ChatroomsList() {
   const { chatrooms, loading: chatroomsLoading, error: chatroomsError } = useUnifiedChatroomContext();
-  // const { chatrooms, loading: chatroomsLoading, error: chatroomsError } = useFetchChatrooms({ userId: user?.userId || "" });
   const [isCreateChatroomDialogOpen, setIsCreateChatroomDialogOpen] = useState(false);
   const { toast } = useToast();
 

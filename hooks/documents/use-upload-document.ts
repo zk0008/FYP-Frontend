@@ -11,7 +11,7 @@ import {
 export function useUploadDocument() {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const { currentChatroom } = useUnifiedChatroomContext();
-    const { user } = useUserContext();
+  const { user } = useUserContext();
   const { toast } = useToast();
 
   const validateDocument = useCallback((file: File): string | null => {
