@@ -7,19 +7,11 @@ import { Chatroom } from "@/types";
 import { useFetchChatrooms, useRealtimeChatroom, useUserContext } from "@/hooks";
 
 interface UnifiedChatroomContextType {
-  // Chatrooms list
-  chatrooms: Chatroom[];
+  chatrooms: Chatroom[];              // Chatrooms list
+  currentChatroom: Chatroom | null;   // Current chatroom
   loading: boolean;
   error: string | null;
   refresh: () => void;
-
-  // Current chatroom
-  currentChatroom: Chatroom | null;
-  // currentChatroom: (chatroomId: string) => {
-  //   chatroom: Chatroom | null;
-  //   loading: boolean;
-  //   error: string | null;
-  // };
 }
 
 export const UnifiedChatroomContext = createContext<UnifiedChatroomContextType>({
@@ -27,8 +19,7 @@ export const UnifiedChatroomContext = createContext<UnifiedChatroomContextType>(
   loading: false,
   error: null,
   refresh: () => null,
-  currentChatroom: null,
-  // currentChatroom: () => ({ chatroom: null, loading: false, error: null }),
+  currentChatroom: null
 });
 
 export function UnifiedChatroomProvider({ children }: { children: React.ReactNode }) {
@@ -58,12 +49,6 @@ export function UnifiedChatroomProvider({ children }: { children: React.ReactNod
   const currentChatroom = useMemo(() =>{
     return currentChatroomId ? getChatroom(currentChatroomId) : null;
   }, [currentChatroomId, getChatroom, chatrooms]);
-
-  // const currentChatroom = useCallback(() => {
-  //   const chatroom = chatrooms.find(c => c.chatroomId === chatroomId) || null;
-  //   return { chatroom, loading, error,
-  //   };
-  // }, [chatrooms, loading, error]);
 
   const contextValue: UnifiedChatroomContextType = useMemo(() => ({
     chatrooms,

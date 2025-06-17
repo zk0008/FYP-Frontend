@@ -28,6 +28,7 @@ export function useFetchChatrooms({ userId }: { userId: string }) {
       if (data) {
         const chatroomsData = data.map((item: any) => ({
           chatroomId: item.chatroom_id,
+          creatorId: item.creator_id,
           name: item.name
         }));
         setChatrooms(chatroomsData);
