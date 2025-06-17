@@ -24,6 +24,7 @@ export { useRealtimeChatroom } from "./chatrooms/use-realtime-chatroom";
 // =============================================================================
 // MESSAGES
 // =============================================================================
+export { useDeleteMessage } from "./messages/use-delete-message";
 export { useMessagesWithRealtime } from "./messages/use-messages-with-realtime";
 export { useSendMessage } from "./messages/use-send-message";
 

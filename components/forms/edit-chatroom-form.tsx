@@ -28,7 +28,7 @@ const supabase = createClient();
 
 export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
   const { refresh, currentChatroom } = useUnifiedChatroomContext();
-    const { toast } = useToast();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof editChatroomFormSchema>>({
     resolver: zodResolver(editChatroomFormSchema),
