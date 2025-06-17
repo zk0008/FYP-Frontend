@@ -1,8 +1,6 @@
 "use client";
 
 import {
-  ChatroomProvider,
-  ChatroomsProvider,
   InvitesProvider,
   UnifiedChatroomProvider,
   UserProvider
@@ -13,11 +11,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <UserProvider>
       <InvitesProvider>
         <UnifiedChatroomProvider>
-        {/* <ChatroomsProvider>
-          <ChatroomProvider chatroomId={ chatroomId }> */}
-            { children }
-          {/* </ChatroomProvider>
-        </ChatroomsProvider> */}
+          { children }
         </UnifiedChatroomProvider>
       </InvitesProvider>
     </UserProvider>

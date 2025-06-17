@@ -3,9 +3,13 @@ import { useCallback, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useUnifiedChatroomContext, useToast } from "@/hooks";
 
+interface useDownloadDocumentProps {
+  filename: string;
+}
+
 const supabase = createClient();
 
-export function useDownloadDocument({ filename }: { filename: string }) {
+export function useDownloadDocument({ filename }: useDownloadDocumentProps) {
   const { currentChatroom } = useUnifiedChatroomContext();
     const { toast } = useToast();
   const [isDownloading, setIsDownloading] = useState(false);

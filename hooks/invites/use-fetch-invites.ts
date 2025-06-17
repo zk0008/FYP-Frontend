@@ -3,9 +3,13 @@ import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Invite } from "@/types";
 
+interface useFetchInvitesProps {
+  userId: string;
+}
+
 const supabase = createClient();
 
-export function useFetchInvites({ userId }: { userId: string }) {
+export function useFetchInvites({ userId }: useFetchInvitesProps) {
   const [pendingInvites, setPendingInvites] = useState<Invite[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

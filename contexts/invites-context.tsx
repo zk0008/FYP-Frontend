@@ -2,15 +2,8 @@
 
 import { createContext, useCallback } from "react";
 
-import { Invite } from "@/types";
+import { Invite, InvitesContextType } from "@/types";
 import { useUserContext, useFetchInvites, useRealtimeInvites } from "@/hooks";
-
-interface InvitesContextType {
-  invites: Invite[];
-  loading: boolean;
-  error: string | null;
-  refresh: () => void;
-}
 
 export const InvitesContext = createContext<InvitesContextType>({
   invites: [],

@@ -4,13 +4,13 @@ import { createClient } from "@/utils/supabase/client";
 import { fetchWithAuth } from "@/utils";
 import { useUnifiedChatroomContext, useUserContext, useToast } from "@/hooks";
 
-const supabase = createClient();
-
 interface GroupGPTRequest {
   username: string;
   chatroom_id: string;
   content: string;
 };
+
+const supabase = createClient();
 
 export function useSendMessage() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);

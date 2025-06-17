@@ -4,6 +4,12 @@ import { createClient } from "@/utils/supabase/client";
 import { Message } from "@/types";
 import { useToast } from "@/hooks";
 
+interface useRealtimeMessagesProps {
+  chatroomId: string;
+  onNewMessage: (message: Message) => void;
+  onDeleteMessage: (messageId: string) => void;
+}
+
 interface MessagePayload {
   chatroom_id: string;
   content: string;
@@ -18,11 +24,7 @@ export function useRealtimeMessages({
   chatroomId,
   onNewMessage,
   onDeleteMessage
-} : {
-  chatroomId: string;
-  onNewMessage: (message: Message) => void;
-  onDeleteMessage: (messageId: string) => void;
-}) {
+}: useRealtimeMessagesProps) {
   const { toast } = useToast();
 
   useEffect(() => {

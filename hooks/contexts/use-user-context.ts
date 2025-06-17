@@ -2,15 +2,8 @@
 
 import { useContext } from "react";
 
-import { User } from "@/types";
+import { UserContextType } from "@/types";
 import { UserContext } from "@/contexts";
-
-interface UserContextType {
-  user: User | null;
-  loading: boolean;
-  error: string | null;
-  refresh: () => void;
-};
 
 export function useUserContext(): UserContextType {
   const userContext = useContext(UserContext);

@@ -2,15 +2,8 @@
 
 import { createContext } from "react";
 
-import { User } from "@/types"
+import { UserContextType } from "@/types"
 import { useFetchUser } from "@/hooks";
-
-interface UserContextType {
-  user: User | null;
-  loading: boolean;
-  error: string | null;
-  refresh: () => void;
-};
 
 export const UserContext = createContext<UserContextType>({
   user: null,

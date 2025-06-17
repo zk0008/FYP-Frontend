@@ -5,7 +5,11 @@ import { Message } from "@/types";
 import { useFetchMessages } from "./use-fetch-messages";
 import { useRealtimeMessages } from "./use-realtime-messages";
 
-export function useMessagesWithRealtime({ chatroomId } : { chatroomId: string }) {
+interface useMessagesWithRealtimeProps {
+  chatroomId: string;
+}
+
+export function useMessagesWithRealtime({ chatroomId } : useMessagesWithRealtimeProps) {
   const { messages: initialMessages, loading, error } = useFetchMessages({ chatroomId });
   const [realtimeMessages, setRealtimeMessages] = useState<Message[]>(initialMessages);
   const [deletedMessageIds, setDeletedMessageIds] = useState<Set<string>>(new Set());

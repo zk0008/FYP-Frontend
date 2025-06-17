@@ -3,11 +3,9 @@
 // =============================================================================
 // CONTEXTS (Global State Management)
 // =============================================================================
-export { useChatroomContext } from "./contexts/use-chatroom-context";
-export { useChatroomsContext } from "./contexts/use-chatrooms-context";
 export { useInvitesContext } from "./contexts/use-invites-context";
-export { useUserContext } from "./contexts/use-user-context";
 export { useUnifiedChatroomContext } from "./contexts/use-unified-chatroom-context";
+export { useUserContext } from "./contexts/use-user-context";
 
 // =============================================================================
 // AUTHENTICATION & USER

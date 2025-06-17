@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 
 import { Chatroom } from "@/types";
 import { createClient } from "@/utils/supabase/client";
-import { set } from "react-hook-form";
 
 const supabase = createClient();
 

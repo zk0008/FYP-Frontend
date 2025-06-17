@@ -3,21 +3,13 @@
 import { createContext, useCallback, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
-import { Chatroom } from "@/types";
+import { Chatroom, UnifiedChatroomContextType } from "@/types";
 import {
   useFetchChatrooms,
   useRealtimeChatroom,
   useToast,
   useUserContext
 } from "@/hooks";
-
-interface UnifiedChatroomContextType {
-  chatrooms: Chatroom[];              // Chatrooms list
-  currentChatroom: Chatroom | null;   // Current chatroom
-  loading: boolean;
-  error: string | null;
-  refresh: () => void;
-}
 
 export const UnifiedChatroomContext = createContext<UnifiedChatroomContextType>({
   chatrooms: [],

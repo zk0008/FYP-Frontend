@@ -3,18 +3,18 @@ import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useToast } from "@/hooks";
 
-const supabase = createClient();
-
-interface DeleteChatroomParams {
+interface deleteChatroomProps {
   chatroomId: string;
   name: string;
 }
+
+const supabase = createClient();
 
 export function useDeleteChatroom() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast(); 
 
-  const deleteChatroom = async ({ chatroomId, name }: DeleteChatroomParams) => {
+  const deleteChatroom = async ({ chatroomId, name }: deleteChatroomProps) => {
     if (!chatroomId || !name) {
       toast({
         title: "Invalid Parameters",

@@ -4,9 +4,9 @@ import { RefreshCw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { UploadedDocumentsTable } from "@/components/tables/uploaded-documents-table";
+import { useUnifiedChatroomContext, useFetchDocuments } from "@/hooks";
 
 import { BaseDialog } from "./base-dialog";
-import { useUnifiedChatroomContext, useFetchDocuments } from "@/hooks";
 
 export function ManageDocumentsDialog({
   open,
@@ -16,7 +16,7 @@ export function ManageDocumentsDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const { currentChatroom } = useUnifiedChatroomContext();
-    const { documents, refresh } = useFetchDocuments(currentChatroom?.chatroomId || "");
+    const { documents, refresh } = useFetchDocuments({ chatroomId: currentChatroom?.chatroomId || "" });
 
   return (
     <BaseDialog

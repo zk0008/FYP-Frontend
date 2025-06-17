@@ -3,15 +3,17 @@ import { useCallback } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useUnifiedChatroomContext, useToast } from "@/hooks";
 
+interface useDeleteDocumentProps {
+  documentId: string;
+  filename: string;
+}
+
 const supabase = createClient();
 
 export function useDeleteDocument({
   documentId,
   filename
-}: {
-  documentId: string;
-  filename: string
-}) {
+}: useDeleteDocumentProps) {
   const { currentChatroom } = useUnifiedChatroomContext();
     const { toast } = useToast();
 
