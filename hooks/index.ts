@@ -3,9 +3,8 @@
 // =============================================================================
 // CONTEXTS (Global State Management)
 // =============================================================================
-export { useChatroomContext } from "./contexts/use-chatroom-context";
-export { useChatroomsContext } from "./contexts/use-chatrooms-context";
 export { useInvitesContext } from "./contexts/use-invites-context";
+export { useUnifiedChatroomContext } from "./contexts/use-unified-chatroom-context";
 export { useUserContext } from "./contexts/use-user-context";
 
 // =============================================================================
@@ -20,6 +19,7 @@ export { useFetchChatroom } from "./chatrooms/use-fetch-chatroom";
 export { useFetchChatrooms } from "./chatrooms/use-fetch-chatrooms";
 export { useDeleteChatroom } from "./chatrooms/use-delete-chatroom";
 export { useLeaveChatroom } from "./chatrooms/use-leave-chatroom";
+export { useRealtimeChatroom } from "./chatrooms/use-realtime-chatroom";
 
 // =============================================================================
 // MESSAGES

@@ -3,9 +3,13 @@ import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Document } from "@/types";
 
+interface useFetchDocumentsProps {
+  chatroomId: string;
+}
+
 const supabase = createClient();
 
-export function useFetchDocuments(chatroomId: string) {
+export function useFetchDocuments({ chatroomId }: useFetchDocumentsProps) {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

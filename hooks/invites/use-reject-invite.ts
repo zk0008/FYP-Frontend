@@ -4,13 +4,13 @@ import { createClient } from "@/utils/supabase/client";
 import { Invite } from "@/types";
 import { useToast, useUserContext } from "@/hooks";
 
-const supabase = createClient();
-
-interface RejectInviteParams {
-  invite: Invite;
+interface useRejectInviteProps {
+  invite: Invite | null;
 }
 
-export function useRejectInvite({ invite }: RejectInviteParams) {
+const supabase = createClient();
+
+export function useRejectInvite({ invite }: useRejectInviteProps) {
   const { toast } = useToast();
   const { user } = useUserContext();
 

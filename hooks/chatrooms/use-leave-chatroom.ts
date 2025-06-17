@@ -3,19 +3,19 @@ import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useToast } from "@/hooks";
 
-const supabase = createClient();
-
-interface LeaveChatroomParams {
+interface leaveChatroomProps {
   userId: string;
   chatroomId: string;
   name: string;
 }
 
+const supabase = createClient();
+
 export function useLeaveChatroom() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const leaveChatroom = async ({ userId, chatroomId, name }: LeaveChatroomParams) => {
+  const leaveChatroom = async ({ userId, chatroomId, name }: leaveChatroomProps) => {
     if (!userId || !chatroomId || !name) {
       toast({
         title: "Invalid Parameters",

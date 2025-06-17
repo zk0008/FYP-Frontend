@@ -2,15 +2,8 @@
 
 import { useContext } from "react";
 
-import { Invite } from "@/types";
+import { Invite, InvitesContextType } from "@/types";
 import { InvitesContext } from "@/contexts";
-
-interface InvitesContextType {
-  invites: Invite[];
-  loading: boolean;
-  error: string | null;
-  refresh: () => void;
-}
 
 export function useInvitesContext(): InvitesContextType {
   const invitesContext = useContext(InvitesContext);

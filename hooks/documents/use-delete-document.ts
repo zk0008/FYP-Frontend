@@ -1,19 +1,21 @@
 import { useCallback } from "react";
 
 import { createClient } from "@/utils/supabase/client";
-import { useChatroomContext, useToast } from "@/hooks";
+import { useUnifiedChatroomContext, useToast } from "@/hooks";
+
+interface useDeleteDocumentProps {
+  documentId: string;
+  filename: string;
+}
 
 const supabase = createClient();
 
 export function useDeleteDocument({
   documentId,
   filename
-}: {
-  documentId: string;
-  filename: string
-}) {
-  const { chatroom } = useChatroomContext();
-  const { toast } = useToast();
+}: useDeleteDocumentProps) {
+  const { currentChatroom } = useUnifiedChatroomContext();
+    const { toast } = useToast();
 
   const deleteDocumentEntry = useCallback(async () => {
     try {
@@ -42,9 +44,7 @@ export function useDeleteDocument({
     try {
       const { error } = await supabase.storage
         .from("uploaded-documents")
-        .remove([`${chatroom!.chatroomId}/${filename}`]);
-
-      console.log(`${chatroom!.chatroomId}/${filename}`);
+        .remove([`${currentChatroom!.chatroomId}/${filename}`]);
 
       if (error) {
         throw new Error(error.message);
@@ -60,10 +60,10 @@ export function useDeleteDocument({
       });
       return false;
     }
-  }, [chatroom, documentId, filename, toast]);
+  }, [currentChatroom, documentId, filename, toast]);
 
   const deleteDocument = useCallback(async () => {
-    if (!documentId || !chatroom?.chatroomId) return;
+    if (!documentId || !currentChatroom?.chatroomId) return;
 
     const [entryDeleted, fileDeleted] = await Promise.all([
       deleteDocumentEntry(),
@@ -79,7 +79,7 @@ export function useDeleteDocument({
     }
 
     return false;
-  }, [deleteDocumentEntry, deleteDocumentFile, documentId, filename, chatroom, toast]);
+  }, [deleteDocumentEntry, deleteDocumentFile, documentId, filename, currentChatroom, toast]);
 
   return { deleteDocument };
 }

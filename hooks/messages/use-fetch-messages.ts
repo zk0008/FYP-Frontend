@@ -3,9 +3,13 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Message } from "@/types";
 
+interface useFetchMessagesProps {
+  chatroomId: string;
+}
+
 const supabase = createClient();
 
-export function useFetchMessages({ chatroomId }: { chatroomId: string }) {
+export function useFetchMessages({ chatroomId }: useFetchMessagesProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

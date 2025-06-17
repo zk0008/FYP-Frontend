@@ -4,8 +4,7 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
-  useChatroomContext,
-  useChatroomsContext,
+  useUnifiedChatroomContext,
   useLeaveChatroom,
   useUserContext
 } from "@/hooks";
@@ -18,17 +17,16 @@ export function LeaveChatroomDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const { chatroom } = useChatroomContext();
-  const { refresh } = useChatroomsContext();
-  const { leaveChatroom, isLoading } = useLeaveChatroom();
+  const { refresh, currentChatroom } = useUnifiedChatroomContext();
+    const { leaveChatroom, isLoading } = useLeaveChatroom();
   const { user } = useUserContext();
   const router = useRouter();
 
   const handleLeave = async () => {
     const result = await leaveChatroom({
       userId: user?.userId || "",
-      chatroomId: chatroom?.chatroomId || "",
-      name: chatroom?.name || ""
+      chatroomId: currentChatroom?.chatroomId || "",
+      name: currentChatroom?.name || ""
     });
 
     if (result.success) {
@@ -43,7 +41,7 @@ export function LeaveChatroomDialog({
       open={ open }
       onOpenChange={ onOpenChange }
       title="Leave Chatroom"
-      description="Are you sure you want to leave this chatroom? You will no longer receive messages or notifications from this chatroom."
+      description="This action cannot be undone. You will no longer be able to access it until you have been re-invited."
     >
       <div className="flex justify-end space-x-2">
         <Button variant="outline" onClick={() => onOpenChange(false)}>

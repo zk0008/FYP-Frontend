@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  useChatroomContext,
+  useUnifiedChatroomContext,
   useToast,
   useUserContext
  } from "@/hooks";
@@ -33,8 +33,8 @@ const inviteUserFormSchema = z.object({
 const supabase = createClient();
 
 export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
-  const { chatroom } = useChatroomContext();
-  const { toast } = useToast();
+  const { currentChatroom } = useUnifiedChatroomContext();
+    const { toast } = useToast();
   const { user } = useUserContext();
 
   const form = useForm<z.infer<typeof inviteUserFormSchema>>({
@@ -45,7 +45,7 @@ export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
   });
 
   const onSubmit = async (data: z.infer<typeof inviteUserFormSchema>) => {
-    if (!chatroom || !user) {
+    if (!currentChatroom || !user) {
       toast({
         title: "Error Sending Invite",
         description: "Invalid chatroom or user context.",
@@ -76,7 +76,7 @@ export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
       .insert({
         sender_id: user.userId,
         recipient_id: recipient.user_id,
-        chatroom_id: chatroom.chatroomId,
+        chatroom_id: currentChatroom.chatroomId,
         status: "PENDING"
       });
 
@@ -90,7 +90,7 @@ export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
 
     toast({
       title: "Invite Sent",
-      description: `'${data.username}' has been invited to join chatroom '${chatroom.name}'.`,
+      description: `'${data.username}' has been invited to join chatroom '${currentChatroom.name}'.`,
     });
 
     form.reset(); // Reset the form after successful submission

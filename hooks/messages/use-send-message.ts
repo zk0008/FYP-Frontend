@@ -2,9 +2,7 @@ import { useState, useCallback } from "react";
 
 import { createClient } from "@/utils/supabase/client";
 import { fetchWithAuth } from "@/utils";
-import { useChatroomContext, useUserContext, useToast } from "@/hooks";
-
-const supabase = createClient();
+import { useUnifiedChatroomContext, useUserContext, useToast } from "@/hooks";
 
 interface GroupGPTRequest {
   username: string;
@@ -12,10 +10,12 @@ interface GroupGPTRequest {
   content: string;
 };
 
+const supabase = createClient();
+
 export function useSendMessage() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const { chatroom } = useChatroomContext();
-  const { user } = useUserContext();
+  const { currentChatroom } = useUnifiedChatroomContext();
+    const { user } = useUserContext();
   const { toast } = useToast();
 
   const sendToGroupGPT = useCallback(async (content: string): Promise<boolean> => {
@@ -23,7 +23,7 @@ export function useSendMessage() {
       const contentWithoutMention = content.replace(/@groupgpt/i, "");
       const payload: GroupGPTRequest = {
         username: user!.username,
-        chatroom_id: chatroom!.chatroomId,
+        chatroom_id: currentChatroom!.chatroomId,
         content: contentWithoutMention,
       };
 
@@ -44,14 +44,14 @@ export function useSendMessage() {
       console.error("Error sending message to GroupGPT:", error.message);
       return false;
     }
-  }, [chatroom, user]);
+  }, [currentChatroom, user]);
 
   const sendToSupabase = useCallback(async (content: string): Promise<{ success: boolean; messageId?: string }> => {
     try {
       const { data, error } = await supabase
         .from("messages")
         .insert({
-          chatroom_id: chatroom!.chatroomId,
+          chatroom_id: currentChatroom!.chatroomId,
           content: content.trim(),
           sender_id: user!.userId,
         })
@@ -71,10 +71,10 @@ export function useSendMessage() {
       });
       return { success: false };
     }
-  }, [chatroom, user, toast]);
+  }, [currentChatroom, user, toast]);
 
   const sendMessage = useCallback(async (content: string): Promise<boolean> => {
-    if (!content.trim() || !chatroom?.chatroomId || !user?.userId) return false;
+    if (!content.trim() || !currentChatroom?.chatroomId || !user?.userId) return false;
 
     setIsSubmitting(true);
 
@@ -141,7 +141,7 @@ export function useSendMessage() {
     }
 
     return false;
-  }, [chatroom, user, toast, sendToGroupGPT, sendToSupabase]);
+  }, [currentChatroom, user, toast, sendToGroupGPT, sendToSupabase]);
 
   return { isSubmitting, sendMessage };
 }

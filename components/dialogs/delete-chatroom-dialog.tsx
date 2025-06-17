@@ -4,8 +4,7 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
-  useChatroomContext,
-  useChatroomsContext,
+  useUnifiedChatroomContext,
   useDeleteChatroom
 } from "@/hooks";
 
@@ -18,15 +17,14 @@ export function DeleteChatroomDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const { chatroom } = useChatroomContext();
-  const { refresh } = useChatroomsContext();
-  const { deleteChatroom, isLoading } = useDeleteChatroom();
+  const { refresh, currentChatroom } = useUnifiedChatroomContext();
+    const { deleteChatroom, isLoading } = useDeleteChatroom();
   const router = useRouter();
 
   const handleDelete = async () => {
     const result = await deleteChatroom({
-      chatroomId: chatroom?.chatroomId || "",
-      name: chatroom?.name || ""
+      chatroomId: currentChatroom?.chatroomId || "",
+      name: currentChatroom?.name || ""
     });
 
     if (result.success) {
@@ -41,7 +39,7 @@ export function DeleteChatroomDialog({
       open={ open }
       onOpenChange={ onOpenChange }
       title="Delete Chatroom"
-      description="This action cannot be undone. All messages sent and files uploaded in this chatroom will be permanently deleted."
+      description="This action cannot be undone. All messages sent and files uploaded in this chatroom will be permanently deleted. Members will no longer be able to access this chatroom."
     >
       <div className="flex justify-end space-x-2">
         <Button variant="outline" onClick={() => onOpenChange(false)}>

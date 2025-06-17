@@ -1,16 +1,18 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
+
 import { ChatInterface } from "@/components/chat/chat-interface";
 import { ChatroomMenu, TopBar } from "@/components/top-bar";
-import { useChatroomContext, useRealtimeDocuments } from "@/hooks";
+import { useUnifiedChatroomContext, useRealtimeDocuments } from "@/hooks";
 
 export default function ChatsPage() {
-  const { chatroom } = useChatroomContext();
-
+  const { currentChatroom } = useUnifiedChatroomContext();
+  
   // Initialize realtime document updates for the logged-in user
   useRealtimeDocuments();
 
-  if (!chatroom) {
+  if (!currentChatroom) {
     return (
       <div className="flex flex-col h-screen overflow-hidden">
         <TopBar
@@ -32,7 +34,7 @@ export default function ChatsPage() {
     >
       <TopBar
         showSidebarTrigger
-        title={ chatroom.name }
+        title={ currentChatroom.name }
       >
         <ChatroomMenu />
       </TopBar>

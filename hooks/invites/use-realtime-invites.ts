@@ -4,6 +4,18 @@ import { createClient } from "@/utils/supabase/client";
 import { Invite } from "@/types";
 import { useToast } from "@/hooks";
 
+interface useRealtimeInvitesProps {
+  userId: string;
+  onNewInvite: (invite: Invite) => void;
+  onUpdateInvite: ({
+    inviteId,
+    status,
+  }: {
+    inviteId: string;
+    status: "PENDING" | "ACCEPTED" | "REJECTED";
+  }) => void;
+}
+
 interface InvitePayload {
   invite_id: string;
   sender_id: string;
@@ -19,17 +31,7 @@ export function useRealtimeInvites({
   userId,
   onNewInvite,
   onUpdateInvite
-}: {
-  userId: string;
-  onNewInvite: (invite: Invite) => void;
-  onUpdateInvite: ({
-    inviteId,
-    status,
-  }: {
-    inviteId: string;
-    status: "PENDING" | "ACCEPTED" | "REJECTED";
-  }) => void;
-}) {
+}: useRealtimeInvitesProps) {
   const { toast } = useToast();
 
   useEffect(() => {

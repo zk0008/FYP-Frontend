@@ -11,13 +11,13 @@ import {
   SidebarMenu
 } from "@/components/ui/sidebar";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useChatroomsContext, useToast } from "@/hooks";
+import { useUnifiedChatroomContext, useToast } from "@/hooks";
 
 import { ChatroomItem } from "./chatroom-item";
 
 
 export function ChatroomsList() {
-  const { chatrooms, loading: chatroomsLoading, error: chatroomsError } = useChatroomsContext();
+  const { chatrooms, loading: chatroomsLoading, error: chatroomsError } = useUnifiedChatroomContext();
   // const { chatrooms, loading: chatroomsLoading, error: chatroomsError } = useFetchChatrooms({ userId: user?.userId || "" });
   const [isCreateChatroomDialogOpen, setIsCreateChatroomDialogOpen] = useState(false);
   const { toast } = useToast();

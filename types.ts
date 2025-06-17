@@ -32,3 +32,26 @@ export interface Invite {
   status: "PENDING" | "ACCEPTED" | "REJECTED";
   createdAt: string;
 }
+
+// Context types
+export interface InvitesContextType {
+  invites: Invite[];
+  loading: boolean;
+  error: string | null;
+  refresh: () => void;
+}
+
+export interface UnifiedChatroomContextType {
+  chatrooms: Chatroom[];              // Chatrooms list
+  currentChatroom: Chatroom | null;   // Current chatroom
+  loading: boolean;
+  error: string | null;
+  refresh: () => void;
+}
+
+export interface UserContextType {
+  user: User | null;
+  loading: boolean;
+  error: string | null;
+  refresh: () => void;
+};
