@@ -44,7 +44,12 @@ export function MessageBubble({
           </div>
         )}
         <ChatBubbleMessage variant={ isOwnMessage ? "sent" : "received" }>
-          <div className="markdown">
+          <div
+            className={`
+              prose whitespace-normal max-w-md
+              ${isOwnMessage ? "text-primary-foreground" : "text-primary"}
+            `}
+          >
             <ReactMarkdown>{ content }</ReactMarkdown>
           </div>
         </ChatBubbleMessage>
