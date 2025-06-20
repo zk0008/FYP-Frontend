@@ -22,7 +22,7 @@ export function EditChatroomDialog({
       open={ open }
       onOpenChange={ onOpenChange }
       title="Edit Chatroom"
-      description="Here you can edit the details of your chatroom."
+      description="Here you can edit the details of the chatroom."
     >
       <EditChatroomForm onSuccess={ handleFormSuccess } />
     </BaseDialog>

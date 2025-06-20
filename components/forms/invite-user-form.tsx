@@ -54,6 +54,16 @@ export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
       return;
     }
 
+    // Error checking for own username
+    if (data.username === user.username) {
+      toast({
+        title: "Error Sending Invite",
+        description: "You cannot invite yourself to the chatroom.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Check if recipient exists
     const { data: recipient, error: recipientError } = await supabase
       .from("users")
@@ -97,6 +107,14 @@ export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
     onSuccess?.(); // Call the success callback if provided
   }
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    // Submit form on Enter key press
+    if (event.key === "Enter") {
+      event.preventDefault();
+      form.handleSubmit(onSubmit)();
+    }
+  };
+
   return (
     <Form { ...form }>
       <form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-8">
@@ -112,6 +130,7 @@ export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
                   placeholder="Enter username"
                   className="rounded-md px-1 border-2 border-black w-full h-8"
                   { ...field }
+                  onKeyDown={ handleKeyDown }
                 />
               </FormControl>
               <FormDescription>

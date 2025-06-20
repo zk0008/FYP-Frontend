@@ -45,7 +45,7 @@ export function ReadMessageButton({ content }: ReadMessageButtonProps) {
     <ChatBubbleAction
       onClick={ handleClick }
       className="cursor-pointer"
-      icon={ isReading ? <CircleOff className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+      icon={ isReading ? <CircleOff className="h-4 w-4 text-red-500" /> : <Volume2 className="h-4 w-4" />}
       title={ isReading ? "Stop reading" : "Read message" }
     />
   );

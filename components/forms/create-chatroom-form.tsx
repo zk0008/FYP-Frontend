@@ -19,14 +19,17 @@ import {
 import { useToast, useUnifiedChatroomContext, useUserContext } from "@/hooks";
 
 const createChatroomFormSchema = z.object({
-  name: z.string().min(2, "Chatroom name must be at least 2 characters long").max(64, "Chatroom name must be at most 64 characters long")
+  name: z.string()
+    .trim()
+    .min(2, "Chatroom name must be at least 2 characters long")
+    .max(64, "Chatroom name must be at most 64 characters long")
 });
 
 const supabase = createClient();
 
 export function CreateChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
   const { user } = useUserContext();
-  const { refresh: refreshChatroomsList } = useUnifiedChatroomContext();
+  const { refresh } = useUnifiedChatroomContext();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof createChatroomFormSchema>>({
@@ -46,12 +49,24 @@ export function CreateChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
       return;
     }
 
+    const chatroomName = data.name.trim();
+
+    // Error checking for empty chatroom name
+    if (chatroomName === "") {
+      toast({
+        title: "Error Creating Chatroom",
+        description: "Chatroom name cannot be empty.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Insert new chatroom into database
     const { data: chatroomData, error: chatroomError } = await supabase
       .from("chatrooms")
       .insert({
         creator_id: user.userId,
-        name: data.name
+        name: chatroomName
       })
       .select("chatroom_id");
 
@@ -76,11 +91,11 @@ export function CreateChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
 
     toast({
       title: "Chatroom Created",
-      description: `"${data.name}" chatroom has been created.`,
+      description: `"${chatroomName}" chatroom has been created.`,
     });
 
-    refreshChatroomsList();   // Refresh the chatrooms list to reflect changes
-    onSuccess?.();             // Call the success callback if provided
+    refresh();      // Refresh chatroom context
+    onSuccess?.();
   }
 
   return (
