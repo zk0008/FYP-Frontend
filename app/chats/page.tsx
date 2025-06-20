@@ -1,7 +1,5 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-
 import { ChatInterface } from "@/components/chat/chat-interface";
 import { ChatroomMenu, TopBar } from "@/components/top-bar";
 import { useUnifiedChatroomContext, useRealtimeDocuments } from "@/hooks";
