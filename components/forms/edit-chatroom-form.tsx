@@ -20,6 +20,7 @@ import { useToast, useUnifiedChatroomContext } from "@/hooks";
 
 const editChatroomFormSchema = z.object({
   name: z.string()
+    .trim()
     .min(2, "Chatroom name must be at least 2 characters long")
     .max(64, "Chatroom name must be at most 64 characters long")
 });
@@ -47,9 +48,21 @@ export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
       return;
     }
 
+    const newChatroomName = data.name.trim();
+
+    // Error checking for empty chatroom name
+    if (newChatroomName === "") {
+      toast({
+        title: "Error Editing Chatroom",
+        description: "Chatroom name cannot be empty.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const { error } = await supabase
       .from("chatrooms")
-      .update({ name: data.name })
+      .update({ name: newChatroomName })
       .eq("chatroom_id", currentChatroom.chatroomId);
 
     if (error) {
@@ -63,13 +76,11 @@ export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
 
     toast({
       title: "Chatroom Edited",
-      description: `Chatroom name changed to "${data.name}".`,
+      description: `Chatroom name changed to "${newChatroomName}".`,
     });
 
-    refresh();
-    // refreshCurrentChatroom();   // Refresh the chatroom context to reflect changes
-    // refreshChatroomsList();     // Refresh the chatrooms list to reflect changes
-    onSuccess?.();              // Call the success callback if provided
+    refresh();      // Refresh chatroom context
+    onSuccess?.();
   }
 
   return (
