@@ -75,7 +75,7 @@ export default function ChatPage() {
   }, [currentTopic]);
 
   return (
-    <div className="flex flex-col h-full w-full items-center">
+    <div className="flex flex-col h-screen w-full items-center">
       <div className="flex justify-between items-center py-2 p-4 h-20 bg-black border-b w-full">
         <h1 className="flex items-center text-2xl font-semibold text-white">
           GroupGPT
