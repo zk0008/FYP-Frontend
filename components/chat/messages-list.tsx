@@ -39,27 +39,29 @@ export function MessagesList() {
     });
     return (
       <div className="flex items-center justify-center h-full">
-        <p className="text-red-500">Failed to load messages.</p>
+        <span className="text-red-500">Failed to load messages</span>
       </div>
     );
   }
 
+  if (messages.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <span>No messages found in this chatroom</span>
+      </div>
+    )
+  }
+
   return (
     <ChatMessageList className="p-0">
-      {messages.length > 0 ? (
-        messages.map((message) => (
-          <MessageBubble
-            key={ message.messageId }
-            messageId={ message.messageId }
-            username={ message.username }
-            content={ message.content }
-          />
-        ))
-      ) : (
-        <div>
-          <p>No messages found in this chatroom.</p>
-        </div>
-      )}
+      {messages.map((message) => (
+        <MessageBubble
+          key={ message.messageId }
+          messageId={ message.messageId }
+          username={ message.username }
+          content={ message.content }
+        />
+      ))}
     </ChatMessageList>
   );
 }
