@@ -22,7 +22,7 @@ export function InviteUserDialog({
       open={ open }
       onOpenChange={ onOpenChange }
       title="Invite a User"
-      description="Here you can invite a user to join your chatroom."
+      description="Here you can invite a user to join the chatroom."
     >
       <InviteUserForm onSuccess={ handleFormSuccess } />
     </BaseDialog>
