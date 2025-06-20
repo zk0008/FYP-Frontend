@@ -1,7 +1,6 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -26,7 +25,6 @@ const signInFormSchema = z.object({
 });
 
 export function SignInForm() {
-  const router = useRouter();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof signInFormSchema>>({
@@ -40,7 +38,7 @@ export function SignInForm() {
   const onSubmit = async (data: z.infer<typeof signInFormSchema>) => {
     const { user, error } = await signIn({ email: data.email, password: data.password });
     if (user) {
-      router.push("/chats");
+      window.location.href = "/chats";    // Full reload required for proper realtime subscription
       toast({
         title: "Signed In",
         description: `Hello ${user?.user_metadata?.username || "there"}, welcome back!`,
