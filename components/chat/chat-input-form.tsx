@@ -1,30 +1,59 @@
 "use client";
 
+import { SendHorizonal } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { ChatInput } from "@/components/ui/chat/chat-input";
-import { Mic, SendHorizonal } from "lucide-react";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { useChatInput } from "@/hooks";
-import { useEffect, useRef } from "react";
 
-import { UploadDocumentButton } from "./upload-document-button";
+import { UploadButton } from "./upload-button";
+import { TranscribeButton } from "./transcribe-button";
 
 export function ChatInputForm() {
   const { input, setInput, isSubmitting, handleSubmit } = useChatInput();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const wasSubmittingRef = useRef<boolean>(false);
+  const [isListening, setIsListening] = useState(false);
 
-  // Re-focus on the input after user sends a message
-  useEffect(() => {
-    if (wasSubmittingRef.current && !isSubmitting) {
-      requestAnimationFrame(() => {
-        inputRef.current?.focus();
-      });
-    }
+  const handleTranscriptChange = (incrementalTranscript: string) => {
+    if (!incrementalTranscript.trim()) return; // Ignore empty transcripts
 
-    // Update ref to track previous state
-    wasSubmittingRef.current = isSubmitting;
-  }, [isSubmitting]);
+    // TranscribeButton returns incremental updates
+    // To show real-time transcription, append the new portion to existing input
+    setInput(prevInput => {
+      const currentInput = prevInput.trim();
+
+      const fullTranscript = (currentInput + incrementalTranscript).trim();
+      const normalizedInput = fullTranscript.toLowerCase();
+      const triggers = [
+        'hey group gpt',
+        'hey group g pt',
+        'hey group gp t',
+        'hey group g p t'
+      ];
+
+      const matchedTrigger = triggers.find(trigger =>
+        normalizedInput.includes(trigger)
+      );
+
+      if (matchedTrigger) {
+        // Replace the spoken trigger with @GroupGPT
+        const triggerRegex = new RegExp(matchedTrigger.replace(/\s/g, '\\s*'), 'i');
+        const replacedTranscript = fullTranscript.replace(triggerRegex, '@GroupGPT ');
+        return replacedTranscript;
+      } else {
+        return fullTranscript;
+      }
+    });
+  };
+
+  const handleTranscriptAbort = () => {
+    // Reset the input when transcription is aborted
+    setInput("");
+    setIsListening(false);
+  };
 
   // Messsge sending using send button
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,6 +75,18 @@ export function ChatInputForm() {
     }
   };
 
+  // Re-focus on the input after user sends a message
+  useEffect(() => {
+    if (wasSubmittingRef.current && !isSubmitting) {
+      requestAnimationFrame(() => {
+        inputRef.current?.focus();
+      });
+    }
+
+    // Update ref to track previous state
+    wasSubmittingRef.current = isSubmitting;
+  }, [isSubmitting]);
+
   return (
     <form
       className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring p-1"
@@ -53,7 +94,11 @@ export function ChatInputForm() {
     >
       <ChatInput
         ref={ inputRef }
-        placeholder="Type your message here... (Use @GroupGPT for AI)"
+        placeholder={
+          isListening
+            ? "Listening... (Say 'Hey GroupGPT' to invoke AI)"
+            : "Type your message here... (Use @GroupGPT for AI)"
+        }
         className="min-h-12 resize-none rounded-lg bg-background border-0 p-4 shadow-none focus-visible:ring-0"
         value={ input }
         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
@@ -61,15 +106,14 @@ export function ChatInputForm() {
         onKeyDown={ handleKeyDown }
         autoFocus
       />
-      <div className="flex items-center p-3 pt-0">
-        <UploadDocumentButton />
+      <div className="flex items-center p-3 pt-0 gap-1">
+        <UploadButton />
 
-        <TooltipWrapper content="Use Microphone" side="top">
-          <Button variant="ghost" size="icon" disabled>
-            <Mic />
-            <span className="sr-only">Use Microphone</span>
-          </Button>
-        </TooltipWrapper>
+        <TranscribeButton
+          onTranscriptChange={ handleTranscriptChange }
+          onListeningChange={(listening) => setIsListening(listening)}
+          onTranscriptAbort={ handleTranscriptAbort }
+        />
 
         <TooltipWrapper content="Send Message" side="top">
           <Button
@@ -77,7 +121,7 @@ export function ChatInputForm() {
             size="icon"
             className="ml-auto gap-1.5"
             type="submit"
-            disabled={ !input.trim() || isSubmitting }
+            disabled={ !input.trim() || isSubmitting || isListening }
           >
             <SendHorizonal />
             <span className="sr-only">Send Message</span>
