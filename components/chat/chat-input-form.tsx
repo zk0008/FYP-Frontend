@@ -6,10 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import { TranscribeButton, UploadButton } from "@/components/buttons";
 import { useChatInput } from "@/hooks";
-
-import { UploadButton } from "./upload-button";
-import { TranscribeButton } from "./transcribe-button";
 
 export function ChatInputForm() {
   const { input, setInput, isSubmitting, handleSubmit } = useChatInput();
