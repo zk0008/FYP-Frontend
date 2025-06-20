@@ -2,9 +2,10 @@
 
 import { ChatInterface } from "@/components/chat/chat-interface";
 import { ChatroomMenu, TopBar } from "@/components/top-bar";
-import { useUnifiedChatroomContext, useRealtimeDocuments } from "@/hooks";
+import { useUnifiedChatroomContext, useRealtimeDocuments, useUserContext } from "@/hooks";
 
 export default function ChatsPage() {
+  const { user } = useUserContext();
   const { currentChatroom } = useUnifiedChatroomContext();
 
   // Initialize realtime document updates for the logged-in user
@@ -15,7 +16,7 @@ export default function ChatsPage() {
       <div className="flex flex-col h-screen overflow-hidden">
         <TopBar
           showSidebarTrigger
-          title="Welcome!"
+          title={ user ? `Welcome, ${user.username}!` : "Welcome!" }
         />
         <div className="flex flex-col h-full w-full items-center justify-center">
           <span>Select a chatroom to start chatting</span>
