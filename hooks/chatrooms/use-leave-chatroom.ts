@@ -28,9 +28,6 @@ export function useLeaveChatroom() {
     setIsLoading(true);
 
     try {
-      console.log("userId:", userId);
-      console.log("chatroomId:", chatroomId);
-
       const { error } = await supabase
         .from("members")
         .delete()
