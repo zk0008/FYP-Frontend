@@ -1,6 +1,6 @@
 "use client";
 
-import { SendHorizonal } from "lucide-react";
+import { LoaderCircle, SendHorizonal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -117,12 +117,16 @@ export function ChatInputForm() {
           <Button
             variant="ghost"
             size="icon"
-            className="ml-auto gap-1.5"
+            className="ml-auto"
             type="submit"
-            disabled={ !input.trim() || isSubmitting || isListening }
+            disabled={ !input.trim() || isListening || isSubmitting }
           >
-            <SendHorizonal />
-            <span className="sr-only">Send Message</span>
+            {isSubmitting ? <LoaderCircle className="animate-spin" /> : (
+              <>
+                <SendHorizonal />
+                <span className="sr-only">Send Message</span>
+              </>
+            )}
           </Button>
         </TooltipWrapper>
       </div>
