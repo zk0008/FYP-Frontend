@@ -121,7 +121,7 @@ export function TranscribeButton({
           </Button>
         </TooltipWrapper>
 
-        <LoaderCircle className="animate-spin h-6 w-6 text-gray-500" />
+        <LoaderCircle className="animate-spin h-6 w-6 text-gray-500 mx-1" />
       </div>
     );
   }
