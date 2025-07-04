@@ -3,6 +3,7 @@ const nextConfig = {
   experimental: {
     esmExternals: false,
     serverActions: true,
+    proxyTimeout: 120_000   // 2 minutes
   },
   rewrites: async () => {
     return [
