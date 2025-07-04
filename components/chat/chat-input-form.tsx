@@ -1,6 +1,6 @@
 "use client";
 
-import { LoaderCircle, SendHorizonal } from "lucide-react";
+import { FileSearch, Globe, LoaderCircle, SendHorizonal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,16 @@ import { TranscribeButton, UploadButton } from "@/components/buttons";
 import { useChatInput } from "@/hooks";
 
 export function ChatInputForm() {
-  const { input, setInput, isSubmitting, handleSubmit } = useChatInput();
+  const {
+    input,
+    setInput,
+    useRagQuery,
+    setUseRagQuery,
+    useWebSearch,
+    setUseWebSearch,
+    isSubmitting,
+    handleSubmit
+  } = useChatInput();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const wasSubmittingRef = useRef<boolean>(false);
   const [isListening, setIsListening] = useState(false);
@@ -26,10 +35,10 @@ export function ChatInputForm() {
       const fullTranscript = (currentInput + incrementalTranscript).trim();
       const normalizedInput = fullTranscript.toLowerCase();
       const triggers = [
-        'hey group gpt',
-        'hey group g pt',
-        'hey group gp t',
-        'hey group g p t'
+        "hey gpt",
+        "hey g p t",
+        "hey g pt",
+        "hey gp t"
       ];
 
       const matchedTrigger = triggers.find(trigger =>
@@ -51,6 +60,11 @@ export function ChatInputForm() {
     // Reset the input when transcription is aborted
     setInput("");
     setIsListening(false);
+  };
+
+  // Check if message is directed at GroupGPT (i.e., has "@groupgpt" substring)
+  const isGroupGPTMessage = (message: string) => {
+    return message.toLowerCase().includes("@groupgpt");
   };
 
   // Messsge sending using send button
@@ -94,7 +108,7 @@ export function ChatInputForm() {
         ref={ inputRef }
         placeholder={
           isListening
-            ? "Listening... (Say 'Hey GroupGPT' to invoke AI)"
+            ? "Listening... (Say 'Hey GPT' to invoke AI)"
             : "Type your message here... (Use @GroupGPT for AI)"
         }
         className="min-h-12 resize-none rounded-lg bg-background border-0 p-4 shadow-none focus-visible:ring-0"
@@ -112,6 +126,34 @@ export function ChatInputForm() {
           onListeningChange={(listening) => setIsListening(listening)}
           onTranscriptAbort={ handleTranscriptAbort }
         />
+
+        <div className="absolute left-1/2 -translate-x-1/2">
+          <TooltipWrapper content={ useRagQuery ? "Disable RAG Query" : "Enable RAG Query" } side="top">
+            <Button
+              variant={ useRagQuery ? "secondary" : "ghost" }
+              className="mx-0.5"
+              type="button"
+              onClick={() => setUseRagQuery(!useRagQuery)}
+              disabled={ !isGroupGPTMessage(input) || isSubmitting }
+            >
+              <FileSearch />
+              RAG Query
+            </Button>
+          </TooltipWrapper>
+
+          <TooltipWrapper content={ useWebSearch ? "Disable Web Search" : "Enable Web Search" } side="top">
+            <Button
+              variant={ useWebSearch ? "secondary" : "ghost" }
+              className="mx-0.5"
+              type="button"
+              onClick={() => setUseWebSearch(!useWebSearch)}
+              disabled={ !isGroupGPTMessage(input) || isSubmitting }
+            >
+              <Globe />
+              Web Search
+            </Button>
+          </TooltipWrapper>
+        </div>
 
         <TooltipWrapper content="Send Message" side="top">
           <Button
