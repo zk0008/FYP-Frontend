@@ -130,7 +130,7 @@ export function ChatInputForm() {
         <div className="absolute left-1/2 -translate-x-1/2">
           <TooltipWrapper content={ useRagQuery ? "Disable RAG Query" : "Enable RAG Query" } side="top">
             <Button
-              variant={ useRagQuery ? "secondary" : "ghost" }
+              variant={ useRagQuery ? "default" : "ghost" }
               className="mx-0.5"
               type="button"
               onClick={() => setUseRagQuery(!useRagQuery)}
@@ -143,7 +143,7 @@ export function ChatInputForm() {
 
           <TooltipWrapper content={ useWebSearch ? "Disable Web Search" : "Enable Web Search" } side="top">
             <Button
-              variant={ useWebSearch ? "secondary" : "ghost" }
+              variant={ useWebSearch ? "default" : "ghost" }
               className="mx-0.5"
               type="button"
               onClick={() => setUseWebSearch(!useWebSearch)}
