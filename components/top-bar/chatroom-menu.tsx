@@ -42,7 +42,7 @@ export function ChatroomMenu() {
       >
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon">
-            <ChevronsUpDown className="h-4 w-4" />
+            <ChevronsUpDown />
           </Button>
         </DropdownMenuTrigger>
       </TooltipWrapper>
