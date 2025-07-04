@@ -7,6 +7,8 @@ import { useUnifiedChatroomContext, useUserContext, useToast } from "@/hooks";
 interface GroupGPTRequest {
   username: string;
   chatroom_id: string;
+  use_rag_query: boolean;
+  use_web_search: boolean;
   content: string;
 };
 
@@ -18,12 +20,22 @@ export function useSendMessage() {
   const { user } = useUserContext();
   const { toast } = useToast();
 
-  const sendToGroupGPT = useCallback(async (content: string): Promise<boolean> => {
+  const sendToGroupGPT = useCallback(async ({
+    useRagQuery,
+    useWebSearch,
+    content
+  }: {
+    useRagQuery: boolean;
+    useWebSearch: boolean;
+    content: string;
+  }): Promise<boolean> => {
     try {
       const contentWithoutMention = content.replace(/@groupgpt/i, "");
       const payload: GroupGPTRequest = {
         username: user!.username,
         chatroom_id: currentChatroom!.chatroomId,
+        use_rag_query: useRagQuery,
+        use_web_search: useWebSearch,
         content: contentWithoutMention,
       };
 
@@ -36,12 +48,18 @@ export function useSendMessage() {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error, status: ${response.status}`);
+        throw new Error(`Error invoking GroupGPT: ${response.statusText}`);
       }
 
       return true;
     } catch (error: any) {
       console.error("Error sending message to GroupGPT:", error.message);
+
+      toast({
+        title: "GroupGPT Invocation Error",
+        description: error.message || "An error occurred when invoking GroupGPT.",
+        variant: "destructive"
+      });
       return false;
     }
   }, [currentChatroom, user]);
@@ -66,14 +84,22 @@ export function useSendMessage() {
       console.error("Error sending message:", error.message);
       toast({
         title: "Message Not Sent",
-        description: error.message || "An error occurred while sending the message.",
+        description: error.message || "An error occurred when sending the message.",
         variant: "destructive",
       });
       return { success: false };
     }
   }, [currentChatroom, user, toast]);
 
-  const sendMessage = useCallback(async (content: string): Promise<boolean> => {
+  const sendMessage = useCallback(async ({
+    useRagQuery,
+    useWebSearch,
+    content
+  }: {
+    useRagQuery: boolean;
+    useWebSearch: boolean;
+    content: string;
+  }): Promise<boolean> => {
     if (!content.trim() || !currentChatroom?.chatroomId || !user?.userId) return false;
 
     setIsSubmitting(true);
@@ -84,36 +110,11 @@ export function useSendMessage() {
       if (isGroupGPTMessage) {
         // For GroupGPT messages, send to both Supabase and backend server
         const [groupGPTSuccess, supabaseResult] = await Promise.all([
-          sendToGroupGPT(content.trim()),
+          sendToGroupGPT({ useRagQuery, useWebSearch, content: content.trim() }),
           sendToSupabase(content.trim())
         ]);
 
-        // If GroupGPT invocation failed, remove message from Supabase and show error
-        if (supabaseResult.success && !groupGPTSuccess && supabaseResult.messageId) {
-          const { error } = await supabase
-            .from("messages")
-            .delete()
-            .eq("message_id", supabaseResult.messageId);
-
-          if (error) {
-            console.error("Error deleting message after GroupGPT failure:", error.message);
-            toast({
-              title: "Invocation Failed",
-              description: "Message saved but GroupGPT invocation failed. Please try again.",
-              variant: "destructive",
-              // TODO: Add action to retry GroupGPT (NOT RESEND)
-            });
-          }
-
-          toast({
-            title: "Message Not Sent",
-            description: "Failed to send message. Please try again.",
-            variant: "destructive",
-          });
-          return false;
-        } else if (supabaseResult.success && groupGPTSuccess) {
-          return true;
-        }
+        return groupGPTSuccess && supabaseResult.success;
       } else {
         // Regular message - only send to Supabase
         const result = await sendToSupabase(content);

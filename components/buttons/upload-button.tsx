@@ -1,5 +1,5 @@
 import { useCallback, useRef } from "react";
-import { LoaderCircle, Paperclip } from "lucide-react";
+import { LoaderCircle, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
@@ -40,7 +40,7 @@ export function UploadButton() {
           onClick={ handleClick }
           disabled={ isUploading }
         >
-          { isUploading ? <LoaderCircle className="animate-spin" /> : <Paperclip /> }
+          { isUploading ? <LoaderCircle className="animate-spin" /> : <Upload /> }
           <span className="sr-only">Upload Document</span>
         </Button>
       </TooltipWrapper>
