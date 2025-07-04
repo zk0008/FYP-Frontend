@@ -114,7 +114,32 @@ export function useSendMessage() {
           sendToSupabase(content.trim())
         ]);
 
-        return groupGPTSuccess && supabaseResult.success;
+        // If GroupGPT invocation failed, show error
+        if (supabaseResult.success && !groupGPTSuccess && supabaseResult.messageId) {
+          const { error } = await supabase
+            .from("messages")
+            .delete()
+            .eq("message_id", supabaseResult.messageId);
+
+          if (error) {
+            console.error("Error deleting message after GroupGPT failure:", error.message);
+            toast({
+              title: "Invocation Failed",
+              description: "Message saved but GroupGPT invocation failed. Please try again.",
+              variant: "destructive",
+              // TODO: Add action to retry GroupGPT (NOT RESEND)
+            });
+          }
+
+          toast({
+            title: "Message Not Sent",
+            description: "Failed to invoke GroupGPT. Please try again.",
+            variant: "destructive",
+          });
+          return false;
+        } else if (supabaseResult.success && groupGPTSuccess) {
+          return true;
+        }
       } else {
         // Regular message - only send to Supabase
         const result = await sendToSupabase(content);
