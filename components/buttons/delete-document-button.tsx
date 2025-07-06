@@ -15,10 +15,10 @@ export function DeleteDocumentButton({
   filename,
   onDeleted
 }: DeleteFileButtonProps) {
-  const { deleteDocument } = useDeleteDocument({ documentId, filename });
+  const { deleteDocument } = useDeleteDocument();
 
   const handleDelete = async () => {
-    await deleteDocument();
+    await deleteDocument({ documentId, filename });
     onDeleted();
   };
 
