@@ -3,21 +3,18 @@ import { useCallback } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useUnifiedChatroomContext, useToast } from "@/hooks";
 
-interface useDeleteDocumentProps {
+interface deleteDocumentProps {
   documentId: string;
   filename: string;
 }
 
 const supabase = createClient();
 
-export function useDeleteDocument({
-  documentId,
-  filename
-}: useDeleteDocumentProps) {
+export function useDeleteDocument() {
   const { currentChatroom } = useUnifiedChatroomContext();
   const { toast } = useToast();
 
-  const deleteDocumentEntry = useCallback(async () => {
+  const deleteDocumentEntry = useCallback(async (documentId: string) => {
     try {
       const { error } = await supabase
         .from("documents")
@@ -38,9 +35,9 @@ export function useDeleteDocument({
       });
       return false;
     }
-  }, [documentId, toast]);
+  }, [toast]);
 
-  const deleteDocumentFile = useCallback(async () => {
+  const deleteDocumentFile = useCallback(async (filename: string) => {
     try {
       const { error } = await supabase.storage
         .from("uploaded-documents")
@@ -60,14 +57,17 @@ export function useDeleteDocument({
       });
       return false;
     }
-  }, [currentChatroom, documentId, filename, toast]);
+  }, [currentChatroom, toast]);
 
-  const deleteDocument = useCallback(async () => {
+  const deleteDocument = useCallback(async ({
+    documentId,
+    filename
+  }: deleteDocumentProps) => {
     if (!documentId || !currentChatroom?.chatroomId) return;
 
     const [entryDeleted, fileDeleted] = await Promise.all([
-      deleteDocumentEntry(),
-      deleteDocumentFile(),
+      deleteDocumentEntry(documentId),
+      deleteDocumentFile(filename),
     ]);
 
     if (entryDeleted && fileDeleted) {
@@ -79,7 +79,7 @@ export function useDeleteDocument({
     }
 
     return false;
-  }, [deleteDocumentEntry, deleteDocumentFile, documentId, filename, currentChatroom, toast]);
+  }, [deleteDocumentEntry, deleteDocumentFile, currentChatroom, toast]);
 
-  return { deleteDocument };
+  return { deleteDocument, deleteDocumentEntry, deleteDocumentFile };
 }
