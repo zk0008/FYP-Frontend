@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { createClient } from "@/utils/supabase/client";
-import { useToast } from "@/hooks";
+import { useDeleteDocument, useToast } from "@/hooks";
 
 interface deleteChatroomProps {
   chatroomId: string;
@@ -12,7 +12,8 @@ const supabase = createClient();
 
 export function useDeleteChatroom() {
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast(); 
+  const { deleteDocumentFile } = useDeleteDocument();
+  const { toast } = useToast();
 
   const deleteChatroom = async ({ chatroomId, name }: deleteChatroomProps) => {
     if (!chatroomId || !name) {
@@ -27,13 +28,26 @@ export function useDeleteChatroom() {
     setIsLoading(true);
 
     try {
-      const { error } = await supabase
+      // Clean up remaining document files in the chatroom
+      const { data: documents, error: fetchError } = await supabase
+        .from("documents")
+        .select("filename")
+        .eq("chatroom_id", chatroomId);
+
+      for (const document of documents || []) {
+        await deleteDocumentFile(document.filename);
+      }
+
+      // Delete the chatroom entry
+      // Deletion of other associated data such as messages, invites, and document entries are cascaded
+      const { error: deleteError } = await supabase
         .from("chatrooms")
         .delete()
         .eq("chatroom_id", chatroomId);
 
-      if (error) {
-        throw new Error(error.message);
+      if (fetchError || deleteError) {
+        const errorMessage = fetchError?.message || deleteError?.message || "An unexpected error occurred.";
+        throw new Error(errorMessage);
       }
 
       toast({
