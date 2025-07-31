@@ -7,8 +7,6 @@ import { useUnifiedChatroomContext, useUserContext, useToast } from "@/hooks";
 interface GroupGPTRequest {
   username: string;
   chatroom_id: string;
-  use_rag_query: boolean;
-  use_web_search: boolean;
   content: string;
 };
 
@@ -20,22 +18,12 @@ export function useSendMessage() {
   const { user } = useUserContext();
   const { toast } = useToast();
 
-  const sendToGroupGPT = useCallback(async ({
-    useRagQuery,
-    useWebSearch,
-    content
-  }: {
-    useRagQuery: boolean;
-    useWebSearch: boolean;
-    content: string;
-  }): Promise<boolean> => {
+  const sendToGroupGPT = useCallback(async ({ content } : { content: string }): Promise<boolean> => {
     try {
       const contentWithoutMention = content.replace(/@groupgpt/i, "");
       const payload: GroupGPTRequest = {
         username: user!.username,
         chatroom_id: currentChatroom!.chatroomId,
-        use_rag_query: useRagQuery,
-        use_web_search: useWebSearch,
         content: contentWithoutMention,
       };
 
@@ -91,15 +79,7 @@ export function useSendMessage() {
     }
   }, [currentChatroom, user, toast]);
 
-  const sendMessage = useCallback(async ({
-    useRagQuery,
-    useWebSearch,
-    content
-  }: {
-    useRagQuery: boolean;
-    useWebSearch: boolean;
-    content: string;
-  }): Promise<boolean> => {
+  const sendMessage = useCallback(async ({ content } : { content: string }): Promise<boolean> => {
     if (!content.trim() || !currentChatroom?.chatroomId || !user?.userId) return false;
 
     setIsSubmitting(true);
@@ -110,7 +90,7 @@ export function useSendMessage() {
       if (isGroupGPTMessage) {
         // For GroupGPT messages, send to both Supabase and backend server
         const [groupGPTSuccess, supabaseResult] = await Promise.all([
-          sendToGroupGPT({ useRagQuery, useWebSearch, content: content.trim() }),
+          sendToGroupGPT({ content: content.trim() }),
           sendToSupabase(content.trim())
         ]);
 

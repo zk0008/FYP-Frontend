@@ -13,10 +13,6 @@ export function ChatInputForm() {
   const {
     input,
     setInput,
-    useRagQuery,
-    setUseRagQuery,
-    useWebSearch,
-    setUseWebSearch,
     isSubmitting,
     handleSubmit
   } = useChatInput();
@@ -127,7 +123,7 @@ export function ChatInputForm() {
           onTranscriptAbort={ handleTranscriptAbort }
         />
 
-        <div className="absolute left-1/2 -translate-x-1/2">
+        {/* <div className="absolute left-1/2 -translate-x-1/2">
           <TooltipWrapper content={ useRagQuery ? "Disable RAG Query" : "Enable RAG Query" } side="top">
             <Button
               variant={ useRagQuery ? "default" : "ghost" }
@@ -153,7 +149,7 @@ export function ChatInputForm() {
               Web Search
             </Button>
           </TooltipWrapper>
-        </div>
+        </div> */}
 
         <TooltipWrapper content="Send Message" side="top">
           <Button
