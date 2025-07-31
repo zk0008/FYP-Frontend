@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { CircleUser, ChevronsUpDown, Dot } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { AccountSettingsDialog, ManageInvitesDialog } from "@/components/dialogs/index";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -24,6 +25,7 @@ export function UserMenu() {
   const [isManageInvitesDialogOpen, setIsManageInvitesDialogOpen] = useState<boolean>(false);
   const { user } = useUserContext();
   const { invites } = useInvitesContext();
+  const router = useRouter();
 
   const userIcon = user?.username ? (
     <Avatar className="h-6 w-6">
@@ -60,9 +62,20 @@ export function UserMenu() {
           >
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Button
+                variant="ghost"
+                className="w-full justify-start p-2"
+                onClick={() => router.push("/chat")}
+              >
+                <span>Switch to Legacy App</span>
+              </Button>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+              <Button
                 variant="ghost" 
                 className="w-full justify-start p-2"
                 onClick={() => setIsAccountSettingsDialogOpen(true)}
+                disabled
               >
                 <span>Account Settings</span>
               </Button>

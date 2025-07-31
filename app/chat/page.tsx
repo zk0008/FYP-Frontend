@@ -167,6 +167,12 @@ export default function ChatPage() {
                   </div>
                 </div>
               ))}
+              <button
+                className="border-2 border-black rounded-md p-2 font-bold bg-white active:bg-slate-400 hover:bg-slate-300"
+                onClick={() => router.push("/chats")}
+              >
+                Switch to Updated App
+              </button>
             </div>
           </div>
           <ChatBox topic={currentTopic} />
