@@ -1,6 +1,6 @@
 "use client";
 
-import { FileSearch, Globe, LoaderCircle, SendHorizonal } from "lucide-react";
+import { LoaderCircle, SendHorizonal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -72,14 +72,20 @@ export function ChatInputForm() {
     }, 0);
   };
 
-  // Message sending using Ctrl + Enter or Cmd + Enter
+  // Send message using Enter
+  // Add newline using Shift + Enter
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-      handleSubmit(e);
-      // Focus back on the input after submitting
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 0);
+    if (e.key === "Enter") {
+      if (e.shiftKey) {
+        return;
+      } else {
+        e.preventDefault();
+        handleSubmit(e);
+        // Focus back on the input after submitting
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 0);
+      }
     }
   };
 
@@ -122,34 +128,6 @@ export function ChatInputForm() {
           onListeningChange={(listening) => setIsListening(listening)}
           onTranscriptAbort={ handleTranscriptAbort }
         />
-
-        {/* <div className="absolute left-1/2 -translate-x-1/2">
-          <TooltipWrapper content={ useRagQuery ? "Disable RAG Query" : "Enable RAG Query" } side="top">
-            <Button
-              variant={ useRagQuery ? "default" : "ghost" }
-              className="mx-0.5"
-              type="button"
-              onClick={() => setUseRagQuery(!useRagQuery)}
-              disabled={ !isGroupGPTMessage(input) || isSubmitting }
-            >
-              <FileSearch />
-              RAG Query
-            </Button>
-          </TooltipWrapper>
-
-          <TooltipWrapper content={ useWebSearch ? "Disable Web Search" : "Enable Web Search" } side="top">
-            <Button
-              variant={ useWebSearch ? "default" : "ghost" }
-              className="mx-0.5"
-              type="button"
-              onClick={() => setUseWebSearch(!useWebSearch)}
-              disabled={ !isGroupGPTMessage(input) || isSubmitting }
-            >
-              <Globe />
-              Web Search
-            </Button>
-          </TooltipWrapper>
-        </div> */}
 
         <TooltipWrapper content="Send Message" side="top">
           <Button
