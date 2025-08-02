@@ -29,7 +29,7 @@ export default function SignInPage() {
 
       <SignInForm />
 
-      <p className="text-center mt-2">Don't have an account?&nbsp;
+      <p className="text-center mt-2">Don&apos;t have an account?&nbsp;
         <a href="/signup" className="text-blue-500 hover:underline">
           Sign Up
         </a>
