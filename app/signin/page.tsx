@@ -15,8 +15,8 @@ export default function SignInPage() {
   useEffect(() => {
     if (confirmed) {
       toast({
-        title: "Account created successfully",
-        description: "You can now log in with your credentials.",
+        title: "Sign Up Confirmed",
+        description: "Your sign up has been confirmed. You can now log in with your credentials.",
       });
     }
   }, []);   // Alert should only be shown once on page load

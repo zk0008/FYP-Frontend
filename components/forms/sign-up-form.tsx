@@ -66,12 +66,12 @@ export function SignUpForm() {
     if (user) {
       router.push("/");
       toast({
-        title: "Sign up successful",
-        description: "Please check your mailbox, a confirmation email will be sent to you shortly.",
+        title: "Confirmation Email Sent",
+        description: "Please check your mailbox and click the confirmation link to complete your sign up.",
       })
     } else if (error) {
       toast({
-        title: "Sign up failed",
+        title: "Sign Up Failed",
         description: error,
         variant: "destructive",
       });
