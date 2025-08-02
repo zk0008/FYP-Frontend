@@ -59,7 +59,7 @@ export function UnifiedChatroomProvider({ children }: { children: React.ReactNod
     if (user?.userId !== deletedChatroom?.creatorId) {
       toast({
         title: "Chatroom Deleted",
-        description: `${deletedChatroomName} has been deleted by its owner. You can no longer access it.`
+        description: `Chatroom ${deletedChatroomName} has been deleted by its owner. You can no longer access it.`
       });
     }
   }, [chatrooms, currentChatroomId, router, removeChatroom, refresh, toast]);
