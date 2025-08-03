@@ -1,3 +1,5 @@
+export { ChangeUsernameForm } from "./change-username-form";
+
 export { CreateChatroomForm } from "./create-chatroom-form";
 export { EditChatroomForm } from "./edit-chatroom-form";
 

@@ -75,7 +75,6 @@ export function UserMenu() {
                 variant="ghost" 
                 className="w-full justify-start p-2"
                 onClick={() => setIsAccountSettingsDialogOpen(true)}
-                disabled
               >
                 <span>Account Settings</span>
               </Button>
