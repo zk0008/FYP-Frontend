@@ -13,8 +13,9 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { signUp } from "@/utils/auth";
 import { useToast } from "@/hooks";
 
@@ -80,7 +81,7 @@ export function SignUpForm() {
 
   return (
     <Form { ...form }>
-      <form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-4 max-w-xs">
+      <form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-4 w-full max-w-xs">
         <FormField
           control={ form.control }
           name="username"
@@ -88,10 +89,9 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <input
+                <Input
                   type="text"
                   placeholder="Enter your username"
-                  className="rounded-md px-1 border-2 border-black w-full h-8"
                   { ...field }
                 />
               </FormControl>
@@ -111,10 +111,9 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <input
+                <Input
                   type="email"
                   placeholder="Enter your email"
-                  className="rounded-md px-1 border-2 border-black w-full h-8"
                   { ...field }
                 />
               </FormControl>
@@ -133,10 +132,9 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <input
+                <Input
                   type="password"
                   placeholder="Enter your password"
-                  className="rounded-md px-1 border-2 border-black w-full h-8"
                   { ...field }
                 />
               </FormControl>
@@ -156,10 +154,9 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <input
+                <Input
                   type="password"
                   placeholder="Confirm your password"
-                  className="rounded-md px-1 border-2 border-black w-full h-8"
                   { ...field }
                 />
               </FormControl>

@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   useUnifiedChatroomContext,
   useToast,
@@ -125,10 +126,9 @@ export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <input
+                <Input
                   type="text"
                   placeholder="Enter username"
-                  className="rounded-md px-1 border-2 border-black w-full h-8"
                   { ...field }
                   onKeyDown={ handleKeyDown }
                 />

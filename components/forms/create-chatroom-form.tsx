@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useToast, useUnifiedChatroomContext, useUserContext } from "@/hooks";
 
 const createChatroomFormSchema = z.object({
@@ -108,10 +109,9 @@ export function CreateChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
             <FormItem>
               <FormLabel>Chatroom Name</FormLabel>
               <FormControl>
-                <input
+                <Input
                   type="text"
                   placeholder="Enter chatroom name"
-                  className="rounded-md px-1 border-2 border-black w-full h-8"
                   { ...field }
                   onKeyDown={(e) => e.stopPropagation()} // Required to allow spaces in input
                 />
