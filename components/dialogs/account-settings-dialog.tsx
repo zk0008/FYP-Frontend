@@ -14,6 +14,12 @@ interface AccountSettingsDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+interface DialogContent {
+  title: string;
+  description: string;
+  content: React.ReactNode;
+}
+
 export function AccountSettingsDialog({
   open,
   onOpenChange,
@@ -29,7 +35,7 @@ export function AccountSettingsDialog({
   };
 
   // Get dialog content based on current stage
-  const getDialogContent = () => {
+  const getDialogContent = (): DialogContent => {
     switch (currentStage) {
       case "MENU":
         return {
@@ -80,7 +86,28 @@ export function AccountSettingsDialog({
         };
 
       default:
-        return getDialogContent();
+        return {
+          title: "Account Settings",
+          description: "Here you can manage your account settings.",
+          content: (
+            <div className="flex flex-col space-y-3">
+              <Button
+                variant="outline"
+                className="justify-start h-12"
+                onClick={() => setCurrentStage("CHANGE_USERNAME")}
+              >
+                Change Username
+              </Button>
+              <Button
+                variant="destructive"
+                className="justify-start h-12"
+                onClick={() => setCurrentStage("DELETE_ACCOUNT")}
+              >
+                Delete Account
+              </Button>
+            </div>
+          ),
+        };
     }
   };
 
