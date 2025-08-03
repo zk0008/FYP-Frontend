@@ -56,7 +56,7 @@ export async function signIn({ email, password } : signInProps) {
     
     if (insertError) {
       console.error("Error inserting new user:", insertError);
-      return { error: "Failed to create user profile. Please try again." };
+      return { error: insertError.message || "Failed to create user profile. Please try again." };
     }
 
     revalidatePath("/");
@@ -64,7 +64,7 @@ export async function signIn({ email, password } : signInProps) {
   } else if (userError) {
     // Some other DB error occurred
     console.error("Database error:", userError);
-    return { error: "An error occurred while accessing user data. Please try again." };
+    return { error: userError.message || "An error occurred while accessing user data. Please try again." };
   }
 
   // User already exists, proceed with signIn as per normal
@@ -92,7 +92,7 @@ export async function signUp({
 
   if (error) {
     console.error("Sign up error:", error);
-    return { error: "Sign up failed. Please try again." };
+    return { error: error.message || "Sign up failed. Please try again." };
   }
 
   revalidatePath("/");
