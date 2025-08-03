@@ -14,7 +14,7 @@ export function useChatInput() {
     const success = await sendMessage({ content: input.trim() });
 
     if (success) {
-      setInput("");   // Clear input
+      setInput("");  // Clear input
     }
   }, [input, sendMessage]);
 

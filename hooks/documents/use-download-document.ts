@@ -35,14 +35,14 @@ export function useDownloadDocument({ filename }: useDownloadDocumentProps) {
       // Create a blob URL and trigger download
       const blob = new Blob([data], { type: data.type || 'application/octet-stream' });
       const url = window.URL.createObjectURL(blob);
-      
+
       // Create a temporary anchor element to trigger download
       const link = document.createElement('a');
       link.href = url;
-      link.download = filename; // Use the original filename
+      link.download = filename;  // Use the original filename
       document.body.appendChild(link);
       link.click();
-      
+
       // Cleanup
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);

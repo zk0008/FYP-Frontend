@@ -20,7 +20,7 @@ export function AcceptInviteButton({
   const handleAccept = async () => {
     await acceptInvite();
     refreshChatrooms();
-    onAccepted();   // Refreshes invite list
+    onAccepted();  // Refreshes invite list
   };
 
   return (
