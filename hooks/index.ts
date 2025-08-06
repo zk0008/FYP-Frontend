@@ -8,7 +8,7 @@ export { useUnifiedChatroomContext } from "./contexts/use-unified-chatroom-conte
 export { useUserContext } from "./contexts/use-user-context";
 
 // =============================================================================
-// AUTHENTICATION & USER
+// AUTHENTICATION
 // =============================================================================
 export { useFetchUser } from "./auth/use-fetch-user";
 
@@ -52,3 +52,9 @@ export { useDragAndDrop } from "./documents/use-drag-and-drop";
 export { useChatInput } from "./ui/use-chat-input";
 export { useIsMobile } from "./ui/use-mobile";
 export { useToast } from "./ui/use-toast";
+
+//
+// =============================================================================
+// USER MANAGEMENT
+// =============================================================================
+export { useDeleteUser } from "./users/use-delete-user";

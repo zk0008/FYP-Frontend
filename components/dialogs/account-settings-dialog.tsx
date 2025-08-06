@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { ChangeUsernameForm } from "@/components/forms";
+import { useDeleteUser, useToast } from "@/hooks";
 
 import { BaseDialog } from "./base-dialog";
 
@@ -25,6 +26,8 @@ export function AccountSettingsDialog({
   onOpenChange,
 }: AccountSettingsDialogProps) {
   const [currentStage, setCurrentStage] = useState<SettingsStage>("MENU");
+  const { deleteUser, isDeleting } = useDeleteUser();
+  const { toast } = useToast();
 
   // Reset state when dialog closes
   const handleOpenChange = (open: boolean) => {
@@ -32,6 +35,24 @@ export function AccountSettingsDialog({
       setCurrentStage("MENU");
     }
     onOpenChange(open);
+  };
+
+  // Handle account deletion
+  const handleDeleteAccount = async () => {
+    const { success, error } = await deleteUser();
+    if (success) {
+      window.location.href = "/";  // Redirect to main page
+      toast({
+        title: "Account Deleted",
+        description: "Your account has been successfully deleted."
+      });
+    } else if (error) {
+      toast({
+        title: "Error Deleting Account",
+        description: error,
+        variant: "destructive"
+      });
+    }
   };
 
   // Get dialog content based on current stage
@@ -78,8 +99,8 @@ export function AccountSettingsDialog({
               <Button variant="outline" onClick={() => setCurrentStage("MENU")}>
                 Back
               </Button>
-              <Button variant="destructive" onClick={() => console.log("delete account")} >
-                Delete Account
+              <Button variant="destructive" onClick={ handleDeleteAccount } disabled={ isDeleting }>
+                {isDeleting ? `Deleting...` : `Delete Account`}
               </Button>
             </div>
           ),
