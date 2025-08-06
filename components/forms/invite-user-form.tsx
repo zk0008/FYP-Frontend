@@ -81,8 +81,55 @@ export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
       return;
     }
 
+    // Check if recipient is already in the chatroom
+    const { data: existingMember, error: memberError } = await supabase
+      .from("members")
+      .select()
+      .eq("user_id", recipient.user_id)
+      .eq("chatroom_id", currentChatroom.chatroomId);
+
+    if (existingMember && existingMember.length > 0) {
+      toast({
+        title: "Error Sending Invite",
+        description: `'${data.username}' is already a member of chatroom '${currentChatroom.name}'.`,
+        variant: "destructive",
+      });
+      return;
+    } else if (memberError) {
+      toast({
+        title: "Error Checking Membership",
+        description: memberError.message || "An unexpected error occurred while checking membership.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check if a pending invite to the user already exists for the current chatroom
+    const { data: existingInvite, error: existingInviteError } = await supabase
+      .from("invites")
+      .select()
+      .eq("recipient_id", recipient.user_id)
+      .eq("chatroom_id", currentChatroom.chatroomId)
+      .eq("status", "PENDING");
+
+    if (existingInvite && existingInvite.length > 0) {
+      toast({
+        title: "Invite Already Exists",
+        description: `'${data.username}' has been invited to join chatroom '${currentChatroom.name}'. Please wait for them to respond.`,
+        variant: "destructive",
+      });
+      return;
+    } else if (existingInviteError) {
+      toast({
+        title: "Error Checking Existing Invites",
+        description: existingInviteError.message || "An unexpected error occurred while checking existing invites.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Insert invite into database
-    const { error: inviteError } = await supabase
+    const { error: insertInviteError } = await supabase
       .from("invites")
       .insert({
         sender_id: user.userId,
@@ -91,12 +138,13 @@ export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
         status: "PENDING"
       });
 
-    if (inviteError) {
+    if (insertInviteError) {
       toast({
         title: "Error Sending Invite",
-        description: inviteError.message || "An unexpected error occurred while sending the invite.",
+        description: insertInviteError.message || "An unexpected error occurred while sending the invite.",
         variant: "destructive",
       });
+      return;
     }
 
     toast({
@@ -104,8 +152,8 @@ export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
       description: `'${data.username}' has been invited to join chatroom '${currentChatroom.name}'.`,
     });
 
-    form.reset(); // Reset the form after successful submission
-    onSuccess?.(); // Call the success callback if provided
+    form.reset();  // Reset the form after successful submission
+    onSuccess?.();  // Call the success callback if provided
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
