@@ -37,6 +37,7 @@ export function useDeleteChatroom() {
       for (const document of documents || []) {
         await deleteDocumentFile(document.filename);
       }
+      await deleteDocumentFile(chatroomId);  // Delete the chatroom folder itself
 
       // Delete the chatroom entry
       // Deletion of other associated data such as messages, invites, and document entries are cascaded
