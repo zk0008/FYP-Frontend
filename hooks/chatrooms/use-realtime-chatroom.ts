@@ -2,7 +2,6 @@ import { useEffect } from "react";
 
 import { Chatroom } from "@/types";
 import { createClient } from "@/utils/supabase/client";
-import { useToast } from "@/hooks";
 
 interface useRealtimeChatroomProps {
   onUpdateChatroom: (chatroom: Chatroom) => void;
@@ -22,8 +21,6 @@ export function useRealtimeChatroom({
   onUpdateChatroom,
   onDeleteChatroom
 }: useRealtimeChatroomProps) {
-  const { toast } = useToast();
-
   useEffect(() => {
     const channel = supabase
       .channel("chatrooms")
@@ -55,5 +52,5 @@ export function useRealtimeChatroom({
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [onUpdateChatroom, onDeleteChatroom, toast]);
+  }, [onUpdateChatroom, onDeleteChatroom]);
 }

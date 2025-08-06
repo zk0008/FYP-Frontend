@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import { createClient } from "@/utils/supabase/client";
 import { Invite } from "@/types";
-import { useToast, useUserContext } from "@/hooks";
+import { useUserContext } from "@/hooks";
 
 interface useFetchInvitesProps {
   invite: Invite | null;
@@ -11,17 +11,13 @@ interface useFetchInvitesProps {
 const supabase = createClient();
 
 export function useAcceptInvite({ invite }: useFetchInvitesProps) {
-  const { toast } = useToast();
   const { user } = useUserContext();
 
   const acceptInvite = useCallback(async () => {
-    if (!invite || !user) {
-      toast({
-        title: "Error",
-        description: "Invalid invite or user context.",
-        variant: "destructive"
-      });
-      return;
+    if (!user) {
+      return { success: false, error: "User context is not available."}
+    } else if (!invite) {
+      return { success: false, error: "Invalid invite." }
     }
 
     try {
@@ -43,22 +39,12 @@ export function useAcceptInvite({ invite }: useFetchInvitesProps) {
         throw new Error(updateError?.message || memberError?.message || "Failed to accept invite.");
       }
 
-      toast({
-        title: "Invite Accepted",
-        description: `You have successfully joined the chatroom '${invite.chatroomName}'.`,
-      });
-
-      return true;
+      return { success: true, error: null };
     } catch (error: any) {
       console.error("Error accepting invite:", error);
-      toast({
-        title: "Error Accepting Invite",
-        description: error.message || "An unexpected error occurred while accepting the invite.",
-        variant: "destructive",
-      });
-      return false;
+      return { success: false, error: error.message || "An unexpected error occurred while accepting the invite." };
     }
-  }, [invite, user, toast]);
+  }, [invite, user]);
 
   return { acceptInvite };
 }

@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import { createClient } from "@/utils/supabase/client";
 import { Invite } from "@/types";
-import { useToast, useUserContext } from "@/hooks";
+import { useUserContext } from "@/hooks";
 
 interface useRejectInviteProps {
   invite: Invite | null;
@@ -11,17 +11,13 @@ interface useRejectInviteProps {
 const supabase = createClient();
 
 export function useRejectInvite({ invite }: useRejectInviteProps) {
-  const { toast } = useToast();
   const { user } = useUserContext();
 
   const rejectInvite = useCallback(async () => {
-    if (!invite || !user) {
-      toast({
-        title: "Error",
-        description: "Invalid invite or user context.",
-        variant: "destructive"
-      });
-      return;
+    if (!user) {
+      return { success: false, error: "User context is not available." };
+    } else if (!invite) {
+      return { success: false, error: "Invalid invite." };
     }
 
     try {
@@ -35,22 +31,12 @@ export function useRejectInvite({ invite }: useRejectInviteProps) {
         throw new Error(error.message);
       }
 
-      toast({
-        title: "Invite Rejected",
-        description: `You have rejected the invite from '${invite.senderUsername}' to chatroom '${invite.chatroomName}'.`,
-      });
-
-      return true;
+      return { success: true, error: null };
     } catch (error: any) {
       console.error("Error rejecting invite:", error);
-      toast({
-        title: "Error Rejecting Invite",
-        description: error.message || "Failed to reject the invite.",
-        variant: "destructive"
-      });
-      return false;
+      return { success: false, error: error.message || "Failed to reject the invite." };
     }
-  }, [invite, user, toast]);
+  }, [invite, user]);
 
   return { rejectInvite };
 }

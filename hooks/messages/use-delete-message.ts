@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 
 import { createClient } from "@/utils/supabase/client";
-import { useToast } from "@/hooks";
 
 interface useDeleteMessageProps {
   messageId: string;
@@ -10,8 +9,6 @@ interface useDeleteMessageProps {
 const supabase = createClient();
 
 export function useDeleteMessage({ messageId }: useDeleteMessageProps) {
-  const { toast } = useToast();
-
   const deleteMessage = useCallback(async () => {
     try {
       const { error } = await supabase
@@ -23,15 +20,10 @@ export function useDeleteMessage({ messageId }: useDeleteMessageProps) {
         throw new Error(error.message);
       }
 
-      return true;
+      return { success: true, error: null };
     } catch (error: any) {
       console.error("Error deleting message:", error);
-      toast({
-        title: "Error Deleting Message",
-        description: error.message || "An unexpected error occurred when deleting the message.",
-        variant: "destructive",
-      });
-      return false;
+      return { success: false, error: error.message || "Failed to delete the message." };
     }
   }, [messageId]);
 

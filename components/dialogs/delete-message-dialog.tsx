@@ -18,12 +18,18 @@ export function DeleteMessageDialog({
   const { toast } = useToast();
 
   const handleDelete = async () => {
-    const success = await deleteMessage();
+    const { success, error } = await deleteMessage();
     if (success) {
       toast({
         title: "Message Deleted"
       })
       onOpenChange(false);
+    } else if (error) {
+      toast({
+        title: "Error Deleting Message",
+        description: error,
+        variant: "destructive",
+      });
     }
   };
 
