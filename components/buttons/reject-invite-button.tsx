@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Invite } from "@/types";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useRejectInvite } from "@/hooks";
+import { useRejectInvite, useToast } from "@/hooks";
 
 interface RejectInviteButtonProps {
   invite: Invite;
@@ -15,10 +15,25 @@ export function RejectInviteButton({
   onRejected
 }: RejectInviteButtonProps) {
   const { rejectInvite } = useRejectInvite({ invite });
+  const { toast } = useToast();
 
   const handleReject = async () => {
-    await rejectInvite();
-    onRejected();   // Refreshes invite list
+    const { success, error } = await rejectInvite();
+
+    if (success) {
+      toast({
+        title: "Invite Rejected",
+        description: `You have rejected the invite from '${invite.senderUsername}' to chatroom '${invite.chatroomName}'.`,
+      });
+      onRejected();   // Refreshes invite list
+    }
+    else if (error) {
+      toast({
+        title: "Error Rejecting Invite",
+        description: error,
+        variant: "destructive"
+      });
+    }
   };
 
   return (

@@ -8,7 +8,7 @@ export interface Document {
   documentId: string;
   filename: string;
   username: string;
-  uploadedAt: string;   // ISO string format
+  uploadedAt: string;  // ISO string format
 }
 
 export interface Message {
@@ -42,8 +42,8 @@ export interface InvitesContextType {
 }
 
 export interface UnifiedChatroomContextType {
-  chatrooms: Chatroom[];              // Chatrooms list
-  currentChatroom: Chatroom | null;   // Current chatroom
+  chatrooms: Chatroom[];  // Chatrooms list
+  currentChatroom: Chatroom | null;  // Current chatroom
   loading: boolean;
   error: string | null;
   refresh: () => void;

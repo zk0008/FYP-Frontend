@@ -21,7 +21,7 @@ export function ChatInputForm() {
   const [isListening, setIsListening] = useState(false);
 
   const handleTranscriptChange = (incrementalTranscript: string) => {
-    if (!incrementalTranscript.trim()) return; // Ignore empty transcripts
+    if (!incrementalTranscript.trim()) return;  // Ignore empty transcripts
 
     // TranscribeButton returns incremental updates
     // To show real-time transcription, append the new portion to existing input

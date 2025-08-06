@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useToast, useUnifiedChatroomContext } from "@/hooks";
 
 const editChatroomFormSchema = z.object({
@@ -79,7 +80,7 @@ export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
       description: `Chatroom name changed to "${newChatroomName}".`,
     });
 
-    refresh();      // Refresh chatroom context
+    refresh();  // Refresh chatroom context
     onSuccess?.();
   }
 
@@ -93,12 +94,11 @@ export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
             <FormItem>
               <FormLabel>Chatroom Name</FormLabel>
               <FormControl>
-                <input
+                <Input
                   type="text"
-                  placeholder={ currentChatroom ? currentChatroom.name : "Enter chatroom name" }
-                  className="rounded-md px-1 border-2 border-black w-full h-8"
+                  placeholder={ currentChatroom ? currentChatroom.name : "Enter new chatroom name" }
                   { ...field }
-                  onKeyDown={(e) => e.stopPropagation()} // Required to allow spaces in input
+                  onKeyDown={(e) => e.stopPropagation()}  // Required to allow spaces in input
                 />
               </FormControl>
               <FormDescription>

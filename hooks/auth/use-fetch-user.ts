@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@/types";
 
@@ -35,7 +36,7 @@ export function useFetchUser() {
       }
 
       if (!userData) {
-        throw new Error("User record not found in your 'users' table.");
+        throw new Error("User record not found in 'users' table.");
       }
 
       setUser({

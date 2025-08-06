@@ -56,7 +56,7 @@ export function useFetchChatrooms({ userId }: useFetchChatroomsProps) {
       // If updatedChatroom is in the current chatrooms list, return updated chatrooms list with the updated chatroom
       return prev.map(chatroom =>
         chatroom.chatroomId === updatedChatroom.chatroomId
-          ? { ...chatroom, ...updatedChatroom } // updatedChatroom's properties will override chatroom's, if conflicting
+          ? { ...chatroom, ...updatedChatroom }  // updatedChatroom's properties will override chatroom's, if conflicting
           : chatroom
       );
     });

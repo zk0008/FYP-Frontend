@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   useUnifiedChatroomContext,
-  useDeleteChatroom
+  useDeleteChatroom,
+  useToast
 } from "@/hooks";
 
 import { BaseDialog } from "./base-dialog";
@@ -20,17 +21,29 @@ export function DeleteChatroomDialog({
   const { refresh, currentChatroom } = useUnifiedChatroomContext();
   const { deleteChatroom, isLoading } = useDeleteChatroom();
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleDelete = async () => {
-    const result = await deleteChatroom({
+    const { success, error } = await deleteChatroom({
       chatroomId: currentChatroom?.chatroomId || "",
       name: currentChatroom?.name || ""
     });
 
-    if (result.success) {
-      refresh();                // Refresh chatrooms list
-      onOpenChange(false);      // Close dialog
-      router.push("/chats");    // Exit chatroom
+    if (success) {
+      toast({
+        title: "Chatroom Deleted",
+        description: `Chatroom '${currentChatroom!.name}' has been successfully deleted.`,
+      });
+
+      refresh();  // Refresh chatrooms list
+      onOpenChange(false);  // Close dialog
+      router.push("/chats");  // Exit chatroom
+    } else if (error) {
+      toast({
+        title: "Error Deleting Chatroom",
+        description: error,
+        variant: "destructive"
+      });
     }
   };
 

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Invite } from "@/types";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { useAcceptInvite, useUnifiedChatroomContext } from "@/hooks";
+import { toast } from "@/hooks/ui/use-toast";
 
 interface AcceptInviteButtonProps {
   invite: Invite;
@@ -18,9 +19,23 @@ export function AcceptInviteButton({
   const { refresh: refreshChatrooms } = useUnifiedChatroomContext();
 
   const handleAccept = async () => {
-    await acceptInvite();
-    refreshChatrooms();
-    onAccepted();   // Refreshes invite list
+    const { success, error } = await acceptInvite();
+
+    if (success) {
+      toast({
+        title: "Invite Accepted",
+        description: `You have successfully joined the chatroom '${invite.chatroomName}'.`
+      })
+
+      refreshChatrooms();
+      onAccepted();  // Refreshes invite list
+    } else if (error) {
+      toast({
+        title: "Error Accepting Invite",
+        description: error,
+        variant: "destructive"
+      });
+    }
   };
 
   return (

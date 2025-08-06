@@ -2,7 +2,7 @@ import { Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useDeleteDocument } from "@/hooks";
+import { useDeleteDocument, useToast } from "@/hooks";
 
 interface DeleteFileButtonProps {
   documentId: string;
@@ -16,10 +16,24 @@ export function DeleteDocumentButton({
   onDeleted
 }: DeleteFileButtonProps) {
   const { deleteDocument } = useDeleteDocument();
+  const { toast } = useToast();
 
   const handleDelete = async () => {
-    await deleteDocument({ documentId, filename });
-    onDeleted();
+    const { success, error } = await deleteDocument({ documentId, filename });
+
+    if (success) {
+      toast({
+        title: "Document Deleted",
+        description: `"${filename}" has been successfully deleted.`
+      })
+      onDeleted();
+    } else if (error) {
+      toast({
+        title: "Error Deleting Document",
+        description: error,
+        variant: "destructive"
+      });
+    }
   };
 
   return (

@@ -13,6 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { signIn } from "@/utils/auth";
 import { useToast } from "@/hooks";
 
@@ -38,7 +39,7 @@ export function SignInForm() {
   const onSubmit = async (data: z.infer<typeof signInFormSchema>) => {
     const { user, error } = await signIn({ email: data.email, password: data.password });
     if (user) {
-      window.location.href = "/chats";    // Full reload required for proper realtime subscription
+      window.location.href = "/chats";  // Full reload required for proper realtime subscription
       toast({
         title: "Signed In",
         description: `Hello ${user?.user_metadata?.username || "there"}, welcome back!`,
@@ -54,7 +55,7 @@ export function SignInForm() {
 
   return (
     <Form { ...form }>
-      <form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-4 max-w-xs">
+      <form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-4 w-full max-w-xs">
         <FormField
           control={ form.control }
           name="email"
@@ -62,10 +63,9 @@ export function SignInForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <input
+                <Input
                   type="email"
                   placeholder="Enter your email"
-                  className="rounded-md px-1 border-2 border-black w-full h-8"
                   { ...field }
                 />
               </FormControl>
@@ -81,10 +81,9 @@ export function SignInForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <input
+                <Input
                   type="password"
                   placeholder="Enter your password"
-                  className="rounded-md px-1 border-2 border-black w-full h-8"
                   { ...field }
                 />
               </FormControl>

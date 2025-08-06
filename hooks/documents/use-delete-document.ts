@@ -25,17 +25,12 @@ export function useDeleteDocument() {
         throw new Error(error.message);
       }
   
-      return true;
+      return { success: true, error: null };
     } catch (error: any) {
       console.error("Error deleting document:", error);
-      toast({
-        title: "Error Deleting Document Entry",
-        description: error.message || "An unexpected error occurred when deleting document entry from Supabase.",
-        variant: "destructive",
-      });
-      return false;
+      return { success: false, error: error.message || "An unexpected error occurred when deleting document entry from Supabase." };
     }
-  }, [toast]);
+  }, []);
 
   const deleteDocumentFile = useCallback(async (filename: string) => {
     try {
@@ -46,8 +41,8 @@ export function useDeleteDocument() {
       if (error) {
         throw new Error(error.message);
       }
-  
-      return true;
+
+      return { success: true, error: null };
     } catch (error: any) {
       console.error("Error deleting document file:", error);
       toast({
@@ -55,30 +50,34 @@ export function useDeleteDocument() {
         description: error.message || "An unexpected error occurred when deleting document file from Supabase Storage.",
         variant: "destructive",
       });
-      return false;
+      return { success: false, error: error.message || "An unexpected error occurred when deleting document file from Supabase Storage." };
     }
-  }, [currentChatroom, toast]);
+  }, [currentChatroom]);
 
   const deleteDocument = useCallback(async ({
     documentId,
     filename
   }: deleteDocumentProps) => {
-    if (!documentId || !currentChatroom?.chatroomId) return;
+    if (!documentId) {
+      return { success: false, error: "Document ID is required." };
+    } else if (!currentChatroom?.chatroomId) {
+      return { success: false, error: "Current chatroom context is not available." };
+    }
 
-    const [entryDeleted, fileDeleted] = await Promise.all([
+    const [
+      { success: entryDeleted, error: entryError },
+      { success: fileDeleted, error: fileError }
+    ] = await Promise.all([
       deleteDocumentEntry(documentId),
       deleteDocumentFile(filename),
     ]);
 
     if (entryDeleted && fileDeleted) {
-      toast({
-        title: "Document Deleted",
-        description: `"${filename}" has been successfully deleted.`,
-      });
-      return true;
+      return { success: true, error: null };
     }
 
-    return false;
+    return { success: false, error: entryError || fileError || "An unexpected error occurred while deleting the document." };
+
   }, [deleteDocumentEntry, deleteDocumentFile, currentChatroom, toast]);
 
   return { deleteDocument, deleteDocumentEntry, deleteDocumentFile };

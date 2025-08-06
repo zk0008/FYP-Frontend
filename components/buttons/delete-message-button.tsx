@@ -5,7 +5,6 @@ import { useState } from "react";
 
 import { ChatBubbleAction } from "@/components/ui/chat/chat-bubble";
 import { DeleteMessageDialog } from "@/components/dialogs";
-import { useDeleteMessage } from "@/hooks";
 
 export function DeleteMessageButton({ messageId }: { messageId: string }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

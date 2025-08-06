@@ -2,13 +2,27 @@ import { Download, LoaderCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useDownloadDocument } from "@/hooks";
+import { useDownloadDocument, useToast } from "@/hooks";
 
 export function DownloadDocumentButton({ filename }: { filename: string }) {
   const { isDownloading, downloadDocument } = useDownloadDocument({ filename });
+  const { toast } = useToast();
 
   const handleDownload = async () => {
-    await downloadDocument();
+    const { success, error } = await downloadDocument();
+
+    if (success) {
+      toast({
+        title: "Download Requested",
+        description: `The download for '${filename}' has been requested. You should see a prompt to save the file shortly.`
+      });
+    } else if (error) {
+      toast({
+        title: "Error Downloading Document",
+        description: error,
+        variant: "destructive"
+      });
+    }
   }
 
   return (

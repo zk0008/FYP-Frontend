@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import {
   useUnifiedChatroomContext,
   useLeaveChatroom,
-  useUserContext
+  useUserContext,
+  useToast
 } from "@/hooks";
 import { BaseDialog } from "./base-dialog";
 
@@ -21,18 +22,29 @@ export function LeaveChatroomDialog({
   const { leaveChatroom, isLoading } = useLeaveChatroom();
   const { user } = useUserContext();
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleLeave = async () => {
-    const result = await leaveChatroom({
+    const { success, error } = await leaveChatroom({
       userId: user?.userId || "",
       chatroomId: currentChatroom?.chatroomId || "",
       name: currentChatroom?.name || ""
     });
 
-    if (result.success) {
-      refresh();                // Refresh chatrooms list
-      onOpenChange(false);      // Close dialog
-      router.push("/chats");    // Exit chatroom
+    if (success) {
+      toast({
+        title: "Left Chatroom",
+        description: `You have successfully left the chatroom '${currentChatroom!.name}'.`,
+      });
+      refresh();  // Refresh chatrooms list
+      onOpenChange(false);  // Close dialog
+      router.push("/chats");  // Exit chatroom
+    } else if (error) {
+      toast({
+        title: "Error Leaving Chatroom",
+        description: error,
+        variant: "destructive"
+      });
     }
   };
 

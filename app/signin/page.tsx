@@ -19,7 +19,7 @@ export default function SignInPage() {
         description: "Your sign up has been confirmed. You can now log in with your credentials.",
       });
     }
-  }, []);   // Alert should only be shown once on page load
+  }, []);  // Alert should only be shown once on page load
 
   return (
     <div className="flex flex-col h-full w-full items-center">

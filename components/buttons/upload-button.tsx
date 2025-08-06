@@ -20,7 +20,7 @@ export function UploadButton() {
     }
 
     if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // Clear the input after selection
+      fileInputRef.current.value = "";  // Clear the input after selection
     }
   }, [uploadDocument, uploadMultipleDocuments]);
 

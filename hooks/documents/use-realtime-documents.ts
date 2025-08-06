@@ -46,13 +46,13 @@ export function useRealtimeDocuments() {
 
             toast({
               title: "Document Uploaded",
-              description: `Your document "${newDocument.filename}" has been uploaded and added to the knowledge base for chatroom "${chatroomName.name}". You may now query it.`
+              description: `Your document '${newDocument.filename}' has been uploaded and added to the knowledge base for chatroom '${chatroomName.name}'. You may now query it.`
             })
           } catch (error) {
             console.error("Document uploaded, but error fetching chatroom name:", error);
             toast({
               title: "Document Uploaded",
-              description: `Your document "${newDocument.filename}" has been uploaded.`
+              description: `Your document '${newDocument.filename}' has been uploaded.`
             });
           }
         }

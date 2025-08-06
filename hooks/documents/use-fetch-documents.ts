@@ -37,7 +37,7 @@ export function useFetchDocuments({ chatroomId }: useFetchDocumentsProps) {
           uploaded_at
         `)
         .eq("chatroom_id", chatroomId)
-        .order("uploaded_at", { ascending: false });    // Newest documents first
+        .order("uploaded_at", { ascending: false });  // Newest documents first
 
       if (error) {
         throw new Error(error.message);

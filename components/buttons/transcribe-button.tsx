@@ -10,7 +10,7 @@ import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 interface TranscribeButtonProps {
   onTranscriptChange: (transcript: string) => void;
   onListeningChange: (listening: boolean) => void;
-  onTranscriptAbort: () => void; // Optional callback for aborting transcription
+  onTranscriptAbort: () => void;
   disabled?: boolean;
 }
 

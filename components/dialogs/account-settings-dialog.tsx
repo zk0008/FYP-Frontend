@@ -1,26 +1,147 @@
 "use client";
 
+import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { ChangeUsernameForm } from "@/components/forms";
+import { useDeleteUser, useToast } from "@/hooks";
+
 import { BaseDialog } from "./base-dialog";
+
+type SettingsStage = "MENU" | "CHANGE_USERNAME" | "DELETE_ACCOUNT";
 
 interface AccountSettingsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  children?: React.ReactNode;
+}
+
+interface DialogContent {
+  title: string;
+  description: string;
+  content: React.ReactNode;
 }
 
 export function AccountSettingsDialog({
   open,
   onOpenChange,
-  children
-} : AccountSettingsDialogProps) {
+}: AccountSettingsDialogProps) {
+  const [currentStage, setCurrentStage] = useState<SettingsStage>("MENU");
+  const { deleteUser, isDeleting } = useDeleteUser();
+  const { toast } = useToast();
+
+  // Reset state when dialog closes
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      setCurrentStage("MENU");
+    }
+    onOpenChange(open);
+  };
+
+  // Handle account deletion
+  const handleDeleteAccount = async () => {
+    const { success, error } = await deleteUser();
+    if (success) {
+      window.location.href = "/";  // Redirect to main page
+      toast({
+        title: "Account Deleted",
+        description: "Your account has been successfully deleted."
+      });
+    } else if (error) {
+      toast({
+        title: "Error Deleting Account",
+        description: error,
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Get dialog content based on current stage
+  const getDialogContent = (): DialogContent => {
+    switch (currentStage) {
+      case "MENU":
+        return {
+          title: "Account Settings",
+          description: "Here you can manage your account settings.",
+          content: (
+            <div className="flex flex-col space-y-3">
+              <Button
+                variant="outline"
+                className="justify-start h-12"
+                onClick={() => setCurrentStage("CHANGE_USERNAME")}
+              >
+                Change Username
+              </Button>
+              <Button
+                variant="destructive"
+                className="justify-start h-12"
+                onClick={() => setCurrentStage("DELETE_ACCOUNT")}
+              >
+                Delete Account
+              </Button>
+            </div>
+          ),
+        };
+
+      case "CHANGE_USERNAME":
+        return {
+          title: "Change Username",
+          description: "Here you can change your username.",
+          content: <ChangeUsernameForm handleBack={() => setCurrentStage("MENU")} />
+        };
+
+      // TODO: Account deletion needs to go through backend (e.g., DELETE /api/users/{user_id})
+      case "DELETE_ACCOUNT":
+        return {
+          title: "Delete Account",
+          description: "This action cannot be undone. Your account and all associated data will be permanently deleted. You will be signed out and lose access to all chatrooms.",
+          content: (
+            <div className="flex justify-between space-x-2 pt-4">
+              <Button variant="outline" onClick={() => setCurrentStage("MENU")}>
+                Back
+              </Button>
+              <Button variant="destructive" onClick={ handleDeleteAccount } disabled={ isDeleting }>
+                {isDeleting ? `Deleting...` : `Delete Account`}
+              </Button>
+            </div>
+          ),
+        };
+
+      default:
+        return {
+          title: "Account Settings",
+          description: "Here you can manage your account settings.",
+          content: (
+            <div className="flex flex-col space-y-3">
+              <Button
+                variant="outline"
+                className="justify-start h-12"
+                onClick={() => setCurrentStage("CHANGE_USERNAME")}
+              >
+                Change Username
+              </Button>
+              <Button
+                variant="destructive"
+                className="justify-start h-12"
+                onClick={() => setCurrentStage("DELETE_ACCOUNT")}
+              >
+                Delete Account
+              </Button>
+            </div>
+          ),
+        };
+    }
+  };
+
+  const dialogContent = getDialogContent();
+
   return (
     <BaseDialog
       open={ open }
-      onOpenChange={ onOpenChange }
-      title="Account Settings"
-      description="Here you can manage your account settings and preferences."
+      onOpenChange={ handleOpenChange }
+      title={ dialogContent.title }
+      description={ dialogContent.description }
     >
-      { children }
+      { dialogContent.content }
     </BaseDialog>
   );
 }
