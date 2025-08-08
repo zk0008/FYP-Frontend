@@ -20,7 +20,7 @@ export default function HomePage() {
     <div className="flex flex-col h-full w-full items-center gap-5">
       <TopBar showLogo title="GroupGPT">
         <Button
-          variant="ghost"
+          variant="link"
           onClick={ handleLoginClick }
         >
           Sign In
