@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { LoaderCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
