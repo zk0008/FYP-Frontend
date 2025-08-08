@@ -1,39 +1,24 @@
 "use client";
 
-import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-
 import { TopBar } from "@/components/top-bar";
 import { SignInForm } from "@/components/forms";
-import { useToast } from "@/hooks";
 
 export default function SignInPage() {
-  const searchParams = useSearchParams();
-  const { toast } = useToast();
-  const confirmed = searchParams.get("confirmed") === "true";
-
-  useEffect(() => {
-    if (confirmed) {
-      toast({
-        title: "Sign Up Confirmed",
-        description: "Your sign up has been confirmed. You can now log in with your credentials.",
-      });
-    }
-  }, []);  // Alert should only be shown once on page load
-
   return (
     <div className="flex flex-col h-full w-full items-center">
       <TopBar showLogo />
 
-      <h1 className="text-center my-4 font-semibold text-xl">Sign in to GroupGPT</h1>
+      <div className="space-y-2 py-4">
+        <h1 className="text-center font-semibold text-xl">Sign In to GroupGPT</h1>
 
-      <SignInForm />
+        <SignInForm />
 
-      <p className="text-center mt-2">Don&apos;t have an account?&nbsp;
-        <a href="/signup" className="text-blue-500 hover:underline">
-          Sign Up
-        </a>
-      </p>
+        <p className="text-center mt-2">Don&apos;t have an account?&nbsp;
+          <a href="/signup" className="text-blue-500 hover:underline">
+            Sign Up
+          </a>
+        </p>
+      </div>
     </div>
   )
 }

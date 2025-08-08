@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const PUBLIC_PATHS = [
   "/",
   "/auth/confirm",
+  "/auth/confirmed",
   "/signin",
   "/signup",
 ];
