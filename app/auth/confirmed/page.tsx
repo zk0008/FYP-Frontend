@@ -88,7 +88,7 @@ export default function ConfirmedPage() {
             </h1>
 
             <p className="text-gray-600">
-              We couldn't verify your email. The confirmation link may be invalid, expired, or already used.
+              We couldn&apos;t verify your email. The confirmation link may be invalid, expired, or already used.
             </p>
 
             <div className="space-y-2">
