@@ -1,12 +1,12 @@
 "use client";
 
-import { LoaderCircle, SendHorizonal } from "lucide-react";
+import { Plus, LoaderCircle, SendHorizonal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { TranscribeButton, UploadButton } from "@/components/buttons";
+import { TranscribeButton } from "@/components/buttons";
 import { useChatInput } from "@/hooks";
 
 export function ChatInputForm() {
@@ -73,7 +73,7 @@ export function ChatInputForm() {
   };
 
   // Send message using Enter
-  // Add newline using Shift + Enter
+  // Plus newline using Shift + Enter
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
       if (e.shiftKey) {
@@ -121,7 +121,16 @@ export function ChatInputForm() {
         autoFocus
       />
       <div className="flex items-center p-3 pt-0 gap-1">
-        <UploadButton />
+        <TooltipWrapper content="Attach File" side="top">
+          <Button
+            variant="ghost"
+            size="icon"
+            disabled
+          >
+            <Plus />
+            <span className="sr-only">Attach File</span>
+          </Button>
+        </TooltipWrapper>
 
         <TranscribeButton
           onTranscriptChange={ handleTranscriptChange }
