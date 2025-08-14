@@ -16,7 +16,7 @@ export function useDownloadDocument({ filename }: useDownloadDocumentProps) {
 
   const downloadDocument = useCallback(async () => {
     if (!filename) {
-      return { success: false, error: "Filename is required."}
+      return { success: false, error: "File name is required."}
     } else if (!currentChatroom?.chatroomId) {
       return { success: false, error: "Chatroom ID is required." }
     }

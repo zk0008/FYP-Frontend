@@ -19,7 +19,7 @@ export function UploadedDocumentsTable({ documents }: UploadedDocumentsTableProp
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Filename</TableHead>
+          <TableHead>File Name</TableHead>
           <TableHead>Uploaded By</TableHead>
           <TableHead className="text-center w-8">Actions</TableHead>
         </TableRow>
