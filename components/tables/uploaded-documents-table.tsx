@@ -11,13 +11,10 @@ import { DownloadDocumentButton, DeleteDocumentButton } from "@/components/butto
 
 interface UploadedDocumentsTableProps {
   documents: Document[];
-  onDocumentDeleted: () => void;
 }
 
-export function UploadedDocumentsTable({
-  documents,
-  onDocumentDeleted
-}: UploadedDocumentsTableProps) {
+// Table showing files / documents within the knowledge base
+export function UploadedDocumentsTable({ documents }: UploadedDocumentsTableProps) {
   return (
     <Table>
       <TableHeader>
@@ -28,7 +25,7 @@ export function UploadedDocumentsTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {documents.map((doc, index) => (
+        {documents.length !== 0 && documents.map((doc, index) => (
           <TableRow key={ index }>
             <TableCell>{ doc.filename }</TableCell>
             <TableCell>{ doc.username }</TableCell>
@@ -37,7 +34,7 @@ export function UploadedDocumentsTable({
               <DeleteDocumentButton
                 documentId={ doc.documentId }
                 filename={ doc.filename }
-                onDeleted={ onDocumentDeleted } />
+              />
             </TableCell>
           </TableRow>
         ))}

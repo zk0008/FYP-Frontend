@@ -87,7 +87,7 @@ export function ChatroomMenu() {
               className="w-full justify-start p-2"
               onClick={() => setIsManageFilesDialogOpen(true)}
             >
-              <span>Manage Uploaded Documents</span>
+              <span>Manage Knowledge Base</span>
             </Button>
             <ManageDocumentsDialog
               open={ isManageFilesDialogOpen }

@@ -7,13 +7,11 @@ import { useDeleteDocument, useToast } from "@/hooks";
 interface DeleteFileButtonProps {
   documentId: string;
   filename: string;
-  onDeleted: () => void;
 }
 
 export function DeleteDocumentButton({
   documentId,
-  filename,
-  onDeleted
+  filename
 }: DeleteFileButtonProps) {
   const { deleteDocument } = useDeleteDocument();
   const { toast } = useToast();
@@ -25,8 +23,7 @@ export function DeleteDocumentButton({
       toast({
         title: "Document Deleted",
         description: `"${filename}" has been successfully deleted.`
-      })
-      onDeleted();
+      });
     } else if (error) {
       toast({
         title: "Error Deleting Document",

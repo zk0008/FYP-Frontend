@@ -39,8 +39,7 @@ export { useRejectInvite } from "./invites/use-reject-invite";
 // =============================================================================
 // DOCUMENTS
 // =============================================================================
-export { useFetchDocuments } from "./documents/use-fetch-documents";
-export { useRealtimeDocuments } from "./documents/use-realtime-documents";
+export { useDocumentsWithRealtime } from "./documents/use-documents-with-realtime";
 export { useUploadDocument } from "./documents/use-upload-document";
 export { useDeleteDocument } from "./documents/use-delete-document";
 export { useDownloadDocument } from "./documents/use-download-document";
