@@ -30,7 +30,7 @@ export function TopBar({
             content="Toggle Sidebar"
             side="right"
           >
-            <SidebarTrigger />
+            <SidebarTrigger className="h-9 w-9" />
           </TooltipWrapper>
         )}
 
