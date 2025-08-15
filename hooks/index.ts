@@ -8,6 +8,11 @@ export { useUnifiedChatroomContext } from "./contexts/use-unified-chatroom-conte
 export { useUserContext } from "./contexts/use-user-context";
 
 // =============================================================================
+// ATTACHMENTS
+// =============================================================================
+export { useFetchAttachmentUrl } from "./attachments/use-fetch-attachment";
+
+// =============================================================================
 // AUTHENTICATION
 // =============================================================================
 export { useFetchUser } from "./auth/use-fetch-user";
