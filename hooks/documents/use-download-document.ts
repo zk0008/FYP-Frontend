@@ -4,19 +4,19 @@ import { createClient } from "@/utils/supabase/client";
 import { useUnifiedChatroomContext, useToast } from "@/hooks";
 
 interface useDownloadDocumentProps {
-  filename: string;
+  documentId: string;
 }
 
 const supabase = createClient();
 
-export function useDownloadDocument({ filename }: useDownloadDocumentProps) {
+export function useDownloadDocument({ documentId }: useDownloadDocumentProps) {
   const { currentChatroom } = useUnifiedChatroomContext();
   const { toast } = useToast();
   const [isDownloading, setIsDownloading] = useState(false);
 
   const downloadDocument = useCallback(async () => {
-    if (!filename) {
-      return { success: false, error: "File name is required."}
+    if (!documentId) {
+      return { success: false, error: "Document ID is required."}
     } else if (!currentChatroom?.chatroomId) {
       return { success: false, error: "Chatroom ID is required." }
     }
@@ -24,9 +24,10 @@ export function useDownloadDocument({ filename }: useDownloadDocumentProps) {
     setIsDownloading(true);
 
     try {
+      console.log(`${currentChatroom!.chatroomId}/${documentId}`)
       const { data, error } = await supabase.storage
-        .from("uploaded-documents")
-        .download(`${currentChatroom!.chatroomId}/${filename}`);
+        .from("knowledge-bases")
+        .download(`${currentChatroom!.chatroomId}/${documentId}`);
 
       if (error) {
         throw new Error(error.message);
@@ -43,7 +44,7 @@ export function useDownloadDocument({ filename }: useDownloadDocumentProps) {
       // Create a temporary anchor element to trigger download
       const link = document.createElement('a');
       link.href = url;
-      link.download = filename;  // Use the original filename
+      link.download = documentId;  // Use the original documentId
       document.body.appendChild(link);
       link.click();
 
@@ -58,7 +59,7 @@ export function useDownloadDocument({ filename }: useDownloadDocumentProps) {
     } finally {
       setIsDownloading(false);
     }
-  }, [filename, currentChatroom, toast]);
+  }, [documentId, currentChatroom, toast]);
 
   return { isDownloading, downloadDocument };
 }

@@ -5,7 +5,6 @@ import { useUnifiedChatroomContext, useToast } from "@/hooks";
 
 interface deleteDocumentProps {
   documentId: string;
-  filename: string;
 }
 
 const supabase = createClient();
@@ -32,11 +31,11 @@ export function useDeleteDocument() {
     }
   }, []);
 
-  const deleteDocumentFile = useCallback(async (filename: string) => {
+  const deleteDocumentFile = useCallback(async (documentId: string) => {
     try {
       const { error } = await supabase.storage
-        .from("uploaded-documents")
-        .remove([`${currentChatroom!.chatroomId}/${filename}`]);
+        .from("knowledge-bases")
+        .remove([`${currentChatroom!.chatroomId}/${documentId}`]);
 
       if (error) {
         throw new Error(error.message);
@@ -54,10 +53,7 @@ export function useDeleteDocument() {
     }
   }, [currentChatroom]);
 
-  const deleteDocument = useCallback(async ({
-    documentId,
-    filename
-  }: deleteDocumentProps) => {
+  const deleteDocument = useCallback(async ({ documentId }: deleteDocumentProps) => {
     if (!documentId) {
       return { success: false, error: "Document ID is required." };
     } else if (!currentChatroom?.chatroomId) {
@@ -69,7 +65,7 @@ export function useDeleteDocument() {
       { success: fileDeleted, error: fileError }
     ] = await Promise.all([
       deleteDocumentEntry(documentId),
-      deleteDocumentFile(filename),
+      deleteDocumentFile(documentId),
     ]);
 
     if (entryDeleted && fileDeleted) {

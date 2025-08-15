@@ -30,7 +30,10 @@ export function UploadedDocumentsTable({ documents }: UploadedDocumentsTableProp
             <TableCell>{ doc.filename }</TableCell>
             <TableCell>{ doc.username }</TableCell>
             <TableCell className="flex justify-end">
-              <DownloadDocumentButton filename={ doc.filename } />
+              <DownloadDocumentButton
+                documentId={ doc.documentId }
+                filename={ doc.filename }
+              />
               <DeleteDocumentButton
                 documentId={ doc.documentId }
                 filename={ doc.filename }
