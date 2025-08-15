@@ -10,7 +10,7 @@ import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { TranscribeButton } from "@/components/buttons";
 import { useChatInput } from "@/hooks";
 
-import { AttachmentPreviews } from "./attachment-previews";
+import { AttachmentPreview } from "./attachment-preview";
 
 export function ChatInputForm() {
   const {
@@ -95,7 +95,7 @@ export function ChatInputForm() {
 
   return (
     <div className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring">
-      <AttachmentPreviews />
+      <AttachmentPreview />
 
       <form onSubmit={ onSubmit }>
         <ChatInput

@@ -1,4 +1,3 @@
-// Each preview item for attachment
 "use client";
 
 import { useRef } from "react";
@@ -11,7 +10,7 @@ import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { useChatInput, useToast } from "@/hooks";
 import { MAX_ATTACHMENTS, MAX_FILE_SIZE_MB } from "@/utils/constants";
 
-export function AttachmentPreviews() {
+export function AttachmentPreview() {
   const { attachments, setAttachments, isSubmitting } = useChatInput();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
