@@ -108,7 +108,7 @@ export function AttachmentPreview() {
           className="hidden"
         />
         <div className="flex items-center justify-between w-full">
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm cursor-default">
             {`Attached Files (${attachments.length}/${MAX_ATTACHMENTS})`}
           </span>
           <TooltipWrapper content="Attach File" side="top">
