@@ -35,12 +35,9 @@ export function useDeleteChatroom() {
       await deleteDocumentFile(chatroomId);  // Delete the chatroom folder itself inside knowledge-bases bucket
 
       // Clean up remaining attachment files in the chatroom
-      const { data: attachments, error: fetchAttachmentsError } = await supabase
-        .from("attachments")
-        .select("attachment_id")
-        .eq("chatroom_id", chatroomId);
+      const { data: attachments, error: fetchAttachmentsError } = await supabase.rpc("get_attachments_in_chatroom", { p_chatroom_id: chatroomId });
 
-      await deleteAttachments(attachments?.map(a => a.attachment_id) || []);
+      await deleteAttachments(attachments?.map((a: any) => a.attachment_id) || []);
       await deleteAttachment(chatroomId);  // Delete the chatroom folder itself inside attachments bucket
 
       // Delete the chatroom entry
