@@ -2,13 +2,13 @@ import { useState, useCallback } from "react";
 
 import { createClient } from "@/utils/supabase/client";
 import { fetchWithAuth } from "@/utils";
-import { useUnifiedChatroomContext, useUserContext, useToast } from "@/hooks";
-
-interface GroupGPTRequest {
-  username: string;
-  chatroom_id: string;
-  content: string;
-};
+import {
+  useToast,
+  useUnifiedChatroomContext,
+  useUploadAttachment,
+  useUserContext
+} from "@/hooks";
+import { AttachmentInput } from "@/types";
 
 const supabase = createClient();
 
@@ -16,23 +16,27 @@ export function useSendMessage() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { currentChatroom } = useUnifiedChatroomContext();
   const { user } = useUserContext();
+  const { uploadAttachmentToSupabase } = useUploadAttachment();
   const { toast } = useToast();
 
-  const sendToGroupGPT = useCallback(async ({ content } : { content: string }): Promise<boolean> => {
+  const sendToGroupGPT = useCallback(async ({ content, attachments }: { content: string; attachments?: AttachmentInput[] }): Promise<boolean> => {
     try {
       const contentWithoutMention = content.replace(/@groupgpt/i, "");
-      const payload: GroupGPTRequest = {
-        username: user!.username,
-        chatroom_id: currentChatroom!.chatroomId,
-        content: contentWithoutMention,
-      };
+
+      const payload = new FormData();
+      payload.append("username", user!.username);
+      payload.append("chatroom_id", currentChatroom!.chatroomId);
+      payload.append("content", contentWithoutMention);
+
+      if (attachments && attachments.length > 0) {
+        attachments.forEach(attachment => {
+          payload.append("files", attachment.file);
+        });
+      }
 
       const response = await fetchWithAuth("/api/queries/groupgpt", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+        body: payload,
       });
 
       if (!response.ok) {
@@ -52,22 +56,33 @@ export function useSendMessage() {
     }
   }, [currentChatroom, user]);
 
-  const sendToSupabase = useCallback(async (content: string): Promise<{ success: boolean; messageId?: string }> => {
+  const sendToSupabase = useCallback(async ({ content, attachments }: { content: string; attachments?: AttachmentInput[] }): Promise<{ success: boolean; messageId?: string }> => {
     try {
-      const { data, error } = await supabase
+      const { data: messageData, error: messageError } = await supabase
         .from("messages")
         .insert({
           chatroom_id: currentChatroom!.chatroomId,
           content: content.trim(),
           sender_id: user!.userId,
+          has_attachments: attachments && attachments.length > 0
         })
         .select();
 
-      if (error) {
-        throw new Error(error.message);
+      if (messageError) {
+        throw new Error(messageError.message);
       }
 
-      return { success: true, messageId: data[0].message_id };
+      if (attachments && attachments.length > 0) {
+        const uploadResults = await Promise.all(
+          attachments.map(attachment => uploadAttachmentToSupabase({ messageId: messageData[0].message_id, attachment }))
+        );
+
+        if (uploadResults.some(result => !result.success)) {
+          throw new Error("Failed to upload attachments");
+        }
+      }
+
+      return { success: true, messageId: messageData[0].message_id };
     } catch (error: any) {
       console.error("Error sending message:", error.message);
       toast({
@@ -79,8 +94,8 @@ export function useSendMessage() {
     }
   }, [currentChatroom, user, toast]);
 
-  const sendMessage = useCallback(async ({ content } : { content: string }): Promise<boolean> => {
-    if (!content.trim() || !currentChatroom?.chatroomId || !user?.userId) return false;
+  const sendMessage = useCallback(async ({ content, attachments } : { content: string, attachments?: AttachmentInput[] }): Promise<boolean> => {
+    if (!currentChatroom?.chatroomId || !user?.userId) return false;
 
     setIsSubmitting(true);
 
@@ -90,8 +105,8 @@ export function useSendMessage() {
       if (isGroupGPTMessage) {
         // For GroupGPT messages, send to both Supabase and backend server
         const [groupGPTSuccess, supabaseResult] = await Promise.all([
-          sendToGroupGPT({ content: content.trim() }),
-          sendToSupabase(content.trim())
+          sendToGroupGPT({ content: content.trim(), attachments }),
+          sendToSupabase({ content: content.trim(), attachments })
         ]);
 
         // If GroupGPT invocation failed, show error
@@ -122,7 +137,7 @@ export function useSendMessage() {
         }
       } else {
         // Regular message - only send to Supabase
-        const result = await sendToSupabase(content);
+        const result = await sendToSupabase({ content, attachments });
         if (result.success) {
           return true;
         } else {

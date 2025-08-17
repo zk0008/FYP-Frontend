@@ -1,4 +1,5 @@
 export {
   getInitials,
-  fetchWithAuth
+  fetchWithAuth,
+  validateFile
 } from "./utils";

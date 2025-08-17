@@ -30,7 +30,7 @@ export function MessageAttachments({ attachments, isOwnMessage }: MessageAttachm
           key={attachment.attachmentId}
           className="flex items-center gap-2 px-1 rounded-lg"
         >
-          {attachment.type === "IMAGE" ? (
+          {attachment.mimeType.startsWith("image/") ? (
             <ImageIcon className="w-5 h-5" />
           ) : (
             <FileText className="w-5 h-5" />

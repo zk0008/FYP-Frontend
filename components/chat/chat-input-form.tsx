@@ -17,6 +17,7 @@ export function ChatInputForm() {
     input,
     setInput,
     attachments,
+    setAttachments,
     isSubmitting,
     handleSubmit
   } = useChatInput();
@@ -58,9 +59,6 @@ export function ChatInputForm() {
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    // TODO: Include attachments in the submission
-    // TODO: Figure out how to represent attachments in DB (uuid => public link to Supabase storage for display?)
-    // You'll need to modify your useChatInput hook to handle files
     handleSubmit(e);
 
     setTimeout(() => {
@@ -95,7 +93,11 @@ export function ChatInputForm() {
 
   return (
     <div className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring">
-      <AttachmentPreview />
+      <AttachmentPreview
+        attachments={ attachments }
+        setAttachments={ setAttachments }
+        isSubmitting={ isSubmitting }
+      />
 
       <form onSubmit={ onSubmit }>
         <ChatInput

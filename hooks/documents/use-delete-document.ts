@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 import { createClient } from "@/utils/supabase/client";
-import { useUnifiedChatroomContext, useToast } from "@/hooks";
+import { useUnifiedChatroomContext } from "@/hooks";
 
 interface deleteDocumentProps {
   documentId: string;
@@ -11,7 +11,6 @@ const supabase = createClient();
 
 export function useDeleteDocument() {
   const { currentChatroom } = useUnifiedChatroomContext();
-  const { toast } = useToast();
 
   const deleteDocumentEntry = useCallback(async (documentId: string) => {
     try {
@@ -44,11 +43,6 @@ export function useDeleteDocument() {
       return { success: true, error: null };
     } catch (error: any) {
       console.error("Error deleting document file:", error);
-      toast({
-        title: "Error Deleting Document File",
-        description: error.message || "An unexpected error occurred when deleting document file from Supabase Storage.",
-        variant: "destructive",
-      });
       return { success: false, error: error.message || "An unexpected error occurred when deleting document file from Supabase Storage." };
     }
   }, [currentChatroom]);
@@ -74,7 +68,11 @@ export function useDeleteDocument() {
 
     return { success: false, error: entryError || fileError || "An unexpected error occurred while deleting the document." };
 
-  }, [deleteDocumentEntry, deleteDocumentFile, currentChatroom, toast]);
+  }, [deleteDocumentEntry, deleteDocumentFile, currentChatroom]);
 
-  return { deleteDocument, deleteDocumentEntry, deleteDocumentFile };
+  return {
+    deleteDocument,
+    deleteDocumentEntry,
+    deleteDocumentFile
+  };
 }

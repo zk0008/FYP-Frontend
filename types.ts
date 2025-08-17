@@ -14,7 +14,6 @@ export interface Document {
 // For attachment uploads
 export interface AttachmentInput {
   attachmentId: string;
-  type: "IMAGE" | "DOCUMENT";
   filename: string;
   preview?: string;  // Base64 string for image preview
   file: File;  // The actual file object for upload
@@ -23,11 +22,8 @@ export interface AttachmentInput {
 // For attachments from Supabase, as part of an already-sent message
 export interface Attachment {
   attachmentId: string;
-  type: "IMAGE" | "DOCUMENT";  // "IMAGE" if .png/.jpeg, otherwise "DOCUMENT", for icons use
+  mimeType: string;
   filename: string;
-
-  // url: string;  // https://[project-id].supabase.co/storage/v1/object/public/[bucket-name]/[chatroom-id]/[attachment-id]
-  // TODO: Explore use of Supabase URL directly to open new tab with file attachment, format: [chatroom-id]/[attachment-id]
 }
 
 export interface Message {

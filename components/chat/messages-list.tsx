@@ -60,6 +60,7 @@ export function MessagesList() {
           messageId={ message.messageId }
           username={ message.username }
           content={ message.content }
+          attachments={ message.attachments }
         />
       ))}
     </ChatMessageList>

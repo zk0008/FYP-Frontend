@@ -7,11 +7,20 @@ import Image from "next/image";
 import { AttachmentInput } from "@/types";
 import { Button } from "@/components/ui/button";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useChatInput, useToast } from "@/hooks";
+import { useToast } from "@/hooks";
 import { MAX_ATTACHMENTS, MAX_FILE_SIZE_MB } from "@/utils/constants";
 
-export function AttachmentPreview() {
-  const { attachments, setAttachments, isSubmitting } = useChatInput();
+interface AttachmentPreviewProps {
+  attachments: AttachmentInput[];
+  setAttachments: React.Dispatch<React.SetStateAction<AttachmentInput[]>>;
+  isSubmitting: boolean;
+}
+
+export function AttachmentPreview({
+  attachments,
+  setAttachments,
+  isSubmitting
+}: AttachmentPreviewProps) {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -54,17 +63,15 @@ export function AttachmentPreview() {
 
     validFiles.forEach(file => {
       const attachmentId = crypto.randomUUID();
-      const type = file.type.startsWith('image/') ? "IMAGE" : "DOCUMENT";
 
       const attachedFile: AttachmentInput = {
         attachmentId,
-        type,
         filename: file.name,
         file
       };
 
       // Generate preview for images
-      if (type === "IMAGE") {
+      if (file.type.startsWith("image/")) {
         const reader = new FileReader();
         reader.onload = (e) => {
           setAttachments(prev =>
@@ -100,7 +107,7 @@ export function AttachmentPreview() {
   return (
     <div className="px-4 py-3 border-b border-border/50">
         <input
-          ref={fileInputRef}
+          ref={ fileInputRef }
           type="file"
           multiple
           accept="image/*,.pdf,.txt"
@@ -130,7 +137,7 @@ export function AttachmentPreview() {
                 key={ a.attachmentId }
                 className="relative group bg-muted rounded-lg p-2 flex items-center gap-2 max-w-[200px]"
               >
-                {a.type === "IMAGE" && a.preview ? (
+                {a.file.type.startsWith("image/") && a.preview ? (
                   <div className="relative w-12 h-12 rounded overflow-hidden flex-shrink-0">
                     <Image
                       src={ a.preview }
@@ -141,7 +148,7 @@ export function AttachmentPreview() {
                    </div>
                 ) : (
                   <div className="w-12 h-12 rounded bg-background flex items-center justify-center flex-shrink-0">
-                    {a.type === "IMAGE" ? (
+                    {a.file.type.startsWith("image/") ? (
                       <ImageIcon className="w-6 h-6 text-muted-foreground" />
                     ) : (
                       <FileText className="w-6 h-6 text-muted-foreground" />

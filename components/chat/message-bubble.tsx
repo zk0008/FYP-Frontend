@@ -62,7 +62,7 @@ export function MessageBubble({
                 variant="ghost"
                 size="sm"
                 className={`
-                  h-6 px-2 text-xs gap-1
+                  h-6 px-2 text-xs gap-1 relative z-10
                   ${isOwnMessage
                     ? "hover:bg-primary-foreground/10 text-primary-foreground hover:text-primary-foreground"
                     : "hover:bg-secondary-foreground/10 text-secondary-foreground hover:text-secondary-foreground"
@@ -77,7 +77,7 @@ export function MessageBubble({
                 )}
                 <span>
                   {showAttachments
-                    ? "Hide Attachments" 
+                    ? `Hide ${attachments.length} Attachment${attachments.length > 1 ? 's' : ''}`
                     : `Show ${attachments.length} Attachment${attachments.length > 1 ? 's' : ''}`
                   }
                 </span>

@@ -2,7 +2,7 @@
 
 import { useContext } from "react";
 
-import { Chatroom, UnifiedChatroomContextType } from "@/types";
+import { UnifiedChatroomContextType } from "@/types";
 import { UnifiedChatroomContext } from "@/contexts";
 
 export function useUnifiedChatroomContext(): UnifiedChatroomContextType {

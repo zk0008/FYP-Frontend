@@ -10,7 +10,9 @@ export { useUserContext } from "./contexts/use-user-context";
 // =============================================================================
 // ATTACHMENTS
 // =============================================================================
-export { useFetchAttachmentUrl } from "./attachments/use-fetch-attachment";
+export { useDeleteAttachment } from "./attachments/use-delete-attachment";
+export { useFetchAttachmentUrl } from "./attachments/use-fetch-attachment-url";
+export { useUploadAttachment } from "./attachments/use-upload-attachment";
 
 // =============================================================================
 // AUTHENTICATION
