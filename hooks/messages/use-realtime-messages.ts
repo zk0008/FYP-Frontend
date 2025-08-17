@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { createClient } from "@/utils/supabase/client";
-import { Message } from "@/types";
+import { Attachment, Message } from "@/types";
 import { useToast } from "@/hooks";
 
 interface useRealtimeMessagesProps {
@@ -16,6 +16,7 @@ interface MessagePayload {
   message_id: string;
   sender_id: string;
   sent_at: string;
+  has_attachments: boolean;
 };
 
 const supabase = createClient();
@@ -39,6 +40,7 @@ export function useRealtimeMessages({
           const newMessage = payload.new;
 
           try {
+            // Get sender username
             const { data: sender, error: senderError } = await supabase
               .from("users")
               .select("username")
@@ -49,11 +51,35 @@ export function useRealtimeMessages({
               throw new Error(senderError.message);
             }
 
+            // Get attachments, if any
+            let attachments: Attachment[] = [];
+            if (newMessage.has_attachments) {
+              console.log("Fetching attachments for message:", newMessage.message_id);
+
+              const { data: attachmentsData, error: attachmentsError } = await supabase
+                .from("attachments")
+                .select("attachment_id, mime_type, filename")
+                .eq("message_id", newMessage.message_id);
+
+              console.log("attachments data:", attachmentsData);
+
+              if (attachmentsError) {
+                throw new Error(attachmentsError.message);
+              }
+
+              attachments = attachmentsData.map((attachment: any) => ({
+                attachmentId: attachment.attachment_id,
+                mimeType: attachment.mime_type,
+                filename: attachment.filename
+              }));
+            }
+
             const message: Message = {
               messageId: newMessage.message_id,
               username: sender.username,
               content: newMessage.content,
               sentAt: newMessage.sent_at,
+              attachments: attachments
             };
 
             onNewMessage(message);

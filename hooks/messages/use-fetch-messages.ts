@@ -33,10 +33,15 @@ export function useFetchMessages({ chatroomId }: useFetchMessagesProps) {
         }
 
         if (data) {
-          const messagesData = data.map((item: any) => ({
+          const messagesData: Message[] = data.map((item: any) => ({
             messageId: item.message_id,
             username: item.username,
-            content: item.content
+            content: item.content,
+            attachments: (item.attachments || []).map((attachment: any) => ({
+              attachmentId: attachment.attachment_id,
+              mimeType: attachment.mime_type,
+              filename: attachment.filename
+            }))
           }));
           setMessages(messagesData);
         }

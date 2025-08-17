@@ -2,7 +2,6 @@ import { useCallback, useRef } from "react";
 import { LoaderCircle, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { useUploadDocument } from "@/hooks";
 
 export function UploadButton() {
@@ -30,20 +29,15 @@ export function UploadButton() {
 
   return (
     <div className="inline-block">
-      <TooltipWrapper
-        content="Upload Document"
-        side="top"
+      <Button 
+        variant="outline" 
+        size="sm"
+        onClick={ handleClick }
+        disabled={ isUploading }
       >
-        <Button 
-          variant="ghost" 
-          size="icon"
-          onClick={ handleClick }
-          disabled={ isUploading }
-        >
-          { isUploading ? <LoaderCircle className="animate-spin" /> : <Upload /> }
-          <span className="sr-only">Upload Document</span>
-        </Button>
-      </TooltipWrapper>
+        { isUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" /> }
+        Upload
+      </Button>
       
       <input
         ref={ fileInputRef }

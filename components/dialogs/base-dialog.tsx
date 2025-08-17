@@ -21,8 +21,8 @@ export function BaseDialog({
     <Dialog open={ open } onOpenChange={ onOpenChange }>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{ title }</DialogTitle>
-          <DialogDescription>{ description }</DialogDescription>
+          <DialogTitle className="cursor-default">{ title }</DialogTitle>
+          <DialogDescription className="cursor-default">{ description }</DialogDescription>
         </DialogHeader>
 
         { children }

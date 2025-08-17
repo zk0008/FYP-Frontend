@@ -1,7 +1,15 @@
 import { useEffect } from "react";
 
+import { Document } from "@/types";
+
 import { createClient } from "@/utils/supabase/client";
-import { useToast, useUserContext } from "@/hooks";
+import { useToast } from "@/hooks";
+
+interface useRealtimeDocumentsProps {
+  chatroomId: string;
+  onNewDocument: (document: Document) => void;
+  onDeleteDocument: (documentId: string) => void;
+}
 
 interface DocumentPayload {
   document_id: string;
@@ -13,43 +21,58 @@ interface DocumentPayload {
 
 const supabase = createClient();
 
-export function useRealtimeDocuments() {
-  const { user } = useUserContext();
-  const { toast } = useToast();
+export function useRealtimeDocuments({ chatroomId, onNewDocument, onDeleteDocument }: useRealtimeDocumentsProps) {
+    const { toast } = useToast();
 
   useEffect(() => {
-    if (!user) return;
+    if (!chatroomId) return;
 
     const channel = supabase
-      .channel(`documents:${user!.userId}`)
+      .channel(`documents:${chatroomId}`)
       .on(
         "postgres_changes",
         {
           event: "INSERT",
           schema: "public",
           table: "documents",
-          filter: `uploader_id=eq.${user.userId}`,
+          filter: `chatroom_id=eq.${chatroomId}`,
         },
         async (payload: { new: DocumentPayload }) => {
           const newDocument = payload.new;
+          console.log("New document uploaded:", newDocument);
 
           try {
-            const { data: chatroomName, error: chatroomError } = await supabase
+            const { data: chatroom, error: chatroomError } = await supabase
               .from("chatrooms")
               .select("name")
               .eq("chatroom_id", newDocument.chatroom_id)
               .single();
 
-            if (chatroomError) {
-              throw new Error(chatroomError.message);
+            const { data: user, error: userError } = await supabase
+              .from("users")
+              .select("username")
+              .eq("user_id", newDocument.uploader_id)
+              .single();
+
+            if (chatroomError || userError) {
+              throw new Error(chatroomError?.message || userError?.message);
             }
 
             toast({
               title: "Document Uploaded",
-              description: `Your document '${newDocument.filename}' has been uploaded and added to the knowledge base for chatroom '${chatroomName.name}'. You may now query it.`
+              description: `Your document '${newDocument.filename}' has been uploaded and added to the knowledge base for chatroom '${chatroom.name}'. You may now query it.`
             })
+
+            const document: Document = {
+              documentId: newDocument.document_id,
+              filename: newDocument.filename,
+              username: user.username,
+              uploadedAt: newDocument.uploaded_at,
+            };
+
+            onNewDocument(document);
           } catch (error) {
-            console.error("Document uploaded, but error fetching chatroom name:", error);
+            console.error("Document uploaded, but error fetching additional details:", error);
             toast({
               title: "Document Uploaded",
               description: `Your document '${newDocument.filename}' has been uploaded.`
@@ -57,10 +80,23 @@ export function useRealtimeDocuments() {
           }
         }
       )
+      .on(
+        "postgres_changes",
+        {
+          event: "DELETE",
+          schema: "public",
+          table: "documents",
+        },
+        (payload) => {
+          console.log("Document deleted:", payload.old);
+          const deletedDocumentId = payload.old.document_id;
+          onDeleteDocument(deletedDocumentId);
+        }
+      )
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, toast]);
+  }, [toast]);
 }

@@ -8,6 +8,13 @@ export { useUnifiedChatroomContext } from "./contexts/use-unified-chatroom-conte
 export { useUserContext } from "./contexts/use-user-context";
 
 // =============================================================================
+// ATTACHMENTS
+// =============================================================================
+export { useDeleteAttachment } from "./attachments/use-delete-attachment";
+export { useFetchAttachmentUrl } from "./attachments/use-fetch-attachment-url";
+export { useUploadAttachment } from "./attachments/use-upload-attachment";
+
+// =============================================================================
 // AUTHENTICATION
 // =============================================================================
 export { useFetchUser } from "./auth/use-fetch-user";
@@ -39,8 +46,7 @@ export { useRejectInvite } from "./invites/use-reject-invite";
 // =============================================================================
 // DOCUMENTS
 // =============================================================================
-export { useFetchDocuments } from "./documents/use-fetch-documents";
-export { useRealtimeDocuments } from "./documents/use-realtime-documents";
+export { useDocumentsWithRealtime } from "./documents/use-documents-with-realtime";
 export { useUploadDocument } from "./documents/use-upload-document";
 export { useDeleteDocument } from "./documents/use-delete-document";
 export { useDownloadDocument } from "./documents/use-download-document";

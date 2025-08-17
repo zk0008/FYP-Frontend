@@ -3,11 +3,13 @@
 import { RefreshCw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { UploadButton } from "@/components/buttons";
 import { UploadedDocumentsTable } from "@/components/tables/uploaded-documents-table";
-import { useUnifiedChatroomContext, useFetchDocuments } from "@/hooks";
+import { useDocumentsWithRealtime, useUnifiedChatroomContext } from "@/hooks";
 
 import { BaseDialog } from "./base-dialog";
 
+// Manage files / documents uploaded into the knowledge base
 export function ManageDocumentsDialog({
   open,
   onOpenChange
@@ -16,34 +18,34 @@ export function ManageDocumentsDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const { currentChatroom } = useUnifiedChatroomContext();
-  const { documents, refresh } = useFetchDocuments({ chatroomId: currentChatroom?.chatroomId || "" });
+  const { documents, refresh } = useDocumentsWithRealtime({ chatroomId: currentChatroom?.chatroomId || "" });
 
   return (
     <BaseDialog
       open={ open }
       onOpenChange={ onOpenChange }
-      title="Manage Uploaded Documents"
-      description="Here you can manage documents uploaded in the chatroom."
+      title="Manage Knowledge Base"
+      description="Here you can manage GroupGPT's knowledge base for the chatroom."
     >
       <div className="flex justify-between items-center">
         <h3 className="text-sm font-medium text-muted-foreground">
           { documents.length } file{ documents.length !== 1 ? 's' : '' } uploaded
         </h3>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={ refresh }
-          className="gap-2"
-        >
-          <RefreshCw className="h-4 w-4" />
-          Refresh
-        </Button>
+        <div className="space-x-2">
+          <UploadButton />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={ refresh }
+            className="gap-2"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Refresh
+          </Button>
+        </div>
       </div>
 
-      {documents.length !== 0 && <UploadedDocumentsTable
-        documents={ documents }
-        onDocumentDeleted={ refresh }
-      />}
+      <UploadedDocumentsTable documents={ documents } />
     </BaseDialog>
   );
 }

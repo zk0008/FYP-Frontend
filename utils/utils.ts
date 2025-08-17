@@ -1,3 +1,23 @@
+import { MAX_FILE_SIZE_MB } from "@/utils/constants";
+
+export function validateFile(file: File): { isValid: boolean; errorMessage?: string } {
+  const allowedTypes = [
+    "application/pdf",
+    "image/jpeg",
+    "image/png"
+  ];
+
+  if (file.size / 1_000_000 > MAX_FILE_SIZE_MB) {
+    return { isValid: false, errorMessage: `File size exceeds ${MAX_FILE_SIZE_MB} MB limit. Please upload a smaller file.` };
+  }
+
+  if (!allowedTypes.includes(file.type)) {
+    return { isValid: false, errorMessage: "Unsupported file type. Please upload a PDF, JPEG, or PNG file." };
+  }
+
+  return { isValid: true };
+}
+
 export function getInitials(name: string): string {
   const initials = name
     .split(" ")

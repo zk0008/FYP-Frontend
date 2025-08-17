@@ -11,11 +11,27 @@ export interface Document {
   uploadedAt: string;  // ISO string format
 }
 
+// For attachment uploads
+export interface AttachmentInput {
+  attachmentId: string;
+  filename: string;
+  preview?: string;  // Base64 string for image preview
+  file: File;  // The actual file object for upload
+}
+
+// For attachments from Supabase, as part of an already-sent message
+export interface Attachment {
+  attachmentId: string;
+  mimeType: string;
+  filename: string;
+}
+
 export interface Message {
   messageId: string;
   username: string;
   content: string;
   sentAt: string;
+  attachments?: Attachment[];
 }
 
 export interface User {

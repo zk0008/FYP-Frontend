@@ -4,29 +4,23 @@ import { Button } from "@/components/ui/button";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { useDeleteDocument, useToast } from "@/hooks";
 
-interface DeleteFileButtonProps {
+interface DeleteDocumentButtonProps {
   documentId: string;
   filename: string;
-  onDeleted: () => void;
 }
 
-export function DeleteDocumentButton({
-  documentId,
-  filename,
-  onDeleted
-}: DeleteFileButtonProps) {
+export function DeleteDocumentButton({ documentId, filename }: DeleteDocumentButtonProps) {
   const { deleteDocument } = useDeleteDocument();
   const { toast } = useToast();
 
   const handleDelete = async () => {
-    const { success, error } = await deleteDocument({ documentId, filename });
+    const { success, error } = await deleteDocument({ documentId });
 
     if (success) {
       toast({
         title: "Document Deleted",
         description: `"${filename}" has been successfully deleted.`
-      })
-      onDeleted();
+      });
     } else if (error) {
       toast({
         title: "Error Deleting Document",

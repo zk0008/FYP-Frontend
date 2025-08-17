@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { createClient } from "@/utils/supabase/client";
-import { useDeleteDocument } from "@/hooks";
+import { useDeleteDocument, useDeleteAttachment } from "@/hooks";
 
 interface deleteChatroomProps {
   chatroomId: string;
@@ -13,6 +13,7 @@ const supabase = createClient();
 export function useDeleteChatroom() {
   const [isLoading, setIsLoading] = useState(false);
   const { deleteDocumentFile } = useDeleteDocument();
+  const { deleteAttachment, deleteAttachments } = useDeleteAttachment();
 
   const deleteChatroom = async ({ chatroomId, name }: deleteChatroomProps) => {
     if (!chatroomId || !name) {
@@ -23,15 +24,24 @@ export function useDeleteChatroom() {
 
     try {
       // Clean up remaining document files in the chatroom
-      const { data: documents, error: fetchError } = await supabase
+      const { data: documents, error: fetchDocumentsError } = await supabase
         .from("documents")
-        .select("filename")
+        .select("document_id")
         .eq("chatroom_id", chatroomId);
 
       for (const document of documents || []) {
-        await deleteDocumentFile(document.filename);
+        await deleteDocumentFile(document.document_id);
       }
-      await deleteDocumentFile(chatroomId);  // Delete the chatroom folder itself
+      await deleteDocumentFile(chatroomId);  // Delete the chatroom folder itself inside knowledge-bases bucket
+
+      // Clean up remaining attachment files in the chatroom
+      const { data: attachments, error: fetchAttachmentsError } = await supabase
+        .from("attachments")
+        .select("attachment_id")
+        .eq("chatroom_id", chatroomId);
+
+      await deleteAttachments(attachments?.map(a => a.attachment_id) || []);
+      await deleteAttachment(chatroomId);  // Delete the chatroom folder itself inside attachments bucket
 
       // Delete the chatroom entry
       // Deletion of other associated data such as messages, invites, and document entries are cascaded
@@ -40,8 +50,8 @@ export function useDeleteChatroom() {
         .delete()
         .eq("chatroom_id", chatroomId);
 
-      if (fetchError || deleteError) {
-        const errorMessage = fetchError?.message || deleteError?.message || "An unexpected error occurred.";
+      if (fetchDocumentsError || fetchAttachmentsError || deleteError) {
+        const errorMessage = fetchDocumentsError?.message || fetchAttachmentsError?.message || deleteError?.message || "An unexpected error occurred.";
         throw new Error(errorMessage);
       }
 

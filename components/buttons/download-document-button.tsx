@@ -4,8 +4,13 @@ import { Button } from "@/components/ui/button";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { useDownloadDocument, useToast } from "@/hooks";
 
-export function DownloadDocumentButton({ filename }: { filename: string }) {
-  const { isDownloading, downloadDocument } = useDownloadDocument({ filename });
+interface DownloadDocumentButtonProps {
+  documentId: string;
+  filename: string;
+}
+
+export function DownloadDocumentButton({ documentId, filename }: DownloadDocumentButtonProps) {
+  const { isDownloading, downloadDocument } = useDownloadDocument({ documentId });
   const { toast } = useToast();
 
   const handleDownload = async () => {

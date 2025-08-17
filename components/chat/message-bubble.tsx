@@ -1,7 +1,10 @@
 "use client";
 
 import ReactMarkdown from "react-markdown";
+import { useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
+import { Attachment } from "@/types";
 import {
   ChatBubble,
   ChatBubbleActionWrapper,
@@ -12,20 +15,28 @@ import { CopyMessageButton, DeleteMessageButton, ReadMessageButton } from "@/com
 import { getInitials } from "@/utils";
 import Icon from "@/public/GroupGPT.png";
 import { useUserContext } from "@/hooks";
+import { Button } from "@/components/ui/button";
+
+import { MessageAttachments } from "./message-attachments";
 
 interface MessageBubbleProps {
-  messageId: string,
-  username: string,
-  content: string,
+  messageId: string;
+  username: string;
+  content: string;
+  attachments?: Attachment[];
 }
 
 export function MessageBubble({
   messageId,
   username,
   content,
+  attachments,
 }: MessageBubbleProps) {
   const { user } = useUserContext();
   const isOwnMessage = username === user?.username;
+  const [showAttachments, setShowAttachments] = useState(false);
+
+  const hasAttachments = attachments && attachments.length > 0;
 
   return (
     <ChatBubble
@@ -42,7 +53,44 @@ export function MessageBubble({
             { username }
           </div>
         )}
+
         <ChatBubbleMessage variant={ isOwnMessage ? "sent" : "received" }>
+          { /* Toggle to show or hide message attachments */ }
+          {hasAttachments && (
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`
+                  h-6 px-2 text-xs gap-1 relative z-10
+                  ${isOwnMessage
+                    ? "hover:bg-primary-foreground/10 text-primary-foreground hover:text-primary-foreground"
+                    : "hover:bg-secondary-foreground/10 text-secondary-foreground hover:text-secondary-foreground"
+                  }
+                `}
+                onClick={() => setShowAttachments(!showAttachments)}
+              >
+                {showAttachments ? (
+                  <ChevronUp className="w-3 h-3" />
+                ) : (
+                  <ChevronDown className="w-3 h-3" />
+                )}
+                <span>
+                  {showAttachments
+                    ? `Hide ${attachments.length} Attachment${attachments.length > 1 ? 's' : ''}`
+                    : `Show ${attachments.length} Attachment${attachments.length > 1 ? 's' : ''}`
+                  }
+                </span>
+              </Button>
+            </>
+          )}
+
+          {/* Show attachments list if available and toggled */}
+          {hasAttachments && showAttachments && (
+            <MessageAttachments attachments={ attachments } isOwnMessage={ isOwnMessage } />
+          )}
+
+          { /* Message content */ }
           <div
             className={`
               prose whitespace-normal max-w-md
@@ -52,6 +100,7 @@ export function MessageBubble({
             <ReactMarkdown>{ content }</ReactMarkdown>
           </div>
         </ChatBubbleMessage>
+
         <ChatBubbleActionWrapper className={`
           absolute bottom-0 top-auto translate-x-0 translate-y-0
           ${isOwnMessage ? "-left-28" : "-right-28"}

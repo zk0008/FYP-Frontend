@@ -3,16 +3,21 @@
 import { LoaderCircle, SendHorizonal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+
 import { Button } from "@/components/ui/button";
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { TranscribeButton, UploadButton } from "@/components/buttons";
+import { TranscribeButton } from "@/components/buttons";
 import { useChatInput } from "@/hooks";
+
+import { AttachmentPreview } from "./attachment-preview";
 
 export function ChatInputForm() {
   const {
     input,
     setInput,
+    attachments,
+    setAttachments,
     isSubmitting,
     handleSubmit
   } = useChatInput();
@@ -21,13 +26,10 @@ export function ChatInputForm() {
   const [isListening, setIsListening] = useState(false);
 
   const handleTranscriptChange = (incrementalTranscript: string) => {
-    if (!incrementalTranscript.trim()) return;  // Ignore empty transcripts
+    if (!incrementalTranscript.trim()) return;
 
-    // TranscribeButton returns incremental updates
-    // To show real-time transcription, append the new portion to existing input
     setInput(prevInput => {
       const currentInput = prevInput.trim();
-
       const fullTranscript = (currentInput + incrementalTranscript).trim();
       const normalizedInput = fullTranscript.toLowerCase();
       const triggers = [
@@ -42,7 +44,6 @@ export function ChatInputForm() {
       );
 
       if (matchedTrigger) {
-        // Replace the spoken trigger with @GroupGPT
         const triggerRegex = new RegExp(matchedTrigger.replace(/\s/g, '\\s*'), 'i');
         const replacedTranscript = fullTranscript.replace(triggerRegex, '@GroupGPT ');
         return replacedTranscript;
@@ -53,27 +54,18 @@ export function ChatInputForm() {
   };
 
   const handleTranscriptAbort = () => {
-    // Reset the input when transcription is aborted
     setInput("");
     setIsListening(false);
   };
 
-  // Check if message is directed at GroupGPT (i.e., has "@groupgpt" substring)
-  const isGroupGPTMessage = (message: string) => {
-    return message.toLowerCase().includes("@groupgpt");
-  };
-
-  // Messsge sending using send button
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     handleSubmit(e);
-    // Focus back on the input after submitting
+
     setTimeout(() => {
       inputRef.current?.focus();
     }, 0);
   };
 
-  // Send message using Enter
-  // Add newline using Shift + Enter
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
       if (e.shiftKey) {
@@ -81,7 +73,6 @@ export function ChatInputForm() {
       } else {
         e.preventDefault();
         handleSubmit(e);
-        // Focus back on the input after submitting
         setTimeout(() => {
           inputRef.current?.focus();
         }, 0);
@@ -89,63 +80,66 @@ export function ChatInputForm() {
     }
   };
 
-  // Re-focus on the input after user sends a message
   useEffect(() => {
     if (wasSubmittingRef.current && !isSubmitting) {
       requestAnimationFrame(() => {
         inputRef.current?.focus();
       });
     }
-
-    // Update ref to track previous state
     wasSubmittingRef.current = isSubmitting;
   }, [isSubmitting]);
 
+  const hasContent = input.trim() || attachments.length > 0;
+
   return (
-    <form
-      className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring p-1"
-      onSubmit={ onSubmit }
-    >
-      <ChatInput
-        ref={ inputRef }
-        placeholder={
-          isListening
-            ? "Listening... (Say 'Hey GPT' to invoke AI)"
-            : "Type your message here... (Use @GroupGPT for AI)"
-        }
-        className="min-h-12 resize-none rounded-lg bg-background border-0 p-4 shadow-none focus-visible:ring-0"
-        value={ input }
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
-        disabled={ isSubmitting }
-        onKeyDown={ handleKeyDown }
-        autoFocus
+    <div className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring">
+      <AttachmentPreview
+        attachments={ attachments }
+        setAttachments={ setAttachments }
+        isSubmitting={ isSubmitting }
       />
-      <div className="flex items-center p-3 pt-0 gap-1">
-        <UploadButton />
 
-        <TranscribeButton
-          onTranscriptChange={ handleTranscriptChange }
-          onListeningChange={(listening) => setIsListening(listening)}
-          onTranscriptAbort={ handleTranscriptAbort }
+      <form onSubmit={ onSubmit }>
+        <ChatInput
+          ref={ inputRef }
+          placeholder={
+            isListening
+              ? "Listening... (Say 'Hey GPT' to invoke AI)"
+              : "Type your message here... (Use @GroupGPT for AI)"
+          }
+          className="min-h-12 resize-none rounded-lg bg-background border-0 p-4 shadow-none focus-visible:ring-0"
+          value={ input }
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
+          disabled={ isSubmitting }
+          onKeyDown={ handleKeyDown }
+          autoFocus
         />
+        
+        <div className="flex items-center p-3 pt-0 gap-1">
+          <TranscribeButton
+            onTranscriptChange={ handleTranscriptChange }
+            onListeningChange={(listening) => setIsListening(listening)}
+            onTranscriptAbort={ handleTranscriptAbort }
+          />
 
-        <TooltipWrapper content="Send Message" side="top">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="ml-auto"
-            type="submit"
-            disabled={ !input.trim() || isListening || isSubmitting }
-          >
-            {isSubmitting ? <LoaderCircle className="animate-spin" /> : (
-              <>
-                <SendHorizonal />
-                <span className="sr-only">Send Message</span>
-              </>
-            )}
-          </Button>
-        </TooltipWrapper>
-      </div>
-    </form>
+          <TooltipWrapper content="Send Message" side="top">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="ml-auto"
+              type="submit"
+              disabled={ !hasContent || isListening || isSubmitting }
+            >
+              {isSubmitting ? <LoaderCircle className="animate-spin" /> : (
+                <>
+                  <SendHorizonal />
+                  <span className="sr-only">Send Message</span>
+                </>
+              )}
+            </Button>
+          </TooltipWrapper>
+        </div>
+      </form>
+    </div>
   );
 }

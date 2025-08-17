@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 
 import { fetchWithAuth } from "@/utils";
-import { MAX_FILE_SIZE_MB } from "@/utils/constants";
+import { validateFile } from "@/utils";
 import {
   useUnifiedChatroomContext,
   useUserContext,
@@ -13,24 +13,6 @@ export function useUploadDocument() {
   const { currentChatroom } = useUnifiedChatroomContext();
   const { user } = useUserContext();
   const { toast } = useToast();
-
-  const validateDocument = useCallback((file: File): string | null => {
-    const allowedTypes = [
-      "application/pdf",
-      "image/jpeg",
-      "image/png"
-    ];
-
-    if (file.size / 1_000_000 > MAX_FILE_SIZE_MB) {
-      return `File size exceeds ${MAX_FILE_SIZE_MB} MB limit. Please upload a smaller file.`;
-    }
-
-    if (!allowedTypes.includes(file.type)) {
-      return "Unsupported file type. Please upload a PDF, JPEG, or PNG file.";
-    }
-
-    return null;
-  }, []);
 
   const uploadToFastAPI = useCallback(async (file: File): Promise<boolean> => {
     try {
@@ -65,11 +47,11 @@ export function useUploadDocument() {
   const uploadDocument = useCallback(async (file: File): Promise<void> => {
     if (!file || !currentChatroom?.chatroomId || !user?.userId) return;
 
-    const validationError = validateDocument(file);
-    if (validationError) {
+    const { isValid, errorMessage } = validateFile(file);
+    if (!isValid) {
       toast({
         title: "Upload Error",
-        description: validationError,
+        description: errorMessage,
         variant: "destructive"
       });
       return;
@@ -107,9 +89,8 @@ export function useUploadDocument() {
   }, [uploadDocument]);
 
   return {
-    uploadDocument,
-    uploadMultipleDocuments,
     isUploading,
-    validateDocument
-  }
+    uploadDocument,
+    uploadMultipleDocuments
+  };
 }
