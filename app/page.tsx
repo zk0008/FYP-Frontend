@@ -34,7 +34,7 @@ export default function HomePage() {
         </Button>
       </TopBar>
 
-      <div className="flex flex-col items-center justify-center flex-1 px-4 max-w-4xl mx-auto">
+      <div className="flex flex-col items-center justify-center flex-1 p-4 max-w-4xl mx-auto">
         <div className="text-center space-y-6">
           <h1 className="text-xl font-bold text-gray-900 sm:text-xl">
             Welcome to GroupGPT
@@ -64,7 +64,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="mt-16 pb-4 text-center">
+        <div className="mt-16 text-center">
           <h2 className="text-lg font-semibold text-gray-900 mb-8">
             What you can do with GroupGPT
           </h2>
