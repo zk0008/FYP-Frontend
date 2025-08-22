@@ -1,23 +1,24 @@
 "use client";
 
+import { DocumentsDropZone } from "@/components/drop-zones";
+
 import { ChatInputForm } from "./chat-input-form"
 import { MessagesList } from "./messages-list";
-import { FileDropZone } from "./file-drop-zone";
 
 export function ChatInterface() {
   return (
     <div className="flex flex-col h-full px-2">
-      <FileDropZone className="flex flex-col h-full">
-        <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto">
+        <DocumentsDropZone className="flex flex-col h-full">
           <MessagesList />
-        </div>
+        </DocumentsDropZone>
+      </div>
 
-        <ChatInputForm />
+      <ChatInputForm />
 
-        <span className="text-xs text-center mt-1 pb-1 cursor-default">
-          GroupGPT can make mistakes. Please verify important information.
-        </span>
-      </FileDropZone>
+      <span className="text-xs text-center mt-1 pb-1 cursor-default">
+        GroupGPT can make mistakes. Please verify important information.
+      </span>
     </div>
   );
 }

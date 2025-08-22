@@ -6,9 +6,9 @@ import Image from "next/image";
 
 import { AttachmentInput } from "@/types";
 import { Button } from "@/components/ui/button";
+import { MAX_ATTACHMENTS } from "@/utils/constants";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useToast } from "@/hooks";
-import { MAX_ATTACHMENTS, MAX_FILE_SIZE_MB } from "@/utils/constants";
+import { useAttachmentManager, useToast } from "@/hooks";
 
 interface AttachmentPreviewProps {
   attachments: AttachmentInput[];
@@ -21,6 +21,7 @@ export function AttachmentPreview({
   setAttachments,
   isSubmitting
 }: AttachmentPreviewProps) {
+  const { addAttachments, removeAttachment } = useAttachmentManager({ attachments, setAttachments });
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -28,74 +29,16 @@ export function AttachmentPreview({
     const files = event.target.files;
     if (!files) return;
 
-    // Ensure only max. 5 files are attached
-    const remainingSlots = MAX_ATTACHMENTS - attachments.length;
-    const filesToProcess = Array.from(files).slice(0, remainingSlots);
+    const fileArray = Array.from(files);
+    const { success, error } = addAttachments(fileArray);
 
-    if (files.length > remainingSlots) {
+    if (!success) {
       toast({
-        title: "Too Many Attached Files",
-        description: "Please remove some files before adding new ones.",
+        title: "Error Adding Attachment",
+        description: error,
         variant: "destructive",
       });
     }
-
-    // Ensure every attached file is less than MAX_FILE_SIZE_MB
-    const validFiles: File[] = [];
-    const invalidFileNames: string[] = [];
-
-    filesToProcess.forEach(file => {
-      const fileSizeMB = file.size / (1024 * 1024);
-      if (fileSizeMB > MAX_FILE_SIZE_MB) {
-        invalidFileNames.push(file.name);
-      } else {
-        validFiles.push(file);
-      }
-    })
-
-    if (invalidFileNames.length > 0) {
-      toast({
-        title: "File Size Limit Exceeded",
-        description: `The following files exceed the ${MAX_FILE_SIZE_MB} MB limit: ${invalidFileNames.join(', ')}`,
-        variant: "destructive",
-      });
-    }
-
-    validFiles.forEach(file => {
-      const attachmentId = crypto.randomUUID();
-
-      const attachedFile: AttachmentInput = {
-        attachmentId,
-        filename: file.name,
-        file
-      };
-
-      // Generate preview for images
-      if (file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          setAttachments(prev =>
-            prev.map(f =>
-              f.attachmentId === attachmentId
-                ? { ...f, preview: e.target?.result as string }
-                : f
-            )
-          );
-        };
-        reader.readAsDataURL(file);
-      }
-
-      setAttachments(prev => [...prev, attachedFile]);
-    });
-
-    // Reset file input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  const removeAttachments = (attachmentId: string) => {
-    setAttachments(prev => prev.filter(file => file.attachmentId !== attachmentId));
   };
 
   const triggerAttachmentUpload = () => {
@@ -171,7 +114,7 @@ export function AttachmentPreview({
                   variant="ghost"
                   size="sm"
                   className="absolute -top-1 -right-1 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  onClick={() => removeAttachments(a.attachmentId)}
+                  onClick={() => removeAttachment(a.attachmentId)}
                 >
                   <X className="w-3 h-3" />
                 </Button>

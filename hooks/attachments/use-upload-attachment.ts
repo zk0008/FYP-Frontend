@@ -11,7 +11,7 @@ export function useUploadAttachment() {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const { currentChatroom } = useUnifiedChatroomContext();
 
-  const insertAttachmentEntryToSupabase = useCallback(async ({ messageId, attachment }: { messageId: string, attachment: AttachmentInput }): Promise<{ success: boolean; error?: string }> => {
+  const insertAttachmentEntry = useCallback(async ({ messageId, attachment }: { messageId: string, attachment: AttachmentInput }): Promise<{ success: boolean; error?: string }> => {
     try {
       const { error } = await supabase
         .from("attachments")
@@ -33,7 +33,7 @@ export function useUploadAttachment() {
     }
   }, []);
 
-  const uploadAttachmentFileToSupabase = useCallback(async ({ messageId, attachment }: { messageId: string, attachment: AttachmentInput }): Promise<{ success: boolean; error?: string }> => {
+  const uploadAttachmentFile = useCallback(async ({ messageId, attachment }: { messageId: string, attachment: AttachmentInput }): Promise<{ success: boolean; error?: string }> => {
     try {
       const { error } = await supabase.storage
         .from("attachments")
@@ -52,7 +52,7 @@ export function useUploadAttachment() {
     }
   }, [currentChatroom]);
 
-  const uploadAttachmentToSupabase = useCallback(async ({ messageId, attachment }: { messageId: string; attachment: AttachmentInput }): Promise<{ success: boolean; error?: string }> => {
+  const uploadAttachment = useCallback(async ({ messageId, attachment }: { messageId: string; attachment: AttachmentInput }): Promise<{ success: boolean; error?: string }> => {
     if (!currentChatroom?.chatroomId) {
       return { success: false, error: "Chatroom context is not available" };
     }
@@ -67,8 +67,8 @@ export function useUploadAttachment() {
 
     try {
       const [uploadResult, insertResult] = await Promise.all([
-        uploadAttachmentFileToSupabase({ messageId, attachment }),
-        insertAttachmentEntryToSupabase({ messageId, attachment })
+        uploadAttachmentFile({ messageId, attachment }),
+        insertAttachmentEntry({ messageId, attachment })
       ]);
 
       if (!uploadResult.success || !insertResult.success) {
@@ -82,8 +82,5 @@ export function useUploadAttachment() {
     }
   }, []);
 
-  return {
-    isUploading,
-    uploadAttachmentToSupabase
-  };
+  return { isUploading, uploadAttachment };
 }

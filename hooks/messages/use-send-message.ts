@@ -16,7 +16,7 @@ export function useSendMessage() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { currentChatroom } = useUnifiedChatroomContext();
   const { user } = useUserContext();
-  const { uploadAttachmentToSupabase } = useUploadAttachment();
+  const { uploadAttachment } = useUploadAttachment();
   const { toast } = useToast();
 
   const sendToGroupGPT = useCallback(async ({ content, attachments }: { content: string; attachments?: AttachmentInput[] }): Promise<boolean> => {
@@ -74,7 +74,7 @@ export function useSendMessage() {
 
       if (attachments && attachments.length > 0) {
         const uploadResults = await Promise.all(
-          attachments.map(attachment => uploadAttachmentToSupabase({ messageId: messageData[0].message_id, attachment }))
+          attachments.map(attachment => uploadAttachment({ messageId: messageData[0].message_id, attachment }))
         );
 
         if (uploadResults.some(result => !result.success)) {

@@ -3,15 +3,13 @@ import { useCallback, useState } from "react";;
 
 import { useUploadDocument } from "./use-upload-document";
 
-export function useDragAndDrop() {
+export function useDropDocument() {
   const { uploadDocument, uploadMultipleDocuments } = useUploadDocument();
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
+  const handleFileDrop = useCallback((files: File[]) => {
     setIsDragging(false);
 
-    const files = event.dataTransfer.files;
     if (files.length === 1) {
       uploadDocument(files[0]);
     } else if (files.length > 1) {
@@ -38,7 +36,7 @@ export function useDragAndDrop() {
 
   return {
     isDragging,
-    handleDrop,
+    handleFileDrop,
     handleDragOver,
     handleDragEnter,
     handleDragLeave
