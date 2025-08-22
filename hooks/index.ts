@@ -10,6 +10,8 @@ export { useUserContext } from "./contexts/use-user-context";
 // =============================================================================
 // ATTACHMENTS
 // =============================================================================
+export { useAttachmentManager } from "./attachments/use-attachment-manager";
+export { useDropAttachment } from "./attachments/use-drop-attachment";
 export { useDeleteAttachment } from "./attachments/use-delete-attachment";
 export { useFetchAttachmentUrl } from "./attachments/use-fetch-attachment-url";
 export { useUploadAttachment } from "./attachments/use-upload-attachment";
@@ -47,10 +49,10 @@ export { useRejectInvite } from "./invites/use-reject-invite";
 // DOCUMENTS
 // =============================================================================
 export { useDocumentsWithRealtime } from "./documents/use-documents-with-realtime";
+export { useDropDocument } from "./documents/use-drop-document";
 export { useUploadDocument } from "./documents/use-upload-document";
 export { useDeleteDocument } from "./documents/use-delete-document";
 export { useDownloadDocument } from "./documents/use-download-document";
-export { useDragAndDrop } from "./documents/use-drag-and-drop";
 
 // =============================================================================
 // UI & UTILITIES

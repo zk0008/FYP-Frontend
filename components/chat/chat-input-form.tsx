@@ -4,6 +4,7 @@ import { LoaderCircle, SendHorizonal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 
+import { AttachmentDropZone } from "@/components/drop-zones";
 import { Button } from "@/components/ui/button";
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
@@ -92,54 +93,56 @@ export function ChatInputForm() {
   const hasContent = input.trim() || attachments.length > 0;
 
   return (
-    <div className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring">
-      <AttachmentPreview
-        attachments={ attachments }
-        setAttachments={ setAttachments }
-        isSubmitting={ isSubmitting }
-      />
-
-      <form onSubmit={ onSubmit }>
-        <ChatInput
-          ref={ inputRef }
-          placeholder={
-            isListening
-              ? "Listening... (Say 'Hey GPT' to invoke AI)"
-              : "Type your message here... (Use @GroupGPT for AI)"
-          }
-          className="min-h-12 resize-none rounded-lg bg-background border-0 p-4 shadow-none focus-visible:ring-0"
-          value={ input }
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
-          disabled={ isSubmitting }
-          onKeyDown={ handleKeyDown }
-          autoFocus
+    <AttachmentDropZone attachments={attachments} setAttachments={setAttachments}>
+      <div className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring">
+        <AttachmentPreview
+          attachments={ attachments }
+          setAttachments={ setAttachments }
+          isSubmitting={ isSubmitting }
         />
-        
-        <div className="flex items-center p-3 pt-0 gap-1">
-          <TranscribeButton
-            onTranscriptChange={ handleTranscriptChange }
-            onListeningChange={(listening) => setIsListening(listening)}
-            onTranscriptAbort={ handleTranscriptAbort }
-          />
 
-          <TooltipWrapper content="Send Message" side="top">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="ml-auto"
-              type="submit"
-              disabled={ !hasContent || isListening || isSubmitting }
-            >
-              {isSubmitting ? <LoaderCircle className="animate-spin" /> : (
-                <>
-                  <SendHorizonal />
-                  <span className="sr-only">Send Message</span>
-                </>
-              )}
-            </Button>
-          </TooltipWrapper>
-        </div>
-      </form>
-    </div>
+        <form onSubmit={ onSubmit }>
+          <ChatInput
+            ref={ inputRef }
+            placeholder={
+              isListening
+                ? "Listening... (Say 'Hey GPT' to invoke AI)"
+                : "Type your message here... (Use @GroupGPT for AI)"
+            }
+            className="min-h-12 resize-none rounded-lg bg-background border-0 p-4 shadow-none focus-visible:ring-0"
+            value={ input }
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
+            disabled={ isSubmitting }
+            onKeyDown={ handleKeyDown }
+            autoFocus
+          />
+          
+          <div className="flex items-center p-3 pt-0 gap-1">
+            <TranscribeButton
+              onTranscriptChange={ handleTranscriptChange }
+              onListeningChange={(listening) => setIsListening(listening)}
+              onTranscriptAbort={ handleTranscriptAbort }
+            />
+
+            <TooltipWrapper content="Send Message" side="top">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="ml-auto"
+                type="submit"
+                disabled={ !hasContent || isListening || isSubmitting }
+              >
+                {isSubmitting ? <LoaderCircle className="animate-spin" /> : (
+                  <>
+                    <SendHorizonal />
+                    <span className="sr-only">Send Message</span>
+                  </>
+                )}
+              </Button>
+            </TooltipWrapper>
+          </div>
+        </form>
+      </div>
+    </AttachmentDropZone>
   );
 }
