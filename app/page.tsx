@@ -20,7 +20,7 @@ export default function HomePage() {
     <div className="flex flex-col h-full w-full items-center gap-5">
       <TopBar showLogo title="GroupGPT">
         <Button
-          variant="link"
+          variant="ghost"
           onClick={ handleLoginClick }
         >
           Sign In
@@ -64,7 +64,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="mt-16 text-center">
+        <div className="mt-16 pb-4 text-center">
           <h2 className="text-lg font-semibold text-gray-900 mb-8">
             What you can do with GroupGPT
           </h2>
