@@ -1,6 +1,7 @@
 "use client";
 
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -97,14 +98,21 @@ export function MessageBubble({
               ${isOwnMessage ? "text-primary-foreground" : "text-primary"}
             `}
           >
-            <ReactMarkdown>{ content }</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={ [remarkGfm] }>
+              { content }
+            </ReactMarkdown>
           </div>
         </ChatBubbleMessage>
 
-        <ChatBubbleActionWrapper className={`
-          absolute bottom-0 top-auto translate-x-0 translate-y-0
-          ${isOwnMessage ? "-left-28" : "-right-28"}
-        `}>
+        <ChatBubbleActionWrapper
+          variant={ isOwnMessage ? "sent" : "received" } className={`
+            !top-auto bottom-0 translate-y-0
+            ${isOwnMessage 
+              ? "!-left-1 !-translate-x-full !flex-row-reverse" 
+              : "!-right-1 !translate-x-full"
+            }
+          `}
+        >
           <CopyMessageButton messageId={ messageId } content={ content } />
           <DeleteMessageButton messageId={ messageId } />
           <ReadMessageButton content={ content } />
