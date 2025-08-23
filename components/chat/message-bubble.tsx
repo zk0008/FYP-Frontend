@@ -1,11 +1,12 @@
 "use client";
 
+import { ChevronDown, ChevronUp } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { Attachment } from "@/types";
+import { Button } from "@/components/ui/button";
 import {
   ChatBubble,
   ChatBubbleActionWrapper,
@@ -16,7 +17,6 @@ import { CopyMessageButton, DeleteMessageButton, ReadMessageButton } from "@/com
 import { getInitials } from "@/utils";
 import Icon from "@/public/GroupGPT.png";
 import { useUserContext } from "@/hooks";
-import { Button } from "@/components/ui/button";
 
 import { MessageAttachments } from "./message-attachments";
 
