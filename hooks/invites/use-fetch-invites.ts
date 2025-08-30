@@ -33,7 +33,7 @@ export function useFetchInvites({ userId }: useFetchInvitesProps) {
     }
 
     if (data) {
-      const invites = data.invites.map((item: any) => ({
+      const invitesData = data.invites.map((item: any) => ({
         inviteId: item.invite_id,
         senderUsername: item.sender_username,
         chatroomId: item.chatroom_id,
@@ -42,7 +42,7 @@ export function useFetchInvites({ userId }: useFetchInvitesProps) {
         createdAt: item.created_at
       }));
 
-      setPendingInvites(invites);
+      setPendingInvites(invitesData);
       setLoading(false);
     }
   }, [userId]);

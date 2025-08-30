@@ -40,14 +40,14 @@ export function useFetchDocuments({ chatroomId }: useFetchDocumentsProps) {
     }
 
     if (data) {
-      const documents = data.documents.map((item: any) => ({
+      const documentsData = data.documents.map((item: any) => ({
         documentId: item.document_id,
         filename: item.filename,
         username: item.uploader_username,
         uploadedAt: new Date(item.uploaded_at).toISOString()
       }));
 
-      setDocuments(documents);
+      setDocuments(documentsData);
       setLoading(false);
     }
   }, [chatroomId]);
