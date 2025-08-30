@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleUser, ChevronsUpDown, Dot } from "lucide-react";
+import { CircleUser, ChevronDown, ChevronUp, Dot } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -21,8 +21,11 @@ import { useInvitesContext, useUserContext } from "@/hooks";
 import { SignOutButton } from "./sign-out-button";
 
 export function UserMenu() {
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
+
   const [isAccountSettingsDialogOpen, setIsAccountSettingsDialogOpen] = useState<boolean>(false);
   const [isManageInvitesDialogOpen, setIsManageInvitesDialogOpen] = useState<boolean>(false);
+
   const { user } = useUserContext();
   const { invites } = useInvitesContext();
   const router = useRouter();
@@ -33,12 +36,12 @@ export function UserMenu() {
         { getInitials(user!.username) }
       </AvatarFallback>
     </Avatar>
-  ) : <CircleUser />;   // Fallback to the fallback
+  ) : <CircleUser />;  // Fallback to the fallback
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
+        <DropdownMenu onOpenChange={ setIsUserMenuOpen }>
           <TooltipWrapper
             content="Show User Menu"
             side="right"
@@ -49,7 +52,7 @@ export function UserMenu() {
                 { user?.username }
                 <div className="flex items-center ml-auto">
                   { invites.length > 0 && <Dot className="h-8 w-8 text-red-500" /> }
-                  <ChevronsUpDown />
+                  { isUserMenuOpen ? <ChevronDown /> : <ChevronUp /> }
                 </div>
               </SidebarMenuButton>
             </DropdownMenuTrigger>

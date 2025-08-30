@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -23,8 +23,7 @@ import {
 } from "@/components/dialogs";
 
 export function ChatroomMenu() {
-  const { user } = useUserContext();
-  const { currentChatroom } = useUnifiedChatroomContext();
+  const [isChatroomMenuOpen, setIsChatroomMenuOpen] = useState<boolean>(false);
 
   const [isEditChatroomDialogOpen, setIsEditChatroomDialogOpen] = useState<boolean>(false);
   const [isInviteUserDialogOpen, setIsInviteUserDialogOpen] = useState<boolean>(false);
@@ -32,17 +31,20 @@ export function ChatroomMenu() {
   const [isLeaveChatroomDialogOpen, setIsLeaveChatroomDialogOpen] = useState<boolean>(false);
   const [isDeleteChatroomDialogOpen, setIsDeleteChatroomDialogOpen] = useState<boolean>(false);
 
+  const { user } = useUserContext();
+  const { currentChatroom } = useUnifiedChatroomContext();
+
   const isCreator = user?.userId === currentChatroom?.creatorId;
 
   return (
-    <DropdownMenu>
+    <DropdownMenu onOpenChange={ setIsChatroomMenuOpen }>
       <TooltipWrapper
         content="Show Chatroom Menu"
         side="left"
       >
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon">
-            <ChevronsUpDown />
+            { isChatroomMenuOpen ? <ChevronUp /> : <ChevronDown /> }
           </Button>
         </DropdownMenuTrigger>
       </TooltipWrapper>
