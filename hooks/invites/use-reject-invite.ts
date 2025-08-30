@@ -28,7 +28,8 @@ export function useRejectInvite() {
     const data = await response.json();
 
     if (!response.ok) {
-      return { success: false, error: data?.error || "Failed to reject invite." };
+      console.error("Error rejecting invite:", data.detail);
+      return { success: false, error: data.detail || "Failed to reject invite." };
     }
 
     return { success: true, error: null };

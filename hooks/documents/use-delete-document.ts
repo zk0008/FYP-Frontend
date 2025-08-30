@@ -23,7 +23,8 @@ export function useDeleteDocument() {
     const data = await response.json();
     
     if (!response.ok) {
-      return { success: false, error: data?.error || "Failed to delete document." };
+      console.error("Error deleting document:", data.detail);
+      return { success: false, error: data.detail || "Failed to delete document." };
     }
 
     return { success: true, error: null };

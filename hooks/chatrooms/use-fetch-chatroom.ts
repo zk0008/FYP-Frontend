@@ -25,7 +25,8 @@ export function useFetchChatroom(chatroomId: string) {
     const data = await response.json();
 
     if (!response.ok) {
-      setError(data.message || "Failed to fetch chatroom");
+      console.error("Error fetching chatroom:", data.detail);
+      setError(data.detail || "Failed to fetch chatroom");
       setLoading(false);
       return;
     }

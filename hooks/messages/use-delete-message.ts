@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
-import { fetchWithAuth } from "@/utils";
 import { useUnifiedChatroomContext } from "@/hooks";
+import { fetchWithAuth } from "@/utils";
 
 interface deleteMessageProps {
   messageId: string;
@@ -21,7 +21,8 @@ export function useDeleteMessage() {
     const data = await response.json()
 
     if (!response.ok) {
-      return { success: false, error: data.message || "Failed to delete message." };
+      console.error("Error deleting message:", data.detail);
+      return { success: false, error: data.detail || "Failed to delete message." };
     }
 
     return { success: true, error: null };

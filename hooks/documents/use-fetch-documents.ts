@@ -1,14 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { createClient } from "@/utils/supabase/client";
 import { Document } from "@/types";
 import { fetchWithAuth } from "@/utils";
 
 interface useFetchDocumentsProps {
   chatroomId: string;
 }
-
-const supabase = createClient();
 
 export function useFetchDocuments({ chatroomId }: useFetchDocumentsProps) {
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -32,8 +29,8 @@ export function useFetchDocuments({ chatroomId }: useFetchDocumentsProps) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("Error fetching documents:", data.message);
-      setError(data.message);
+      console.error("Error fetching documents:", data.detail);
+      setError(data.detail);
       setLoading(false);
       return;
     }

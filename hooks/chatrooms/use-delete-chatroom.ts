@@ -23,7 +23,8 @@ export function useDeleteChatroom() {
     const data = await response.json();
 
     if (!response.ok) {
-      return { success: false, error: data.error || "Failed to delete chatroom." };
+      console.error("Error deleting chatroom:", data.detail);
+      return { success: false, error: data.detail || "Failed to delete chatroom." };
     }
 
     return { success: true, error: null };

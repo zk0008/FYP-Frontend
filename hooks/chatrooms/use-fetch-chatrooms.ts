@@ -23,7 +23,8 @@ export function useFetchChatrooms({ userId }: useFetchChatroomsProps) {
     const data = await response.json();
 
     if (!response.ok) {
-      setError(data.message || "Failed to fetch chatrooms");
+      console.error("Error fetching chatrooms:", data.detail);
+      setError(data.detail || "Failed to fetch chatrooms");
       setLoading(false);
       return;
     }

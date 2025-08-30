@@ -21,7 +21,8 @@ export function useLeaveChatroom() {
     const data = await response.json();
 
     if (!response.ok) {
-      return { success: false, error: data.error || "Failed to leave chatroom." };
+      console.error("Error leaving chatroom:", data.detail);
+      return { success: false, error: data.detail || "Failed to leave chatroom." };
     }
 
     return { success: true, error: null };

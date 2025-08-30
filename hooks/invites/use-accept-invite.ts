@@ -28,7 +28,8 @@ export function useAcceptInvite() {
     const data = await response.json();
 
     if (!response.ok) {
-      return { success: false, error: data?.error || "Failed to accept invite." };
+      console.error("Error accepting invite:", data.detail);
+      return { success: false, error: data.detail || "Failed to accept invite." };
     }
 
     return { success: true, error: null };

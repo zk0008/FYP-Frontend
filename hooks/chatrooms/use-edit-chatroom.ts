@@ -27,7 +27,8 @@ export function useEditChatroom() {
     const data = await response.json();
 
     if (!response.ok) {
-      return { success: false, error: data?.error || "Failed to edit chatroom." };
+      console.error("Error editing chatroom:", data.detail);
+      return { success: false, error: data.detail || "Failed to edit chatroom." };
     }
 
     return { success: true, error: null };

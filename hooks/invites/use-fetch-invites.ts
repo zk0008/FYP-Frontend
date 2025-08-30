@@ -25,8 +25,8 @@ export function useFetchInvites({ userId }: useFetchInvitesProps) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("Error fetching invites:", data.message);
-      setError(data.message);
+      console.error("Error fetching invites:", data.detail);
+      setError(data.detail);
       setLoading(false);
       return;
     }

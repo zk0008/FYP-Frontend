@@ -21,7 +21,7 @@ export function useDeleteUser() {
 
     if (!response.ok) {
       setIsDeleting(false);
-      return { success: false, error: data?.error || "Failed to delete user." };
+      return { success: false, error: data.detail || "Failed to delete user." };
     }
 
     setIsDeleting(false);

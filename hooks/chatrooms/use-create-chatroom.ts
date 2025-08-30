@@ -27,7 +27,8 @@ export function useCreateChatroom() {
     const data = await response.json();
 
     if (!response.ok) {
-      return { success: false, error: data?.error || "Failed to create chatroom." };
+      console.error("Error creating chatroom:", data.detail);
+      return { success: false, error: data.detail || "Failed to create chatroom." };
     }
 
     return { success: true, error: null };
