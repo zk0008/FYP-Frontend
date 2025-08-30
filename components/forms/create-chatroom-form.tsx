@@ -5,7 +5,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/utils/supabase/client";
 import { DialogClose } from "@/components/ui/dialog";
 import {
   Form,
@@ -17,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast, useUnifiedChatroomContext, useUserContext } from "@/hooks";
+import { useCreateChatroom, useToast, useUnifiedChatroomContext } from "@/hooks";
 
 const createChatroomFormSchema = z.object({
   name: z.string()
@@ -26,10 +25,8 @@ const createChatroomFormSchema = z.object({
     .max(64, "Chatroom name must be at most 64 characters long")
 });
 
-const supabase = createClient();
-
 export function CreateChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
-  const { user } = useUserContext();
+  const { createChatroom } = useCreateChatroom();
   const { refresh } = useUnifiedChatroomContext();
   const { toast } = useToast();
 
@@ -41,15 +38,6 @@ export function CreateChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
   });
 
   const onSubmit = async (data: z.infer<typeof createChatroomFormSchema>) => {
-    if (!user) {
-      toast({
-        title: "Error Creating Chatroom",
-        description: "User not found.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     const chatroomName = data.name.trim();
 
     // Error checking for empty chatroom name
@@ -62,41 +50,22 @@ export function CreateChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
       return;
     }
 
-    // Insert new chatroom into database
-    const { data: chatroomData, error: chatroomError } = await supabase
-      .from("chatrooms")
-      .insert({
-        creator_id: user.userId,
-        name: chatroomName
-      })
-      .select("chatroom_id");
+    const { success, error } = await createChatroom({ chatroomName });
 
-    // Add creator as member of the chatroom
-    const { error: memberError } = await supabase
-      .from("members")
-      .insert({
-        user_id: user.userId,
-        chatroom_id: chatroomData?.[0]?.chatroom_id
+    if (success) {
+      toast({
+        title: "Chatroom Created",
+        description: `'${chatroomName}' chatroom has been created.`,
       });
-
-    if (chatroomError || memberError) {
-      const error = chatroomError || memberError;
-
+      refresh();  // Refresh chatroom context
+      onSuccess?.();
+    } else if (error) {
       toast({
         title: "Error Creating Chatroom",
-        description: error?.message || "An error occurred while creating the chatroom.",
+        description: error,
         variant: "destructive",
       });
-      return;
     }
-
-    toast({
-      title: "Chatroom Created",
-      description: `"${chatroomName}" chatroom has been created.`,
-    });
-
-    refresh();      // Refresh chatroom context
-    onSuccess?.();
   }
 
   return (

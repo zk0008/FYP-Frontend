@@ -14,7 +14,7 @@ export function CreateChatroomDialog({
   onOpenChange
 }: CreateChatroomDialogProps) {
   const handleFormSuccess = () => {
-    onOpenChange(false);    // Close dialog after form submission
+    onOpenChange(false);  // Close dialog after form submission
   };
 
   return (

@@ -19,16 +19,13 @@ export function LeaveChatroomDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const { refresh, currentChatroom } = useUnifiedChatroomContext();
-  const { leaveChatroom, isLoading } = useLeaveChatroom();
-  const { user } = useUserContext();
+  const { leaveChatroom } = useLeaveChatroom();
   const router = useRouter();
   const { toast } = useToast();
 
   const handleLeave = async () => {
     const { success, error } = await leaveChatroom({
-      userId: user?.userId || "",
       chatroomId: currentChatroom?.chatroomId || "",
-      name: currentChatroom?.name || ""
     });
 
     if (success) {
@@ -59,7 +56,7 @@ export function LeaveChatroomDialog({
         <Button variant="outline" onClick={() => onOpenChange(false)}>
           Cancel
         </Button>
-        <Button variant="destructive" onClick={ handleLeave } disabled={ isLoading }>
+        <Button variant="destructive" onClick={ handleLeave }>
           Leave
         </Button>
       </div>

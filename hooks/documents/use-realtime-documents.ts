@@ -39,7 +39,6 @@ export function useRealtimeDocuments({ chatroomId, onNewDocument, onDeleteDocume
         },
         async (payload: { new: DocumentPayload }) => {
           const newDocument = payload.new;
-          console.log("New document uploaded:", newDocument);
 
           try {
             const { data: chatroom, error: chatroomError } = await supabase
@@ -88,7 +87,6 @@ export function useRealtimeDocuments({ chatroomId, onNewDocument, onDeleteDocume
           table: "documents",
         },
         (payload) => {
-          console.log("Document deleted:", payload.old);
           const deletedDocumentId = payload.old.document_id;
           onDeleteDocument(deletedDocumentId);
         }

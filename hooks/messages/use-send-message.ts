@@ -20,40 +20,36 @@ export function useSendMessage() {
   const { toast } = useToast();
 
   const sendToGroupGPT = useCallback(async ({ content, attachments }: { content: string; attachments?: AttachmentInput[] }): Promise<boolean> => {
-    try {
-      const contentWithoutMention = content.replace(/@groupgpt/i, "");
+    const contentWithoutMention = content.replace(/@groupgpt/i, "");
 
-      const payload = new FormData();
-      payload.append("username", user!.username);
-      payload.append("chatroom_id", currentChatroom!.chatroomId);
-      payload.append("content", contentWithoutMention);
+    const payload = new FormData();
+    payload.append("username", user!.username);
+    payload.append("chatroom_id", currentChatroom!.chatroomId);
+    payload.append("content", contentWithoutMention);
 
-      if (attachments && attachments.length > 0) {
-        attachments.forEach(attachment => {
-          payload.append("files", attachment.file);
-        });
-      }
-
-      const response = await fetchWithAuth("/api/queries/groupgpt", {
-        method: "POST",
-        body: payload,
+    if (attachments && attachments.length > 0) {
+      attachments.forEach(attachment => {
+        payload.append("files", attachment.file);
       });
+    }
 
-      if (!response.ok) {
-        throw new Error(`Error invoking GroupGPT: ${response.statusText}`);
-      }
+    const response = await fetchWithAuth("/api/queries/groupgpt", {
+      method: "POST",
+      body: payload,
+    });
+    const data = await response.json();
 
-      return true;
-    } catch (error: any) {
-      console.error("Error sending message to GroupGPT:", error.message);
-
+    if (!response.ok) {
+      console.error("Error invoking GroupGPT:", data.detail);
       toast({
         title: "GroupGPT Invocation Error",
-        description: error.message || "An error occurred when invoking GroupGPT.",
+        description: data.detail || "An error occurred when invoking GroupGPT.",
         variant: "destructive"
       });
       return false;
     }
+
+    return true;
   }, [currentChatroom, user]);
 
   const sendToSupabase = useCallback(async ({ content, attachments }: { content: string; attachments?: AttachmentInput[] }): Promise<{ success: boolean; messageId?: string }> => {

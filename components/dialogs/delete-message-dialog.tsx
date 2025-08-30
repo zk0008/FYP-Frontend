@@ -14,11 +14,11 @@ export function DeleteMessageDialog({
   onOpenChange: (open: boolean) => void;
   messageId: string;
 }) {
-  const { deleteMessage } = useDeleteMessage({ messageId });
+  const { deleteMessage } = useDeleteMessage();
   const { toast } = useToast();
 
   const handleDelete = async () => {
-    const { success, error } = await deleteMessage();
+    const { success, error } = await deleteMessage({ messageId});
     if (success) {
       toast({
         title: "Message Deleted"

@@ -1,13 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { createClient } from "@/utils/supabase/client";
 import { Invite } from "@/types";
+import { fetchWithAuth } from "@/utils";
 
 interface useFetchInvitesProps {
   userId: string;
 }
-
-const supabase = createClient();
 
 export function useFetchInvites({ userId }: useFetchInvitesProps) {
   const [pendingInvites, setPendingInvites] = useState<Invite[]>([]);
@@ -21,29 +19,29 @@ export function useFetchInvites({ userId }: useFetchInvitesProps) {
     setLoading(true);
     setError(null);
 
-    try {
-      const { data, error } = await supabase.rpc("get_user_pending_invites", { p_user_id: userId });
+    const response = await fetchWithAuth(`/api/invites/${userId}`, {
+      method: "GET",
+    });
+    const data = await response.json();
 
-      if (error) {
-        throw new Error(error.message);
-      }
+    if (!response.ok) {
+      console.error("Error fetching invites:", data.detail);
+      setError(data.detail);
+      setLoading(false);
+      return;
+    }
 
-      if (data) {
-        const invitesData = data.map((item: any) => ({
-          inviteId: item.invite_id,
-          senderUsername: item.sender_username,
-          chatroomId: item.chatroom_id,
-          chatroomName: item.chatroom_name,
-          status: item.status,
-          createdAt: item.created_at
-        }));
-        setPendingInvites(invitesData);
-      }
-    } catch (error: any) {
-      console.error("Error fetching invites:", error.message);
-      setError(error.message);
-      setPendingInvites([]);
-    } finally {
+    if (data) {
+      const invitesData = data.map((item: any) => ({
+        inviteId: item.invite_id,
+        senderUsername: item.sender_username,
+        chatroomId: item.chatroom_id,
+        chatroomName: item.chatroom_name,
+        status: item.status,
+        createdAt: item.created_at
+      }));
+
+      setPendingInvites(invitesData);
       setLoading(false);
     }
   }, [userId]);

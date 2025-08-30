@@ -54,14 +54,10 @@ export function useRealtimeMessages({
             // Get attachments, if any
             let attachments: Attachment[] = [];
             if (newMessage.has_attachments) {
-              console.log("Fetching attachments for message:", newMessage.message_id);
-
               const { data: attachmentsData, error: attachmentsError } = await supabase
                 .from("attachments")
                 .select("attachment_id, mime_type, filename")
                 .eq("message_id", newMessage.message_id);
-
-              console.log("attachments data:", attachmentsData);
 
               if (attachmentsError) {
                 throw new Error(attachmentsError.message);

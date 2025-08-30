@@ -1,51 +1,14 @@
 import { useCallback } from "react";
 
-import { createClient } from "@/utils/supabase/client";
+import { fetchWithAuth } from "@/utils";
 import { useUnifiedChatroomContext } from "@/hooks";
 
 interface deleteDocumentProps {
   documentId: string;
 }
 
-const supabase = createClient();
-
 export function useDeleteDocument() {
   const { currentChatroom } = useUnifiedChatroomContext();
-
-  const deleteDocumentEntry = useCallback(async (documentId: string) => {
-    try {
-      const { error } = await supabase
-        .from("documents")
-        .delete()
-        .eq("document_id", documentId);
-  
-      if (error) {
-        throw new Error(error.message);
-      }
-  
-      return { success: true, error: null };
-    } catch (error: any) {
-      console.error("Error deleting document:", error);
-      return { success: false, error: error.message || "An unexpected error occurred when deleting document entry from Supabase." };
-    }
-  }, []);
-
-  const deleteDocumentFile = useCallback(async (documentId: string) => {
-    try {
-      const { error } = await supabase.storage
-        .from("knowledge-bases")
-        .remove([`${currentChatroom!.chatroomId}/${documentId}`]);
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return { success: true, error: null };
-    } catch (error: any) {
-      console.error("Error deleting document file:", error);
-      return { success: false, error: error.message || "An unexpected error occurred when deleting document file from Supabase Storage." };
-    }
-  }, [currentChatroom]);
 
   const deleteDocument = useCallback(async ({ documentId }: deleteDocumentProps) => {
     if (!documentId) {
@@ -54,25 +17,18 @@ export function useDeleteDocument() {
       return { success: false, error: "Current chatroom context is not available." };
     }
 
-    const [
-      { success: entryDeleted, error: entryError },
-      { success: fileDeleted, error: fileError }
-    ] = await Promise.all([
-      deleteDocumentEntry(documentId),
-      deleteDocumentFile(documentId),
-    ]);
-
-    if (entryDeleted && fileDeleted) {
-      return { success: true, error: null };
+    const response = await fetchWithAuth(`/api/documents/${currentChatroom.chatroomId}/${documentId}`, {
+      method: "DELETE"
+    });
+    const data = await response.json();
+    
+    if (!response.ok) {
+      console.error("Error deleting document:", data.detail);
+      return { success: false, error: data.detail || "Failed to delete document." };
     }
 
-    return { success: false, error: entryError || fileError || "An unexpected error occurred while deleting the document." };
+    return { success: true, error: null };
+  }, [currentChatroom]);
 
-  }, [deleteDocumentEntry, deleteDocumentFile, currentChatroom]);
-
-  return {
-    deleteDocument,
-    deleteDocumentEntry,
-    deleteDocumentFile
-  };
+  return { deleteDocument };
 }

@@ -24,9 +24,11 @@ export { useFetchUser } from "./auth/use-fetch-user";
 // =============================================================================
 // CHATROOMS
 // =============================================================================
+export { useCreateChatroom } from "./chatrooms/use-create-chatroom";
+export { useDeleteChatroom } from "./chatrooms/use-delete-chatroom";
+export { useEditChatroom } from "./chatrooms/use-edit-chatroom";
 export { useFetchChatroom } from "./chatrooms/use-fetch-chatroom";
 export { useFetchChatrooms } from "./chatrooms/use-fetch-chatrooms";
-export { useDeleteChatroom } from "./chatrooms/use-delete-chatroom";
 export { useLeaveChatroom } from "./chatrooms/use-leave-chatroom";
 export { useRealtimeChatroom } from "./chatrooms/use-realtime-chatroom";
 

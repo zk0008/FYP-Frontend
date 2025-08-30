@@ -33,9 +33,7 @@ export function useMessagesWithRealtime({ chatroomId } : useMessagesWithRealtime
 
   const handleDeleteMessage = useCallback((messageId: string) => {
     setRealtimeMessages((prevMessages) => prevMessages.filter((msg) => msg.messageId !== messageId));
-
     setDeletedMessageIds((prevDeleted) => new Set(prevDeleted).add(messageId));
-
   }, []);
 
   useRealtimeMessages({

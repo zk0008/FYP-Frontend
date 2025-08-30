@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 
-import { createClient } from "@/utils/supabase/client";
 import { Message } from "@/types";
+import { fetchWithAuth } from "@/utils";
 
 interface useFetchMessagesProps {
   chatroomId: string;
 }
-
-const supabase = createClient();
 
 export function useFetchMessages({ chatroomId }: useFetchMessagesProps) {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -25,33 +23,30 @@ export function useFetchMessages({ chatroomId }: useFetchMessagesProps) {
       setLoading(true);
       setError(null);
 
-      try {
-        const { data, error } = await supabase.rpc("get_chatroom_messages", { p_chatroom_id: chatroomId })
+      const response = await fetchWithAuth(`/api/messages/${chatroomId}`, {
+        method: "GET"
+      });
+      const data = await response.json();
 
-        if (error) {
-          throw new Error(error.message);
-        }
-
-        if (data) {
-          const messagesData: Message[] = data.map((item: any) => ({
-            messageId: item.message_id,
-            username: item.username,
-            content: item.content,
-            attachments: (item.attachments || []).map((attachment: any) => ({
-              attachmentId: attachment.attachment_id,
-              mimeType: attachment.mime_type,
-              filename: attachment.filename
-            }))
-          }));
-          setMessages(messagesData);
-        }
-      } catch (error: any) {
-        console.error("Error fetching messages:", error.message);
-        setError(error.message);
-        setMessages([]);
-      } finally {
+      if (!response.ok) {
+        console.error("Error fetching messages:", data.detail);
         setLoading(false);
+        setError(data.detail || "Failed to fetch messages");
+        return;
       }
+
+      const messagesData: Message[] = data.map((item: any) => ({
+        messageId: item.message_id,
+        username: item.username,
+        content: item.content,
+        attachments: (item.attachments || []).map((attachment: any) => ({
+          attachmentId: attachment.attachment_id,
+          mimeType: attachment.mime_type,
+          filename: attachment.filename
+        }))
+      }));
+      setLoading(false);
+      setMessages(messagesData);
     };
 
     fetchMessages();

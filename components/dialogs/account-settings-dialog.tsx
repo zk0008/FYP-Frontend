@@ -40,6 +40,7 @@ export function AccountSettingsDialog({
   // Handle account deletion
   const handleDeleteAccount = async () => {
     const { success, error } = await deleteUser();
+
     if (success) {
       window.location.href = "/";  // Redirect to main page
       toast({

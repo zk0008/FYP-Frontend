@@ -3,8 +3,7 @@ import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Invite } from "@/types";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import { useAcceptInvite, useUnifiedChatroomContext } from "@/hooks";
-import { toast } from "@/hooks/ui/use-toast";
+import { useAcceptInvite, useToast, useUnifiedChatroomContext } from "@/hooks";
 
 interface AcceptInviteButtonProps {
   invite: Invite;
@@ -15,11 +14,12 @@ export function AcceptInviteButton({
   invite,
   onAccepted
 }: AcceptInviteButtonProps) {
-  const { acceptInvite } = useAcceptInvite({ invite });
+  const { acceptInvite } = useAcceptInvite();
+  const { toast } = useToast();
   const { refresh: refreshChatrooms } = useUnifiedChatroomContext();
 
   const handleAccept = async () => {
-    const { success, error } = await acceptInvite();
+    const { success, error } = await acceptInvite({ inviteId: invite.inviteId });
 
     if (success) {
       toast({
@@ -45,7 +45,7 @@ export function AcceptInviteButton({
         size="icon"
         onClick={ handleAccept }
       >
-        <Check className="h-4 w-4" />
+        <Check className="h-4 w-4 text-green-500" />
       </Button>
     </TooltipWrapper>
   );
