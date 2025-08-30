@@ -39,10 +39,7 @@ export function ManageInvitesDialog({
         </Button>
       </div>
 
-      {invites.length !== 0 && <PendingInvitesTable
-        invites={ invites }
-        onInviteUpdated={ refresh }
-      />}
+      <PendingInvitesTable invites={ invites } onInviteUpdated={ refresh } />
     </BaseDialog>
   );
 }

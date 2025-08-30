@@ -19,7 +19,7 @@ export function BaseDialog({
 } : BaseDialogProps) {
   return (
     <Dialog open={ open } onOpenChange={ onOpenChange }>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="cursor-default">{ title }</DialogTitle>
           <DialogDescription className="cursor-default">{ description }</DialogDescription>
