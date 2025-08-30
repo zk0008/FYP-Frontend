@@ -3,7 +3,6 @@
 import { LoaderCircle, SendHorizonal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-
 import { AttachmentDropZone } from "@/components/drop-zones";
 import { Button } from "@/components/ui/button";
 import { ChatInput } from "@/components/ui/chat/chat-input";

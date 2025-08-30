@@ -36,7 +36,7 @@ export function TranscribeButton({
   const lastSentTranscriptRef = useRef<string>('');
   // Send only the incremental/new part of the transcript for real-time updates
   useEffect(() => {
-    if (transcript && transcript !== lastSentTranscriptRef.current) {
+    if (transcript && transcript !== lastSentTranscriptRef.current && listening) {
       // Get only the new part that hasn't been sent yet
       const newPortion = transcript.slice(lastSentTranscriptRef.current.length);
       if (newPortion.trim()) {
