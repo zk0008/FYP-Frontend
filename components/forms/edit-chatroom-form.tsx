@@ -77,7 +77,7 @@ export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
 
     toast({
       title: "Chatroom Edited",
-      description: `Chatroom name changed to "${newChatroomName}".`,
+      description: `Chatroom name changed to '${newChatroomName}'.`,
     });
 
     refresh();  // Refresh chatroom context

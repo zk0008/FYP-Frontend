@@ -92,7 +92,7 @@ export function CreateChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
 
     toast({
       title: "Chatroom Created",
-      description: `"${chatroomName}" chatroom has been created.`,
+      description: `'${chatroomName}' chatroom has been created.`,
     });
 
     refresh();      // Refresh chatroom context
