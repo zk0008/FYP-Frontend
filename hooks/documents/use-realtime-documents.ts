@@ -87,7 +87,6 @@ export function useRealtimeDocuments({ chatroomId, onNewDocument, onDeleteDocume
           table: "documents",
         },
         (payload) => {
-          console.log("Document deleted:", payload.old);
           const deletedDocumentId = payload.old.document_id;
           onDeleteDocument(deletedDocumentId);
         }

@@ -25,7 +25,6 @@ export function useAcceptInvite() {
         invite_id: inviteId
       }),
     });
-
     const data = await response.json();
 
     if (!response.ok) {

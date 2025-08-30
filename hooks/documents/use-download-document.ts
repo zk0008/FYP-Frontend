@@ -23,7 +23,6 @@ export function useDownloadDocument({ documentId }: useDownloadDocumentProps) {
     setIsDownloading(true);
 
     try {
-      console.log(`${currentChatroom!.chatroomId}/${documentId}`)
       const { data, error } = await supabase.storage
         .from("knowledge-bases")
         .download(`${currentChatroom!.chatroomId}/${documentId}`);

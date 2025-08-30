@@ -20,7 +20,6 @@ export function useDeleteDocument() {
     const response = await fetchWithAuth(`/api/documents/${currentChatroom.chatroomId}/${documentId}`, {
       method: "DELETE"
     });
-
     const data = await response.json();
     
     if (!response.ok) {

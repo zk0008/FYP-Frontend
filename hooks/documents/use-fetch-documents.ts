@@ -29,7 +29,6 @@ export function useFetchDocuments({ chatroomId }: useFetchDocumentsProps) {
     const response = await fetchWithAuth(`/api/documents/${chatroomId}`, {
       method: "GET"
     });
-
     const data = await response.json();
 
     if (!response.ok) {
