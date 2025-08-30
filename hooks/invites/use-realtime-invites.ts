@@ -14,6 +14,7 @@ interface useRealtimeInvitesProps {
     inviteId: string;
     status: "PENDING" | "ACCEPTED" | "REJECTED";
   }) => void;
+  onDeleteInvite: (inviteId: string) => void;
 }
 
 interface InvitePayload {
@@ -30,7 +31,8 @@ const supabase = createClient();
 export function useRealtimeInvites({
   userId,
   onNewInvite,
-  onUpdateInvite
+  onUpdateInvite,
+  onDeleteInvite
 }: useRealtimeInvitesProps) {
   const { toast } = useToast();
 
@@ -93,6 +95,14 @@ export function useRealtimeInvites({
             inviteId: updatedInvite.invite_id,
             status: updatedInvite.status,
           });
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "invites" },
+        (payload) => {
+          const deletedInviteId = payload.old.invite_id;
+          onDeleteInvite(deletedInviteId);
         }
       )
       .subscribe();

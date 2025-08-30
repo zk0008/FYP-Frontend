@@ -20,6 +20,7 @@ export function InvitesProvider({ children }: { children: React.ReactNode }) {
     error,
     refresh,
     addInvite,
+    removeInvite,
     updateInviteStatus
   } = useFetchInvites({ userId: user?.userId || "" });
 
@@ -33,11 +34,22 @@ export function InvitesProvider({ children }: { children: React.ReactNode }) {
     updateInviteStatus(inviteId, status);
   }, [updateInviteStatus]);
 
+  const handleDeleteInvite = useCallback((inviteId: string) => {
+    // Check if the invite exists in the array
+    const inviteExists = invites.some(invite => invite.inviteId === inviteId);
+
+    if (inviteExists) {
+      // If the invite exists, remove it from the array
+      removeInvite(inviteId);
+    }
+  }, [invites, removeInvite]);
+
   // Subscribe to real-time updates
   useRealtimeInvites({
     userId: user?.userId || "",
     onNewInvite: handleNewInvite,
-    onUpdateInvite: handleUpdateInviteStatus
+    onUpdateInvite: handleUpdateInviteStatus,
+    onDeleteInvite: handleDeleteInvite
   });
 
   const contextValue: InvitesContextType = { invites, loading, error, refresh };
