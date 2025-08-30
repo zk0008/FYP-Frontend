@@ -25,7 +25,7 @@ export function RejectInviteButton({
         title: "Invite Rejected",
         description: `You have rejected the invite from '${invite.senderUsername}' to chatroom '${invite.chatroomName}'.`,
       });
-      onRejected();   // Refreshes invite list
+      onRejected();  // Refreshes invite list
     }
     else if (error) {
       toast({

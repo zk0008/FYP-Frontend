@@ -14,23 +14,18 @@ export function useDeleteUser() {
 
     setIsDeleting(true);
 
-    try {
-      const response = await fetchWithAuth(`/api/users/${user.userId}`, {
-        method: "DELETE"
-      });
+    const response = await fetchWithAuth(`/api/users/${user.userId}`, {
+      method: "DELETE"
+    });
+    const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(`HTTP error, status: ${response.status}`);
-      }
-
-      return { success: true, error: null };
-    } catch (error: any) {
-      console.error("Error deleting user:", error.message);
-
-      return { success: false, error: error.message || "An unexpected error occurred." };
-    } finally {
+    if (!response.ok) {
       setIsDeleting(false);
+      return { success: false, error: data?.error || "Failed to delete user." };
     }
+
+    setIsDeleting(false);
+    return { success: true, error: null };
   }, [user]);
 
   return { deleteUser, isDeleting };
