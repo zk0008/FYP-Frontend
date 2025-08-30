@@ -14,11 +14,11 @@ export function RejectInviteButton({
   invite,
   onRejected
 }: RejectInviteButtonProps) {
-  const { rejectInvite } = useRejectInvite({ invite });
+  const { rejectInvite } = useRejectInvite();
   const { toast } = useToast();
 
   const handleReject = async () => {
-    const { success, error } = await rejectInvite();
+    const { success, error } = await rejectInvite({ inviteId: invite.inviteId });
 
     if (success) {
       toast({
@@ -43,7 +43,7 @@ export function RejectInviteButton({
         size="icon"
         onClick={ handleReject }
       >
-        <X className="h-4 w-4" />
+        <X className="h-4 w-4 text-red-500" />
       </Button>
     </TooltipWrapper>
   );

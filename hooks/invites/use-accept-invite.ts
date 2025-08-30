@@ -1,50 +1,39 @@
 import { useCallback } from "react";
 
-import { createClient } from "@/utils/supabase/client";
-import { Invite } from "@/types";
+import { fetchWithAuth } from "@/utils";
 import { useUserContext } from "@/hooks";
 
-interface useFetchInvitesProps {
-  invite: Invite | null;
+interface acceptInviteProps {
+  inviteId: string;
 }
 
-const supabase = createClient();
-
-export function useAcceptInvite({ invite }: useFetchInvitesProps) {
+export function useAcceptInvite() {
   const { user } = useUserContext();
 
-  const acceptInvite = useCallback(async () => {
+  const acceptInvite = useCallback(async ({ inviteId }: acceptInviteProps) => {
     if (!user) {
-      return { success: false, error: "User context is not available."}
-    } else if (!invite) {
-      return { success: false, error: "Invalid invite." }
+      return { success: false, error: "User context is not available." }
     }
 
-    try {
-      // Update invite status to ACCEPTED
-      const { error: updateError } = await supabase
-        .from("invites")
-        .update({ status: "ACCEPTED" })
-        .eq("invite_id", invite.inviteId);
+    const response = await fetchWithAuth(`/api/invites/accept`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        user_id: user.userId,
+        invite_id: inviteId
+      }),
+    });
 
-      // Add entry to members table
-      const { error: memberError } = await supabase
-        .from("members")
-        .insert({
-          user_id: user.userId,
-          chatroom_id: invite.chatroomId,
-        });
+    const data = await response.json();
 
-      if (updateError || memberError) {
-        throw new Error(updateError?.message || memberError?.message || "Failed to accept invite.");
-      }
-
-      return { success: true, error: null };
-    } catch (error: any) {
-      console.error("Error accepting invite:", error);
-      return { success: false, error: error.message || "An unexpected error occurred while accepting the invite." };
+    if (!response.ok) {
+      return { success: false, error: data?.error || "Failed to accept invite." };
     }
-  }, [invite, user]);
+
+    return { success: true, error: null };
+  }, [user]);
 
   return { acceptInvite };
 }
