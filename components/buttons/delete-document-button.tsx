@@ -19,7 +19,7 @@ export function DeleteDocumentButton({ documentId, filename }: DeleteDocumentBut
     if (success) {
       toast({
         title: "Document Deleted",
-        description: `"${filename}" has been successfully deleted.`
+        description: `'${filename}' has been successfully deleted.`
       });
     } else if (error) {
       toast({
@@ -37,7 +37,7 @@ export function DeleteDocumentButton({ documentId, filename }: DeleteDocumentBut
         size="icon"
         onClick={ handleDelete }
       >
-        <Trash className="h-4 w-4" />
+        <Trash className="h-4 w-4 text-red-500" />
       </Button>
     </TooltipWrapper>
   );

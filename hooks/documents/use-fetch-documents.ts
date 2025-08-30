@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { createClient } from "@/utils/supabase/client";
 import { Document } from "@/types";
+import { fetchWithAuth } from "@/utils";
 
 interface useFetchDocumentsProps {
   chatroomId: string;
@@ -25,37 +26,28 @@ export function useFetchDocuments({ chatroomId }: useFetchDocumentsProps) {
     setLoading(true);
     setError(null);
 
-    try {
-      const { data, error } = await supabase
-        .from("documents")
-        .select(`
-          document_id,
-          filename,
-          users (
-            username
-          ),
-          uploaded_at
-        `)
-        .eq("chatroom_id", chatroomId)
-        .order("uploaded_at", { ascending: false });  // Newest documents first
+    const response = await fetchWithAuth(`/api/documents/${chatroomId}`, {
+      method: "GET"
+    });
 
-      if (error) {
-        throw new Error(error.message);
-      }
+    const data = await response.json();
 
-      const formattedDocuments = data.map((doc: any) => ({
-        documentId: doc.document_id,
-        filename: doc.filename,
-        username: doc.users.username,
-        uploadedAt: new Date(doc.uploaded_at).toISOString(),
+    if (!response.ok) {
+      console.error("Error fetching documents:", data.message);
+      setError(data.message);
+      setLoading(false);
+      return;
+    }
+
+    if (data) {
+      const documents = data.documents.map((item: any) => ({
+        documentId: item.document_id,
+        filename: item.filename,
+        username: item.uploader_username,
+        uploadedAt: new Date(item.uploaded_at).toISOString()
       }));
 
-      setDocuments(formattedDocuments);
-    } catch (error: any) {
-      console.error("Error fetching documents:", error.message);
-      setError(error.message);
-      setDocuments([]);
-    } finally {
+      setDocuments(documents);
       setLoading(false);
     }
   }, [chatroomId]);
