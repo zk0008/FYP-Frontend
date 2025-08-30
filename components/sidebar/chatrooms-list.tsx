@@ -29,7 +29,7 @@ export function ChatroomsList() {
         variant: "destructive"
       });
     }
-  }, [chatroomsError]);
+  }, [chatroomsError, toast]);
 
   return (
     <SidebarGroup>
