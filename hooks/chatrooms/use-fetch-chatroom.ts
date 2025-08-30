@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { Chatroom } from "@/types";
-import { createClient } from "@/utils/supabase/client";
-
-const supabase = createClient();
+import { fetchWithAuth } from "@/utils";
 
 export function useFetchChatroom(chatroomId: string) {
   const [chatroom, setChatroom] = useState<Chatroom | null>(null);
@@ -21,31 +19,23 @@ export function useFetchChatroom(chatroomId: string) {
     setLoading(true);
     setError(null);
 
-    try {
-      const { data, error } = await supabase
-        .from("chatrooms")
-        .select("chatroom_id, name, creator_id")
-        .eq("chatroom_id", chatroomId)
-        .single();
+    const response = await fetchWithAuth(`/api/chatrooms/${chatroomId}`, {
+      method: "GET"
+    });
+    const data = await response.json();
 
-      if (error) {
-        throw new Error(error.message);
-      }
+    if (!response.ok) {
+      setError(data.message || "Failed to fetch chatroom");
+      setLoading(false);
+      return;
+    }
 
-      if (!data) {
-        throw new Error("Chatroom not found.");
-      }
-
+    if (data) {
       setChatroom({
         chatroomId: data.chatroom_id,
         name: data.name,
         creatorId: data.creator_id,
       });
-    } catch (error: any) {
-      console.error("Error fetching chatroom:", error.message);
-      setError(error.message);
-      setChatroom(null);
-    } finally {
       setLoading(false);
     }
   }, [chatroomId]);

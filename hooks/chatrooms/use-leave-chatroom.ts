@@ -1,44 +1,31 @@
-import { useState } from "react";
+import { useCallback } from "react";
 
-import { createClient } from "@/utils/supabase/client";
+import { fetchWithAuth } from "@/utils";
+import { useUserContext } from "@/hooks";
 
 interface leaveChatroomProps {
-  userId: string;
   chatroomId: string;
-  name: string;
 }
 
-const supabase = createClient();
-
 export function useLeaveChatroom() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useUserContext();
 
-  const leaveChatroom = async ({ userId, chatroomId, name }: leaveChatroomProps) => {
-    if (!userId || !chatroomId || !name) {
-      return { success: false, error: "User ID, chatroom ID, and name are required to leave a chatroom." };
+  const leaveChatroom = useCallback(async ({ chatroomId }: leaveChatroomProps) => {
+    if (!user) {
+      return { success: false, error: "User context is not available." };
     }
 
-    setIsLoading(true);
+    const response = await fetchWithAuth(`/api/chatrooms/${chatroomId}/user/${user.userId}`, {
+      method: "DELETE"
+    });
+    const data = await response.json();
 
-    try {
-      const { error } = await supabase
-        .from("members")
-        .delete()
-        .eq("user_id", userId)
-        .eq("chatroom_id", chatroomId);
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return { success: true, error: null };
-    } catch (error: any) {
-      console.error("Error leaving chatroom:", error);
-      return { success: false, error: error.message || "An unexpected error occurred." };
-    } finally {
-      setIsLoading(false);
+    if (!response.ok) {
+      return { success: false, error: data.error || "Failed to leave chatroom." };
     }
-  };
 
-  return { leaveChatroom, isLoading };
+    return { success: true, error: null };
+  }, [user]);
+
+  return { leaveChatroom };
 }

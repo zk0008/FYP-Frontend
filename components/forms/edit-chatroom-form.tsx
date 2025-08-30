@@ -5,7 +5,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/utils/supabase/client";
 import { DialogClose } from "@/components/ui/dialog";
 import {
   Form,
@@ -17,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast, useUnifiedChatroomContext } from "@/hooks";
+import { useEditChatroom, useToast, useUnifiedChatroomContext } from "@/hooks";
 
 const editChatroomFormSchema = z.object({
   name: z.string()
@@ -26,9 +25,8 @@ const editChatroomFormSchema = z.object({
     .max(64, "Chatroom name must be at most 64 characters long")
 });
 
-const supabase = createClient();
-
 export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
+  const { editChatroom } = useEditChatroom();
   const { refresh, currentChatroom } = useUnifiedChatroomContext();
   const { toast } = useToast();
 
@@ -40,15 +38,6 @@ export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
   });
 
   const onSubmit = async (data: z.infer<typeof editChatroomFormSchema>) => {
-    if (!currentChatroom) {
-      toast({
-        title: "Error Editing Chatroom",
-        description: "No chatroom selected.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     const newChatroomName = data.name.trim();
 
     // Error checking for empty chatroom name
@@ -61,12 +50,17 @@ export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
       return;
     }
 
-    const { error } = await supabase
-      .from("chatrooms")
-      .update({ name: newChatroomName })
-      .eq("chatroom_id", currentChatroom.chatroomId);
+    const { success, error } = await editChatroom({ chatroomName: newChatroomName });
 
-    if (error) {
+    if (success) {
+      toast({
+        title: "Chatroom Edited",
+        description: `Chatroom name changed to '${newChatroomName}'.`,
+      });
+
+      refresh();  // Refresh chatroom context
+      onSuccess?.();
+    } else if (error) {
       toast({
         title: "Error Editing Chatroom",
         description: error.message || "An error occurred while editing the chatroom.",
@@ -74,14 +68,6 @@ export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
       });
       return;
     }
-
-    toast({
-      title: "Chatroom Edited",
-      description: `Chatroom name changed to '${newChatroomName}'.`,
-    });
-
-    refresh();  // Refresh chatroom context
-    onSuccess?.();
   }
 
   return (

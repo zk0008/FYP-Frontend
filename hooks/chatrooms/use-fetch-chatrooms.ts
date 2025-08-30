@@ -1,13 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { Chatroom } from "@/types";
-import { createClient } from "@/utils/supabase/client";
+import { fetchWithAuth } from "@/utils";
 
 interface useFetchChatroomsProps {
   userId: string;
 }
-
-const supabase = createClient();
 
 export function useFetchChatrooms({ userId }: useFetchChatroomsProps) {
   const [chatrooms, setChatrooms] = useState<Chatroom[]>([]);
@@ -21,27 +19,22 @@ export function useFetchChatrooms({ userId }: useFetchChatroomsProps) {
     setLoading(true);
     setError(null);
 
-    try {
-      // Chatrooms ordered by most recently joined
-      const { data, error } = await supabase.rpc("get_user_chatrooms_ordered", { p_user_id: userId });
+    const response = await fetchWithAuth(`/api/chatrooms/user/${userId}`);
+    const data = await response.json();
 
-      if (error) {
-        throw new Error(error.message);
-      }
+    if (!response.ok) {
+      setError(data.message || "Failed to fetch chatrooms");
+      setLoading(false);
+      return;
+    }
 
-      if (data) {
-        const chatroomsData = data.map((item: any) => ({
-          chatroomId: item.chatroom_id,
-          creatorId: item.creator_id,
-          name: item.name
-        }));
-        setChatrooms(chatroomsData);
-      }
-    } catch (error: any) {
-      console.error("Error fetching chatrooms:", error.message);
-      setError(error.message);
-      setChatrooms([]);
-    } finally {
+    if (data) {
+      const chatroomsData = data.map((item: any) => ({
+        chatroomId: item.chatroom_id,
+        creatorId: item.creator_id,
+        name: item.name
+      }));
+      setChatrooms(chatroomsData);
       setLoading(false);
     }
   }, [userId]);
