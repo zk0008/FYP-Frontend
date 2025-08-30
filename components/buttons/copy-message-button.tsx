@@ -4,13 +4,16 @@ import { ClipboardCheck, ClipboardCopy } from "lucide-react";
 import { useState } from "react";
 
 import { ChatBubbleAction } from "@/components/ui/chat/chat-bubble";
+import { useToast } from "@/hooks";
 
 export function CopyMessageButton({ messageId, content }: { messageId: string, content: string }) {
   const [isCopied, setIsCopied] = useState(false);
+  const { toast } = useToast();
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(content);
+      toast({ title: "Message Copied" });
     } catch (error) {
       console.error("Failed to copy text: ", error);
     }
@@ -20,7 +23,7 @@ export function CopyMessageButton({ messageId, content }: { messageId: string, c
     if (isCopied) return;
     handleCopy();
     setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000); // Reset after 2 seconds
+    setTimeout(() => setIsCopied(false), 2000);  // Reset after 2 seconds
   };
 
   return (
