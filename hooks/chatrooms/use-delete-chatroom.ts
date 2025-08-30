@@ -8,19 +8,19 @@ interface deleteChatroomProps {
 }
 
 export function useDeleteChatroom() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const deleteChatroom = async ({ chatroomId, name }: deleteChatroomProps) => {
     if (!chatroomId || !name) {
       return { success: false, error: "Chatroom ID and name are required." };
     }
 
-    setIsLoading(true);
-
+    setIsDeleting(true);
     const response = await fetchWithAuth(`/api/chatrooms/${chatroomId}`, {
       method: "DELETE"
     });
     const data = await response.json();
+    setIsDeleting(false);
 
     if (!response.ok) {
       console.error("Error deleting chatroom:", data.detail);
@@ -30,5 +30,5 @@ export function useDeleteChatroom() {
     return { success: true, error: null };
   };
 
-  return { deleteChatroom, isLoading };
+  return { deleteChatroom, isDeleting };
 }

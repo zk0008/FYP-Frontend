@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { fetchWithAuth } from "@/utils";
 import { useUserContext } from "@/hooks";
@@ -8,6 +8,7 @@ interface leaveChatroomProps {
 }
 
 export function useLeaveChatroom() {
+  const [isLeaving, setIsLeaving] = useState(false);
   const { user } = useUserContext();
 
   const leaveChatroom = useCallback(async ({ chatroomId }: leaveChatroomProps) => {
@@ -15,10 +16,12 @@ export function useLeaveChatroom() {
       return { success: false, error: "User context is not available." };
     }
 
+    setIsLeaving(true);
     const response = await fetchWithAuth(`/api/chatrooms/${chatroomId}/user/${user.userId}`, {
       method: "DELETE"
     });
     const data = await response.json();
+    setIsLeaving(false);
 
     if (!response.ok) {
       console.error("Error leaving chatroom:", data.detail);
@@ -28,5 +31,5 @@ export function useLeaveChatroom() {
     return { success: true, error: null };
   }, [user]);
 
-  return { leaveChatroom };
+  return { leaveChatroom, isLeaving };
 }

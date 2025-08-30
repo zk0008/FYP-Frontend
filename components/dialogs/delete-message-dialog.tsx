@@ -14,7 +14,7 @@ export function DeleteMessageDialog({
   onOpenChange: (open: boolean) => void;
   messageId: string;
 }) {
-  const { deleteMessage } = useDeleteMessage();
+  const { deleteMessage, isDeleting } = useDeleteMessage();
   const { toast } = useToast();
 
   const handleDelete = async () => {
@@ -44,7 +44,7 @@ export function DeleteMessageDialog({
         <Button variant="outline" onClick={() => onOpenChange(false)}>
           Cancel
         </Button>
-        <Button variant="destructive" onClick={ handleDelete }>
+        <Button variant="destructive" onClick={ handleDelete } disabled={ isDeleting }>
           Delete
         </Button>
       </div>

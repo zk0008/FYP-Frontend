@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { fetchWithAuth } from "@/utils";
 import { useUserContext } from "@/hooks";
@@ -8,6 +8,7 @@ interface createChatroomProps {
 }
 
 export function useCreateChatroom() {
+  const [isCreating, setIsCreating] = useState(false);
   const { user } = useUserContext();
 
   const createChatroom = useCallback(async ({ chatroomName }: createChatroomProps) => {
@@ -15,6 +16,7 @@ export function useCreateChatroom() {
       return { success: false, error: "User context is not available." };
     }
 
+    setIsCreating(true);
     const response = await fetchWithAuth(`/api/chatrooms/user/${user.userId}`, {
       method: "POST",
       headers: {
@@ -25,6 +27,7 @@ export function useCreateChatroom() {
       }),
     });
     const data = await response.json();
+    setIsCreating(false);
 
     if (!response.ok) {
       console.error("Error creating chatroom:", data.detail);
@@ -34,5 +37,5 @@ export function useCreateChatroom() {
     return { success: true, error: null };
   }, [user]);
 
-  return { createChatroom };
+  return { createChatroom, isCreating };
 }

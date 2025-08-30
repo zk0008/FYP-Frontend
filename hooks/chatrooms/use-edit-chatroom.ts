@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { fetchWithAuth } from "@/utils";
 import { useUnifiedChatroomContext } from "@/hooks";
@@ -8,6 +8,7 @@ interface editChatroomProps {
 }
 
 export function useEditChatroom() {
+  const [isEditing, setIsEditing] = useState(false);
   const { currentChatroom } = useUnifiedChatroomContext();
 
   const editChatroom = useCallback(async ({ chatroomName }: editChatroomProps) => {
@@ -15,6 +16,7 @@ export function useEditChatroom() {
       return { success: false, error: "Chatroom context is not available." };
     }
 
+    setIsEditing(true);
     const response = await fetchWithAuth(`/api/chatrooms/${currentChatroom.chatroomId}`, {
       method: "PUT",
       headers: {
@@ -25,6 +27,7 @@ export function useEditChatroom() {
       }),
     });
     const data = await response.json();
+    setIsEditing(false);
 
     if (!response.ok) {
       console.error("Error editing chatroom:", data.detail);
@@ -34,5 +37,5 @@ export function useEditChatroom() {
     return { success: true, error: null };
   }, [currentChatroom]);
 
-  return { editChatroom };
+  return { editChatroom, isEditing };
 }

@@ -26,7 +26,7 @@ const createChatroomFormSchema = z.object({
 });
 
 export function CreateChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
-  const { createChatroom } = useCreateChatroom();
+  const { createChatroom, isCreating } = useCreateChatroom();
   const { refresh } = useUnifiedChatroomContext();
   const { toast } = useToast();
 
@@ -99,7 +99,7 @@ export function CreateChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
               Cancel
             </Button>
           </DialogClose>
-          <Button variant="default" type="submit">
+          <Button variant="default" type="submit" disabled={ isCreating }>
             Create Chatroom
           </Button>
         </div>

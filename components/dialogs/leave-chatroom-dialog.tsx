@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import {
   useUnifiedChatroomContext,
   useLeaveChatroom,
-  useUserContext,
   useToast
 } from "@/hooks";
 import { BaseDialog } from "./base-dialog";
@@ -19,7 +18,7 @@ export function LeaveChatroomDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const { refresh, currentChatroom } = useUnifiedChatroomContext();
-  const { leaveChatroom } = useLeaveChatroom();
+  const { leaveChatroom, isLeaving } = useLeaveChatroom();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -56,7 +55,7 @@ export function LeaveChatroomDialog({
         <Button variant="outline" onClick={() => onOpenChange(false)}>
           Cancel
         </Button>
-        <Button variant="destructive" onClick={ handleLeave }>
+        <Button variant="destructive" onClick={ handleLeave } disabled={ isLeaving }>
           Leave
         </Button>
       </div>

@@ -19,7 +19,7 @@ export function DeleteChatroomDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const { refresh, currentChatroom } = useUnifiedChatroomContext();
-  const { deleteChatroom, isLoading } = useDeleteChatroom();
+  const { deleteChatroom, isDeleting } = useDeleteChatroom();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -58,7 +58,7 @@ export function DeleteChatroomDialog({
         <Button variant="outline" onClick={() => onOpenChange(false)}>
           Cancel
         </Button>
-        <Button variant="destructive" onClick={ handleDelete } disabled={ isLoading }>
+        <Button variant="destructive" onClick={ handleDelete } disabled={ isDeleting }>
           Delete
         </Button>
       </div>

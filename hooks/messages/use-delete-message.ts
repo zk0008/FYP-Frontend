@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { useUnifiedChatroomContext } from "@/hooks";
 import { fetchWithAuth } from "@/utils";
@@ -8,6 +8,7 @@ interface deleteMessageProps {
 }
 
 export function useDeleteMessage() {
+  const [isDeleting, setIsDeleting] = useState(false);
   const { currentChatroom } = useUnifiedChatroomContext();
 
   const deleteMessage = useCallback(async ({ messageId }: deleteMessageProps) => {
@@ -15,10 +16,12 @@ export function useDeleteMessage() {
       return { success: false, error: "Chatroom context not available." };
     }
 
+    setIsDeleting(true);
     const response = await fetchWithAuth(`/api/messages/${currentChatroom.chatroomId}/${messageId}`, {
       method: "DELETE"
     });
-    const data = await response.json()
+    const data = await response.json();
+    setIsDeleting(false);
 
     if (!response.ok) {
       console.error("Error deleting message:", data.detail);
@@ -28,5 +31,5 @@ export function useDeleteMessage() {
     return { success: true, error: null };
   }, [currentChatroom]);
 
-  return { deleteMessage };
+  return { deleteMessage, isDeleting };
 }

@@ -26,7 +26,7 @@ const editChatroomFormSchema = z.object({
 });
 
 export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
-  const { editChatroom } = useEditChatroom();
+  const { editChatroom, isEditing } = useEditChatroom();
   const { refresh, currentChatroom } = useUnifiedChatroomContext();
   const { toast } = useToast();
 
@@ -101,7 +101,7 @@ export function EditChatroomForm({ onSuccess }: { onSuccess?: () => void }) {
               Cancel
             </Button>
           </DialogClose>
-          <Button variant="default" type="submit">
+          <Button variant="default" type="submit" disabled={ isEditing }>
             Save Changes
           </Button>
         </div>
