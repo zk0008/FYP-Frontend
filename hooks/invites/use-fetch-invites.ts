@@ -1,14 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { createClient } from "@/utils/supabase/client";
 import { Invite } from "@/types";
 import { fetchWithAuth } from "@/utils";
 
 interface useFetchInvitesProps {
   userId: string;
 }
-
-const supabase = createClient();
 
 export function useFetchInvites({ userId }: useFetchInvitesProps) {
   const [pendingInvites, setPendingInvites] = useState<Invite[]>([]);
@@ -25,7 +22,6 @@ export function useFetchInvites({ userId }: useFetchInvitesProps) {
     const response = await fetchWithAuth(`/api/invites/${userId}`, {
       method: "GET",
     });
-
 
     const data = await response.json();
 
