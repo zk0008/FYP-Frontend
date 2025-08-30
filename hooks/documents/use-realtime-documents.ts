@@ -39,7 +39,6 @@ export function useRealtimeDocuments({ chatroomId, onNewDocument, onDeleteDocume
         },
         async (payload: { new: DocumentPayload }) => {
           const newDocument = payload.new;
-          console.log("New document uploaded:", newDocument);
 
           try {
             const { data: chatroom, error: chatroomError } = await supabase
