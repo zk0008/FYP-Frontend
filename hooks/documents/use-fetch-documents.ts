@@ -40,7 +40,7 @@ export function useFetchDocuments({ chatroomId }: useFetchDocumentsProps) {
     }
 
     if (data) {
-      const documentsData = data.documents.map((item: any) => ({
+      const documentsData = data.map((item: any) => ({
         documentId: item.document_id,
         filename: item.filename,
         username: item.uploader_username,

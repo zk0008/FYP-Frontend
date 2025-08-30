@@ -33,7 +33,7 @@ export function useFetchInvites({ userId }: useFetchInvitesProps) {
     }
 
     if (data) {
-      const invitesData = data.invites.map((item: any) => ({
+      const invitesData = data.map((item: any) => ({
         inviteId: item.invite_id,
         senderUsername: item.sender_username,
         chatroomId: item.chatroom_id,
