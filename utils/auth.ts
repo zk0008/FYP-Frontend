@@ -27,7 +27,7 @@ export async function signIn({ email, password } : signInProps) {
     return { error: "Password must be at least 6 characters long." };
   }
 
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   
@@ -78,7 +78,7 @@ export async function signUp({
   password,
   confirmPassword
 } : signUpProps) {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const { data, error } = await supabase.auth.signUp({
     email,

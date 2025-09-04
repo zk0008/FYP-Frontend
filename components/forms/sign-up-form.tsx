@@ -1,7 +1,6 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -16,7 +15,7 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signUp } from "@/utils/auth";
+import { signUp, signIn } from "@/utils/auth";
 import { useToast } from "@/hooks";
 
 const signUpFormSchema = z.object({
@@ -43,7 +42,6 @@ const signUpFormSchema = z.object({
 });
 
 export function SignUpForm() {
-  const router = useRouter();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof signUpFormSchema>>({
@@ -57,26 +55,52 @@ export function SignUpForm() {
   });
 
   const onSubmit = async (data: z.infer<typeof signUpFormSchema>) => {
-    const { user, error } = await signUp({
+    const { error: signUpError } = await signUp({
       username: data.username,
       email: data.email,
       password: data.password,
       confirmPassword: data.confirmPassword,
     });
+    console.log("we here")
 
-    if (user) {
-      router.push("/");
-      toast({
-        title: "Confirmation Email Sent",
-        description: "Please check your mailbox and click the confirmation link to complete your sign up.",
-      })
-    } else if (error) {
+    // Unsuccessful sign up
+    if (signUpError) {
       toast({
         title: "Sign Up Failed",
-        description: error,
+        description: signUpError,
         variant: "destructive",
       });
+      return;
     }
+
+    // Successful sign up
+    /* Email confirmation flow (to be set in Supabase), but verification emails get blocked by NTU firewall */
+    // router.push("/");
+    // toast({
+    //   title: "Confirmation Email Sent",
+    //   description: "Please check your mailbox and click the confirmation link to complete your sign up.",
+    // })
+
+    /* Directly log the user in upon successful sign up since users cannot receive verification emails */
+    const { user, error: signInError } = await signIn({
+      email: data.email,
+      password: data.password,
+    });
+
+    if (signInError) {
+      toast({
+        title: "Sign In Failed",
+        description: signInError,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    window.location.href = "/chats";  // Full reload required for proper realtime subscription
+    toast({
+      title: "Signed In",
+      description: `Hello ${user?.user_metadata?.username || "there"}, welcome!`,
+    });
   };
 
   return (

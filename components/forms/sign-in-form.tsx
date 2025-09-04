@@ -38,19 +38,21 @@ export function SignInForm() {
 
   const onSubmit = async (data: z.infer<typeof signInFormSchema>) => {
     const { user, error } = await signIn({ email: data.email, password: data.password });
-    if (user) {
-      window.location.href = "/chats";  // Full reload required for proper realtime subscription
-      toast({
-        title: "Signed In",
-        description: `Hello ${user?.user_metadata?.username || "there"}, welcome back!`,
-      })
-    } else if (error) {
+
+    if (error) {
       toast({
         title: "Sign In Failed",
         description: error,
         variant: "destructive",
-      })
+      });
+      return;
     }
+
+    window.location.href = "/chats";  // Full reload required for proper realtime subscription
+    toast({
+      title: "Signed In",
+      description: `Hello ${user?.user_metadata?.username || "there"}, welcome back!`,
+    });
   };
 
   return (
