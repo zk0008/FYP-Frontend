@@ -72,7 +72,7 @@ export function useRealtimeMessages({
 
             const message: Message = {
               messageId: newMessage.message_id,
-              username: sender.username,
+              username: sender?.username || "[deleted]",
               content: newMessage.content,
               sentAt: newMessage.sent_at,
               attachments: attachments
