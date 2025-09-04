@@ -7,7 +7,7 @@ export interface Chatroom {
 export interface Document {
   documentId: string;
   filename: string;
-  username: string;
+  username: string;  // "[deleted]" if user does not exist
   uploadedAt: string;  // ISO string format
 }
 
@@ -28,7 +28,7 @@ export interface Attachment {
 
 export interface Message {
   messageId: string;
-  username: string;
+  username: string;  // "[deleted]" if user does not exist
   content: string;
   sentAt: string;
   attachments?: Attachment[];
@@ -42,7 +42,7 @@ export interface User {
 
 export interface Invite {
   inviteId: string;
-  senderUsername: string;
+  senderUsername: string;  // "[deleted]" if user does not exist
   chatroomId: string;
   chatroomName: string;
   status: "PENDING" | "ACCEPTED" | "REJECTED";

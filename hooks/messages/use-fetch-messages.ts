@@ -37,7 +37,7 @@ export function useFetchMessages({ chatroomId }: useFetchMessagesProps) {
 
       const messagesData: Message[] = data.map((item: any) => ({
         messageId: item.message_id,
-        username: item.username,
+        username: item?.username || "[deleted]",
         content: item.content,
         attachments: (item.attachments || []).map((attachment: any) => ({
           attachmentId: attachment.attachment_id,

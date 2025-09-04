@@ -34,7 +34,7 @@ export function useFetchInvites({ userId }: useFetchInvitesProps) {
     if (data) {
       const invitesData = data.map((item: any) => ({
         inviteId: item.invite_id,
-        senderUsername: item.sender_username,
+        senderUsername: item?.sender_username || "[deleted]",
         chatroomId: item.chatroom_id,
         chatroomName: item.chatroom_name,
         status: item.status,

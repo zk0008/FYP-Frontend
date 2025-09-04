@@ -39,7 +39,7 @@ export function useFetchDocuments({ chatroomId }: useFetchDocumentsProps) {
       const documentsData = data.map((item: any) => ({
         documentId: item.document_id,
         filename: item.filename,
-        username: item.uploader_username,
+        username: item?.uploader_username || "[deleted]",
         uploadedAt: new Date(item.uploaded_at).toISOString()
       }));
 
