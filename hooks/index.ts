@@ -14,7 +14,6 @@ export { useAttachmentManager } from "./attachments/use-attachment-manager";
 export { useDropAttachment } from "./attachments/use-drop-attachment";
 export { useDeleteAttachment } from "./attachments/use-delete-attachment";
 export { useFetchAttachmentUrl } from "./attachments/use-fetch-attachment-url";
-export { useUploadAttachment } from "./attachments/use-upload-attachment";
 
 // =============================================================================
 // AUTHENTICATION
