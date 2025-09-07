@@ -18,11 +18,11 @@ export function ChatInputForm() {
     setInput,
     attachments,
     setAttachments,
-    isSubmitting,
+    isSending,
     handleSubmit
   } = useChatInput();
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const wasSubmittingRef = useRef<boolean>(false);
+  const wasSendingRef = useRef<boolean>(false);
   const [isListening, setIsListening] = useState(false);
 
   const handleTranscriptChange = (incrementalTranscript: string) => {
@@ -81,13 +81,13 @@ export function ChatInputForm() {
   };
 
   useEffect(() => {
-    if (wasSubmittingRef.current && !isSubmitting) {
+    if (wasSendingRef.current && !isSending) {
       requestAnimationFrame(() => {
         inputRef.current?.focus();
       });
     }
-    wasSubmittingRef.current = isSubmitting;
-  }, [isSubmitting]);
+    wasSendingRef.current = isSending;
+  }, [isSending]);
 
   const hasContent = input.trim() || attachments.length > 0;
 
@@ -97,7 +97,7 @@ export function ChatInputForm() {
         <AttachmentPreview
           attachments={ attachments }
           setAttachments={ setAttachments }
-          isSubmitting={ isSubmitting }
+          isSending={ isSending }
         />
 
         <form onSubmit={ onSubmit }>
@@ -111,7 +111,7 @@ export function ChatInputForm() {
             className="min-h-12 resize-none rounded-lg bg-background border-0 p-4 shadow-none focus-visible:ring-0"
             value={ input }
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
-            disabled={ isSubmitting }
+            disabled={ isSending }
             onKeyDown={ handleKeyDown }
             autoFocus
           />
@@ -129,9 +129,9 @@ export function ChatInputForm() {
                 size="icon"
                 className="ml-auto"
                 type="submit"
-                disabled={ !hasContent || isListening || isSubmitting }
+                disabled={ !hasContent || isListening || isSending }
               >
-                {isSubmitting ? <LoaderCircle className="animate-spin" /> : (
+                {isSending ? <LoaderCircle className="animate-spin" /> : (
                   <>
                     <SendHorizonal />
                     <span className="sr-only">Send Message</span>
