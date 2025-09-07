@@ -17,7 +17,7 @@ export function useCreateChatroom() {
     }
 
     setIsCreating(true);
-    const response = await fetchWithAuth(`/api/chatrooms/user/${user.userId}`, {
+    const response = await fetchWithAuth(`/api/chatrooms`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
