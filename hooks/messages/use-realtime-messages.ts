@@ -54,10 +54,14 @@ export function useRealtimeMessages({
             // Get attachments, if any
             let attachments: Attachment[] = [];
             if (newMessage.has_attachments) {
+              await new Promise(resolve => setTimeout(resolve, 500)); // Short 500ms delay to ensure attachment entries have been created by backend server
+
               const { data: attachmentsData, error: attachmentsError } = await supabase
                 .from("attachments")
                 .select("attachment_id, mime_type, filename")
                 .eq("message_id", newMessage.message_id);
+
+              console.log("Fetched attachments for new message:", attachmentsData);
 
               if (attachmentsError) {
                 throw new Error(attachmentsError.message);

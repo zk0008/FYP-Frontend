@@ -13,13 +13,13 @@ import { useAttachmentManager, useToast } from "@/hooks";
 interface AttachmentPreviewProps {
   attachments: AttachmentInput[];
   setAttachments: React.Dispatch<React.SetStateAction<AttachmentInput[]>>;
-  isSubmitting: boolean;
+  isSending: boolean;
 }
 
 export function AttachmentPreview({
   attachments,
   setAttachments,
-  isSubmitting
+  isSending
 }: AttachmentPreviewProps) {
   const { addAttachments, removeAttachment } = useAttachmentManager({ attachments, setAttachments });
   const { toast } = useToast();
@@ -65,7 +65,7 @@ export function AttachmentPreview({
             <Button
               variant="ghost"
               onClick={ triggerAttachmentUpload }
-              disabled={ isSubmitting || !canAddMore }
+              disabled={ isSending || !canAddMore }
               className="h-8 w-8"
             >
               <Plus />
