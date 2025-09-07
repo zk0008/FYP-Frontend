@@ -23,7 +23,7 @@ export function useFetchMessages({ chatroomId }: useFetchMessagesProps) {
       setLoading(true);
       setError(null);
 
-      const response = await fetchWithAuth(`/api/messages/${chatroomId}`, {
+      const response = await fetchWithAuth(`/api/messages?chatroom_id=${chatroomId}`, {
         method: "GET"
       });
       const data = await response.json();
