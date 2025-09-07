@@ -5,7 +5,7 @@ import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UploadButton } from "@/components/buttons";
 import { UploadedDocumentsTable } from "@/components/tables/uploaded-documents-table";
-import { useDocumentsWithRealtime, useUnifiedChatroomContext } from "@/hooks";
+import { useDocumentsWithRealtime } from "@/hooks";
 
 import { BaseDialog } from "./base-dialog";
 
@@ -17,8 +17,7 @@ export function ManageDocumentsDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const { currentChatroom } = useUnifiedChatroomContext();
-  const { documents, refresh } = useDocumentsWithRealtime({ chatroomId: currentChatroom?.chatroomId || "" });
+  const { documents, refresh } = useDocumentsWithRealtime();
 
   return (
     <BaseDialog
@@ -45,7 +44,7 @@ export function ManageDocumentsDialog({
         </div>
       </div>
 
-      <UploadedDocumentsTable documents={ documents } />
+      <UploadedDocumentsTable documents={ documents } onDocumentDelete={ refresh } />
     </BaseDialog>
   );
 }

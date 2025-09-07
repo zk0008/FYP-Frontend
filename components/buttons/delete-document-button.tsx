@@ -7,10 +7,11 @@ import { useDeleteDocument, useToast } from "@/hooks";
 interface DeleteDocumentButtonProps {
   documentId: string;
   filename: string;
+  onDelete: () => void;
 }
 
-export function DeleteDocumentButton({ documentId, filename }: DeleteDocumentButtonProps) {
-  const { deleteDocument } = useDeleteDocument();
+export function DeleteDocumentButton({ documentId, filename, onDelete }: DeleteDocumentButtonProps) {
+  const { deleteDocument, isDeleting } = useDeleteDocument();
   const { toast } = useToast();
 
   const handleDelete = async () => {
@@ -21,6 +22,8 @@ export function DeleteDocumentButton({ documentId, filename }: DeleteDocumentBut
         title: "Document Deleted",
         description: `'${filename}' has been successfully deleted.`
       });
+
+      onDelete();  // Notify parent to refresh document list
     } else if (error) {
       toast({
         title: "Error Deleting Document",
@@ -36,6 +39,7 @@ export function DeleteDocumentButton({ documentId, filename }: DeleteDocumentBut
         variant="ghost"
         size="icon"
         onClick={ handleDelete }
+        disabled={ isDeleting }
       >
         <Trash className="h-4 w-4 text-red-500" />
       </Button>

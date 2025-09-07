@@ -3,10 +3,9 @@ import { useEffect } from "react";
 import { Document } from "@/types";
 
 import { createClient } from "@/utils/supabase/client";
-import { useToast } from "@/hooks";
+import { useToast, useUnifiedChatroomContext } from "@/hooks";
 
 interface useRealtimeDocumentsProps {
-  chatroomId: string;
   onNewDocument: (document: Document) => void;
   onDeleteDocument: (documentId: string) => void;
 }
@@ -21,21 +20,22 @@ interface DocumentPayload {
 
 const supabase = createClient();
 
-export function useRealtimeDocuments({ chatroomId, onNewDocument, onDeleteDocument }: useRealtimeDocumentsProps) {
-    const { toast } = useToast();
+export function useRealtimeDocuments({ onNewDocument, onDeleteDocument }: useRealtimeDocumentsProps) {
+  const { currentChatroom } = useUnifiedChatroomContext();
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (!chatroomId) return;
+    if (!currentChatroom) return;
 
     const channel = supabase
-      .channel(`documents:${chatroomId}`)
+      .channel(`documents:${currentChatroom.chatroomId}`)
       .on(
         "postgres_changes",
         {
           event: "INSERT",
           schema: "public",
           table: "documents",
-          filter: `chatroom_id=eq.${chatroomId}`,
+          filter: `chatroom_id=eq.${currentChatroom.chatroomId}`,
         },
         async (payload: { new: DocumentPayload }) => {
           const newDocument = payload.new;

@@ -12,11 +12,12 @@ import { DownloadDocumentButton, DeleteDocumentButton } from "@/components/butto
 
 interface UploadedDocumentsTableProps {
   documents: Document[];
+  onDocumentDelete: () => void;
   maxHeight?: string;
 }
 
 // Table showing files / documents within the knowledge base
-export function UploadedDocumentsTable({ documents, maxHeight = "200px" }: UploadedDocumentsTableProps) {
+export function UploadedDocumentsTable({ documents, onDocumentDelete, maxHeight = "200px" }: UploadedDocumentsTableProps) {
   return (
     <div className="border rounded-md">
       <div className="border-b">
@@ -57,6 +58,7 @@ export function UploadedDocumentsTable({ documents, maxHeight = "200px" }: Uploa
                       <DeleteDocumentButton
                         documentId={ doc.documentId }
                         filename={ doc.filename }
+                        onDelete={ onDocumentDelete }
                       />
                     </div>
                   </TableCell>
@@ -75,4 +77,3 @@ export function UploadedDocumentsTable({ documents, maxHeight = "200px" }: Uploa
     </div>
   );
 }
-
