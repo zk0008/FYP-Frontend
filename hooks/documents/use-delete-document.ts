@@ -15,19 +15,17 @@ export function useDeleteDocument() {
     }
 
     setIsDeleting(true);
-
     const response = await fetchWithAuth(`/api/documents/${documentId}`, {
       method: "DELETE",
     });
     const data = await response.json();
-    
+    setIsDeleting(false);
+
     if (!response.ok) {
       console.error("Error deleting document:", data.detail);
-      setIsDeleting(false);
       return { success: false, error: data.detail || "Failed to delete document." };
     }
 
-    setIsDeleting(false);
     return { success: true, error: null };
   }, []);
 

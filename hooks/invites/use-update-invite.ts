@@ -12,7 +12,6 @@ export function useUpdateInvite() {
 
   const updateInvite = useCallback(async ({ inviteId, status }: updateInviteProps) => {
     setIsUpdating(true);
-
     const response = await fetchWithAuth(`/api/invites/${inviteId}`, {
       method: "PUT",
       headers: {
@@ -23,14 +22,13 @@ export function useUpdateInvite() {
       }),
     });
     const data = await response.json();
+    setIsUpdating(false);
 
     if (!response.ok) {
       console.error("Error updating invite:", data.detail);
-      setIsUpdating(false);
       return { success: false, error: data.detail || "Failed to update invite." };
     }
 
-    setIsUpdating(false);
     return { success: true, error: null };
   }, []);
 
