@@ -31,9 +31,9 @@ export function useUploadDocument() {
 
     const formData = new FormData();
     formData.append("uploaded_document", file);
-    formData.append("uploader_id", user!.userId);
+    formData.append("chatroom_id", currentChatroom.chatroomId);
 
-    const response = await fetchWithAuth(`/api/documents/${currentChatroom.chatroomId}`, {
+    const response = await fetchWithAuth(`/api/documents`, {
       method: "POST",
       body: formData
     });

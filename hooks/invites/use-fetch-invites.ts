@@ -19,7 +19,7 @@ export function useFetchInvites({ userId }: useFetchInvitesProps) {
     setLoading(true);
     setError(null);
 
-    const response = await fetchWithAuth(`/api/invites/${userId}`, {
+    const response = await fetchWithAuth(`/api/invites`, {
       method: "GET",
     });
     const data = await response.json();

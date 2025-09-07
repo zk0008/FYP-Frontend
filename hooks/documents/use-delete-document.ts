@@ -1,34 +1,33 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { fetchWithAuth } from "@/utils";
-import { useUnifiedChatroomContext } from "@/hooks";
 
 interface deleteDocumentProps {
   documentId: string;
 }
 
 export function useDeleteDocument() {
-  const { currentChatroom } = useUnifiedChatroomContext();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const deleteDocument = useCallback(async ({ documentId }: deleteDocumentProps) => {
     if (!documentId) {
       return { success: false, error: "Document ID is required." };
-    } else if (!currentChatroom?.chatroomId) {
-      return { success: false, error: "Current chatroom context is not available." };
     }
 
-    const response = await fetchWithAuth(`/api/documents/${currentChatroom.chatroomId}/${documentId}`, {
-      method: "DELETE"
+    setIsDeleting(true);
+    const response = await fetchWithAuth(`/api/documents/${documentId}`, {
+      method: "DELETE",
     });
     const data = await response.json();
-    
+    setIsDeleting(false);
+
     if (!response.ok) {
       console.error("Error deleting document:", data.detail);
       return { success: false, error: data.detail || "Failed to delete document." };
     }
 
     return { success: true, error: null };
-  }, [currentChatroom]);
+  }, []);
 
-  return { deleteDocument };
+  return { deleteDocument, isDeleting };
 }

@@ -3,17 +3,17 @@ import { useCallback, useEffect, useState } from "react";
 import { Document } from "@/types";
 import { fetchWithAuth } from "@/utils";
 
-interface useFetchDocumentsProps {
-  chatroomId: string;
-}
+import { useUnifiedChatroomContext } from "@/hooks";
 
-export function useFetchDocuments({ chatroomId }: useFetchDocumentsProps) {
+export function useFetchDocuments() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const { currentChatroom } = useUnifiedChatroomContext();
+
   const fetchDocuments = useCallback(async () => {
-    if (!chatroomId) {
+    if (!currentChatroom || !currentChatroom.chatroomId) {
       setDocuments([]);
       setLoading(false);
       return;
@@ -23,7 +23,7 @@ export function useFetchDocuments({ chatroomId }: useFetchDocumentsProps) {
     setLoading(true);
     setError(null);
 
-    const response = await fetchWithAuth(`/api/documents/${chatroomId}`, {
+    const response = await fetchWithAuth(`/api/documents?chatroom_id=${currentChatroom.chatroomId}`, {
       method: "GET"
     });
     const data = await response.json();
@@ -46,11 +46,11 @@ export function useFetchDocuments({ chatroomId }: useFetchDocumentsProps) {
       setDocuments(documentsData);
       setLoading(false);
     }
-  }, [chatroomId]);
+  }, [currentChatroom]);
 
   useEffect(() => {
     fetchDocuments();
-  }, [chatroomId, fetchDocuments]);
+  }, [currentChatroom, fetchDocuments]);
 
   return { documents, loading, error, refresh: fetchDocuments };
 }

@@ -19,7 +19,7 @@ export function useFetchChatrooms({ userId }: useFetchChatroomsProps) {
     setLoading(true);
     setError(null);
 
-    const response = await fetchWithAuth(`/api/chatrooms/user/${userId}`);
+    const response = await fetchWithAuth(`/api/chatrooms`);
     const data = await response.json();
 
     if (!response.ok) {
