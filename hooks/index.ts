@@ -44,6 +44,7 @@ export { useSendMessage } from "./messages/use-send-message";
 // =============================================================================
 export { useFetchInvites } from "./invites/use-fetch-invites";
 export { useRealtimeInvites } from "./invites/use-realtime-invites";
+export { useSendInvite } from "./invites/use-send-invite";
 export { useUpdateInvite } from "./invites/use-update-invite";
 
 // =============================================================================

@@ -5,7 +5,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/utils/supabase/client";
 import { DialogClose } from "@/components/ui/dialog";
 import {
   Form,
@@ -17,11 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  useUnifiedChatroomContext,
-  useToast,
-  useUserContext
- } from "@/hooks";
+import { useSendInvite, useToast, useUnifiedChatroomContext } from "@/hooks";
 
 const inviteUserFormSchema = z.object({
   username: z.string()
@@ -31,12 +26,10 @@ const inviteUserFormSchema = z.object({
     .regex(/^\S+$/, "Username must not contain spaces")
 });
 
-const supabase = createClient();
-
 export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
-  const { currentChatroom } = useUnifiedChatroomContext();
+  const { sendInvite, isLoading } = useSendInvite();
   const { toast } = useToast();
-  const { user } = useUserContext();
+  const { currentChatroom } = useUnifiedChatroomContext();
 
   const form = useForm<z.infer<typeof inviteUserFormSchema>>({
     resolver: zodResolver(inviteUserFormSchema),
@@ -46,114 +39,35 @@ export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
   });
 
   const onSubmit = async (data: z.infer<typeof inviteUserFormSchema>) => {
-    if (!currentChatroom || !user) {
+    if (!currentChatroom) {
       toast({
         title: "Error Sending Invite",
-        description: "Invalid chatroom or user context.",
+        description: "Chatroom context is not available.",
         variant: "destructive"
       });
       return;
     }
 
-    // Error checking for own username
-    if (data.username === user.username) {
-      toast({
-        title: "Error Sending Invite",
-        description: "You cannot invite yourself to the chatroom.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Check if recipient exists
-    const { data: recipient, error: recipientError } = await supabase
-      .from("users")
-      .select("user_id")
-      .eq("username", data.username)
-      .single();
-
-    if (!recipient || recipientError) {
-      toast({
-        title: "Error Sending Invite",
-        description: "Recipient not found. Please check the username and try again.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Check if recipient is already in the chatroom
-    const { data: existingMember, error: memberError } = await supabase
-      .from("members")
-      .select()
-      .eq("user_id", recipient.user_id)
-      .eq("chatroom_id", currentChatroom.chatroomId);
-
-    if (existingMember && existingMember.length > 0) {
-      toast({
-        title: "Error Sending Invite",
-        description: `'${data.username}' is already a member of chatroom '${currentChatroom.name}'.`,
-        variant: "destructive",
-      });
-      return;
-    } else if (memberError) {
-      toast({
-        title: "Error Checking Membership",
-        description: memberError.message || "An unexpected error occurred while checking membership.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Check if a pending invite to the user already exists for the current chatroom
-    const { data: existingInvite, error: existingInviteError } = await supabase
-      .from("invites")
-      .select()
-      .eq("recipient_id", recipient.user_id)
-      .eq("chatroom_id", currentChatroom.chatroomId)
-      .eq("status", "PENDING");
-
-    if (existingInvite && existingInvite.length > 0) {
-      toast({
-        title: "Invite Already Exists",
-        description: `'${data.username}' has been invited to join chatroom '${currentChatroom.name}'. Please wait for them to respond.`,
-        variant: "destructive",
-      });
-      return;
-    } else if (existingInviteError) {
-      toast({
-        title: "Error Checking Existing Invites",
-        description: existingInviteError.message || "An unexpected error occurred while checking existing invites.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Insert invite into database
-    const { error: insertInviteError } = await supabase
-      .from("invites")
-      .insert({
-        sender_id: user.userId,
-        recipient_id: recipient.user_id,
-        chatroom_id: currentChatroom.chatroomId,
-        status: "PENDING"
-      });
-
-    if (insertInviteError) {
-      toast({
-        title: "Error Sending Invite",
-        description: insertInviteError.message || "An unexpected error occurred while sending the invite.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    toast({
-      title: "Invite Sent",
-      description: `'${data.username}' has been invited to join chatroom '${currentChatroom.name}'.`,
+    const { success, error } = await sendInvite({
+      chatroomId: currentChatroom.chatroomId,
+      recipientUsername: data.username
     });
 
-    form.reset();  // Reset the form after successful submission
-    onSuccess?.();  // Call the success callback if provided
+    if (success) {
+      toast({
+        title: "Invite Sent",
+        description: `'${data.username}' has been invited to join chatroom '${currentChatroom.name}'.`,
+      });
+
+      form.reset();  // Reset the form after successful submission
+      onSuccess?.();  // Call the success callback if provided
+    } else if (error) {
+      toast({
+        title: "Error Sending Invite",
+        description: error,
+        variant: "destructive"
+      });
+    }
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -196,8 +110,8 @@ export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
               Cancel
             </Button>
           </DialogClose>
-          <Button variant="default" type="submit">
-            Send Invite
+          <Button variant="default" type="submit" disabled={ isLoading }>
+            {isLoading ? "Sending..." : "Send Invite"}
           </Button>
         </div>
       </form>

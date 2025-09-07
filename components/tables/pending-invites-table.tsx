@@ -26,28 +26,30 @@ export function PendingInvitesTable({
 }: PendingInvitesTableProps) {
   const { toast } = useToast();
   const { refresh: refreshChatrooms } = useUnifiedChatroomContext();
-  const { updateInvite } = useUpdateInvite();
+  const { updateInvite, isLoading } = useUpdateInvite();
 
   const handleAcceptInvite = async (invite: Invite) => {
     const { success, error } = await updateInvite({ inviteId: invite.inviteId, status: "ACCEPTED" });
-        if (success) {
-          toast({
-            title: "Invite Accepted",
-            description: `You have successfully joined the chatroom '${invite.chatroomName}'`
-          });
 
-          refreshChatrooms();
-          onInviteUpdated();
-        } else {
-          toast({
-            title: "Error",
-            description: `Failed to accept invite: ${error}`
-          });
-        }
+    if (success) {
+      toast({
+        title: "Invite Accepted",
+        description: `You have successfully joined the chatroom '${invite.chatroomName}'`
+      });
+
+      refreshChatrooms();
+      onInviteUpdated();
+    } else {
+      toast({
+        title: "Error",
+        description: `Failed to accept invite: ${error}`
+      });
+    }
   }
 
   const handleRejectInvite = async (invite: Invite) => {
     const { success, error } = await updateInvite({ inviteId: invite.inviteId, status: "REJECTED" });
+
     if (success) {
       toast({
         title: "Invite Rejected",
@@ -98,13 +100,23 @@ export function PendingInvitesTable({
                   <TableCell className="w-1/5">
                     <div className="flex justify-center">
                       <TooltipWrapper content="Accept Invite">
-                        <Button variant="ghost" size="icon" onClick={ () => handleAcceptInvite(invite) }>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleAcceptInvite(invite)}
+                          disabled={ isLoading }
+                        >
                           <Check className="h-4 w-4 text-green-500" />
                         </Button>
                       </TooltipWrapper>
 
                       <TooltipWrapper content="Reject Invite">
-                        <Button variant="ghost" size="icon" onClick={ () => handleRejectInvite(invite) }>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleRejectInvite(invite)}
+                          disabled={isLoading}
+                        >
                           <X className="h-4 w-4 text-red-500" />
                         </Button>
                       </TooltipWrapper>
