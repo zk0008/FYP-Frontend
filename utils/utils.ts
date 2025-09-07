@@ -63,7 +63,7 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
   if (!accessToken) {
     throw new Error("No access token found in cookies")
   }
-
+  
   const headers = {
     ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     ...options.headers,
