@@ -8,10 +8,10 @@ interface sendInviteProps {
 }
 
 export function useSendInvite() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSending, setIsSending] = useState<boolean>(false);
 
   const sendInvite = useCallback(async ({ chatroomId, recipientUsername }: sendInviteProps) => {
-    setIsLoading(true);
+    setIsSending(true);
 
     const response = await fetchWithAuth(`/api/invites`, {
       method: "POST",
@@ -27,13 +27,13 @@ export function useSendInvite() {
 
     if (!response.ok) {
       console.error("Error sending invite:", data.detail);
-      setIsLoading(false);
+      setIsSending(false);
       return { success: false, error: data.detail || "Failed to send invite." };
     }
 
-    setIsLoading(false);
+    setIsSending(false);
     return { success: true, error: null };
   }, []);
 
-  return { sendInvite, isLoading };
+  return { sendInvite, isSending };
 }

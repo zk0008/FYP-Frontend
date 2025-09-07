@@ -26,7 +26,7 @@ export function PendingInvitesTable({
 }: PendingInvitesTableProps) {
   const { toast } = useToast();
   const { refresh: refreshChatrooms } = useUnifiedChatroomContext();
-  const { updateInvite, isLoading } = useUpdateInvite();
+  const { updateInvite, isUpdating } = useUpdateInvite();
 
   const handleAcceptInvite = async (invite: Invite) => {
     const { success, error } = await updateInvite({ inviteId: invite.inviteId, status: "ACCEPTED" });
@@ -104,7 +104,7 @@ export function PendingInvitesTable({
                           variant="ghost"
                           size="icon"
                           onClick={() => handleAcceptInvite(invite)}
-                          disabled={ isLoading }
+                          disabled={ isUpdating }
                         >
                           <Check className="h-4 w-4 text-green-500" />
                         </Button>
@@ -115,7 +115,7 @@ export function PendingInvitesTable({
                           variant="ghost"
                           size="icon"
                           onClick={() => handleRejectInvite(invite)}
-                          disabled={isLoading}
+                          disabled={ isUpdating }
                         >
                           <X className="h-4 w-4 text-red-500" />
                         </Button>

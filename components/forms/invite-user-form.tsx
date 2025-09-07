@@ -27,7 +27,7 @@ const inviteUserFormSchema = z.object({
 });
 
 export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
-  const { sendInvite, isLoading } = useSendInvite();
+  const { sendInvite, isSending } = useSendInvite();
   const { toast } = useToast();
   const { currentChatroom } = useUnifiedChatroomContext();
 
@@ -110,8 +110,8 @@ export function InviteUserForm({ onSuccess }: { onSuccess?: () => void }) {
               Cancel
             </Button>
           </DialogClose>
-          <Button variant="default" type="submit" disabled={ isLoading }>
-            {isLoading ? "Sending..." : "Send Invite"}
+          <Button variant="default" type="submit" disabled={ isSending }>
+            {isSending ? "Sending..." : "Send Invite"}
           </Button>
         </div>
       </form>

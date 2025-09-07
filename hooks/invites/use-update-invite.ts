@@ -8,10 +8,10 @@ interface updateInviteProps {
 }
 
 export function useUpdateInvite() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const updateInvite = useCallback(async ({ inviteId, status }: updateInviteProps) => {
-    setIsLoading(true);
+    setIsUpdating(true);
 
     const response = await fetchWithAuth(`/api/invites/${inviteId}`, {
       method: "PUT",
@@ -26,13 +26,13 @@ export function useUpdateInvite() {
 
     if (!response.ok) {
       console.error("Error updating invite:", data.detail);
-      setIsLoading(false);
+      setIsUpdating(false);
       return { success: false, error: data.detail || "Failed to update invite." };
     }
 
-    setIsLoading(false);
+    setIsUpdating(false);
     return { success: true, error: null };
   }, []);
 
-  return { updateInvite, isLoading };
+  return { updateInvite, isUpdating };
 }
