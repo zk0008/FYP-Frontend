@@ -76,9 +76,8 @@ export function AttachmentPreview({
         {attachments.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {attachments.map((a: AttachmentInput) => (
-              <TooltipWrapper content={ a.filename } side="top">
+              <TooltipWrapper key={ a.attachmentId } content={ a.filename } side="top">
                 <div
-                  key={ a.attachmentId }
                   className="relative group bg-muted rounded-lg p-2 flex items-center gap-2 max-w-[200px] cursor-default"
                 >
                   {a.file.type.startsWith("image/") && a.preview ? (
