@@ -13,7 +13,7 @@ export interface Document {
 
 // For attachment uploads
 export interface AttachmentInput {
-  attachmentId: string;
+  attachmentId: string;  // For element key only
   filename: string;
   preview?: string;  // Base64 string for image preview
   file: File;  // The actual file object for upload
