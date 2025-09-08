@@ -76,50 +76,51 @@ export function AttachmentPreview({
         {attachments.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {attachments.map((a: AttachmentInput) => (
-              <div
-                key={ a.attachmentId }
-                className="relative group bg-muted rounded-lg p-2 flex items-center gap-2 max-w-[200px]"
-              >
-                {a.file.type.startsWith("image/") && a.preview ? (
-                  <div className="relative w-12 h-12 rounded overflow-hidden flex-shrink-0">
-                    <Image
-                      src={ a.preview }
-                      alt={ a.file.name }
-                      fill
-                      className="object-cover"
-                    />
-                   </div>
-                ) : (
-                  <div className="w-12 h-12 rounded bg-background flex items-center justify-center flex-shrink-0">
-                    {a.file.type.startsWith("image/") ? (
-                      <ImageIcon className="w-6 h-6 text-muted-foreground" />
-                    ) : (
-                      <FileText className="w-6 h-6 text-muted-foreground" />
-                    )}
-                  </div>
-                )}
-
-              { /* File size indicator */ }
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">
-                  { a.file.name }
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  { (a.file.size / 1024 / 1024).toFixed(1) } MB
-                </p>
-              </div>
-
-              <TooltipWrapper content="Remove File" side="top">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="absolute -top-1 -right-1 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  onClick={() => removeAttachment(a.attachmentId)}
+              <TooltipWrapper key={ a.attachmentId } content={ a.filename } side="top">
+                <div
+                  className="relative group bg-muted rounded-lg p-2 flex items-center gap-2 max-w-[200px] cursor-default"
                 >
-                  <X className="w-3 h-3" />
-                </Button>
-              </TooltipWrapper>
-            </div>
+                  {a.file.type.startsWith("image/") && a.preview ? (
+                    <div className="relative w-12 h-12 rounded overflow-hidden flex-shrink-0">
+                      <Image
+                        src={ a.preview }
+                        alt={ a.file.name }
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-12 h-12 rounded bg-background flex items-center justify-center flex-shrink-0">
+                      {a.file.type.startsWith("image/") ? (
+                        <ImageIcon className="w-6 h-6 text-muted-foreground" />
+                      ) : (
+                        <FileText className="w-6 h-6 text-muted-foreground" />
+                      )}
+                    </div>
+                  )}
+
+                { /* File size indicator */ }
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">
+                    { a.file.name }
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    { (a.file.size / 1024 / 1024).toFixed(1) } MB
+                  </p>
+                </div>
+
+                <TooltipWrapper content="Remove File" side="top">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute -top-1 -right-1 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    onClick={() => removeAttachment(a.attachmentId)}
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                </TooltipWrapper>
+              </div>
+            </TooltipWrapper>
           ))}
         </div>
       )}

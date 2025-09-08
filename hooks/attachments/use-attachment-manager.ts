@@ -9,6 +9,37 @@ interface useAttachmentManagerProps {
 }
 
 export function useAttachmentManager({ attachments, setAttachments }: useAttachmentManagerProps) {
+  const generateUniqueFilename = useCallback((filename: string, existingFilenames: string[]): string => {
+    const filenameLower = filename.toLowerCase();
+    const existingLower = existingFilenames.map(name => name.toLowerCase());
+    
+    if (!existingLower.includes(filenameLower)) {
+      return filename;
+    }
+
+    // Split filename into name and extension
+    const lastDotIndex = filename.lastIndexOf('.');
+    const name = lastDotIndex !== -1 ? filename.substring(0, lastDotIndex) : filename;
+    const extension = lastDotIndex !== -1 ? filename.substring(lastDotIndex) : '';
+
+    let counter = 1;
+    let newFilename: string;
+    
+    do {
+      newFilename = `${name}_${counter}${extension}`;
+      counter++;
+    } while (existingLower.includes(newFilename.toLowerCase()));
+
+    return newFilename;
+  }, []);
+
+  const createFileWithNewName = useCallback((originalFile: File, newFilename: string): File => {
+    return new File([originalFile], newFilename, {
+      type: originalFile.type,
+      lastModified: originalFile.lastModified,
+    });
+  }, []);
+
   const addAttachments = useCallback((files: File[]) => {
     // Ensure only max. 5 files are attached
     const remainingSlots = MAX_ATTACHMENTS - attachments.length;
@@ -35,13 +66,22 @@ export function useAttachmentManager({ attachments, setAttachments }: useAttachm
       return { success: false, error: `The following files exceed the ${MAX_FILE_SIZE_MB} MB limit: ${invalidFileNames.join(', ')}` };
     }
 
+    // Generate unique filenames to avoid collisions
+    const existingFilenames = attachments.map(att => att.filename);
+    const processedFilenames: string[] = [...existingFilenames];
+
     validFiles.forEach(file => {
       const attachmentId = crypto.randomUUID();
 
+      const uniqueFilename = generateUniqueFilename(file.name, processedFilenames);
+      processedFilenames.push(uniqueFilename);
+
+      const renamedFile = createFileWithNewName(file, uniqueFilename);
+
       const attachedFile: AttachmentInput = {
         attachmentId,
-        filename: file.name,
-        file,
+        filename: uniqueFilename,
+        file: renamedFile,
       };
 
       // Generate preview for images
