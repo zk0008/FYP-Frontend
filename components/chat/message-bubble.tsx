@@ -95,7 +95,7 @@ export function MessageBubble({
           <div
             className={`
               prose whitespace-normal max-w-md
-              ${isOwnMessage ? "text-primary-foreground" : "text-primary"}
+              ${isOwnMessage ? "message-prose-sent" : "message-prose-received"}
             `}
           >
             <ReactMarkdown remarkPlugins={ [remarkGfm] }>

@@ -121,3 +121,76 @@ next-route-announcer {
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom styling for sent message bubbles */
+.message-prose-sent {
+  @apply prose text-primary-foreground max-w-md;
+}
+
+.message-prose-sent h1,
+.message-prose-sent h2,
+.message-prose-sent h3,
+.message-prose-sent h4,
+.message-prose-sent h5,
+.message-prose-sent h6,
+.message-prose-sent strong,
+.message-prose-sent em,
+.message-prose-sent code,
+.message-prose-sent pre,
+.message-prose-sent a,
+.message-prose-sent blockquote,
+.message-prose-sent li,
+.message-prose-sent th,
+.message-prose-sent td {
+  @apply text-primary-foreground;
+}
+
+.message-prose-sent a {
+  @apply underline;
+}
+
+.message-prose-sent blockquote {
+  @apply border-l-primary-foreground/30;
+}
+
+.message-prose-sent hr {
+  @apply border-primary-foreground/30;
+}
+
+/* Custom styling for received message bubbles */
+.message-prose-received {
+  @apply prose text-primary max-w-md;
+}
+
+.message-prose-received h1,
+.message-prose-received h2,
+.message-prose-received h3,
+.message-prose-received h4,
+.message-prose-received h5,
+.message-prose-received h6,
+.message-prose-received strong,
+.message-prose-received em,
+.message-prose-received pre,
+.message-prose-received a,
+.message-prose-received blockquote,
+.message-prose-received li,
+.message-prose-received th,
+.message-prose-received td {
+  @apply text-primary;
+}
+
+.message-prose-received code {
+  @apply text-primary-foreground;
+}
+
+.message-prose-received a {
+  @apply underline;
+}
+
+.message-prose-received blockquote {
+  @apply border-l-primary/30;
+}
+
+.message-prose-received hr {
+  @apply border-primary/30;
+}
