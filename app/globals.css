@@ -170,7 +170,7 @@ next-route-announcer {
 .message-prose-received h6,
 .message-prose-received strong,
 .message-prose-received em,
-.message-prose-received pre,
+.message-prose-received code:not(pre code),
 .message-prose-received a,
 .message-prose-received blockquote,
 .message-prose-received li,
@@ -179,7 +179,7 @@ next-route-announcer {
   @apply text-primary;
 }
 
-.message-prose-received code {
+.message-prose-received pre code {
   @apply text-primary-foreground;
 }
 
