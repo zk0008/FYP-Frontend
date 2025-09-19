@@ -77,7 +77,7 @@ export function AccountSettingsDialog({
                 className="justify-start h-12"
                 onClick={() => setCurrentStage("DELETE_ACCOUNT")}
               >
-                Delete Account
+                Delete Account...
               </Button>
             </div>
           ),

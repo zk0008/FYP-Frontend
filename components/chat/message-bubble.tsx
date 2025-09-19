@@ -94,7 +94,7 @@ export function MessageBubble({
           { /* Message content */ }
           <div
             className={`
-              prose whitespace-normal max-w-md
+              prose whitespace-normal max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-4xl
               ${isOwnMessage ? "message-prose-sent" : "message-prose-received"}
             `}
           >
@@ -114,8 +114,8 @@ export function MessageBubble({
           `}
         >
           <CopyMessageButton messageId={ messageId } content={ content } />
-          <DeleteMessageButton messageId={ messageId } />
           <ReadMessageButton content={ content } />
+          <DeleteMessageButton messageId={ messageId } />
         </ChatBubbleActionWrapper>
       </div>
     </ChatBubble>

@@ -17,16 +17,6 @@ interface signUpProps {
 }
 
 export async function signIn({ email, password } : signInProps) {
-  if (!email || !password) {
-    return { error: "Email and password are required." };
-  }
-  if (!email.includes("@")) {
-    return { error: "Invalid email format." };
-  }
-  if (password.length < 6) {
-    return { error: "Password must be at least 6 characters long." };
-  }
-
   const supabase = createClient();
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });

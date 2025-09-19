@@ -53,7 +53,7 @@ export function AttachmentPreview({
           ref={ fileInputRef }
           type="file"
           multiple
-          accept="image/*,.pdf,.txt"
+          accept="image/*,.pdf"
           onChange={ handleAttachmentUpload }
           className="hidden"
         />

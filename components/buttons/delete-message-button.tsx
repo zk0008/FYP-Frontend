@@ -15,7 +15,7 @@ export function DeleteMessageButton({ messageId }: { messageId: string }) {
         onClick={() => setIsDialogOpen(true)}
         className="cursor-pointer"
         key={ `delete-${messageId}` }
-        icon={ <Trash className="h-4 w-4" /> }
+        icon={ <Trash className="h-4 w-4 text-red-500" /> }
         title="Delete message"
       />
       <DeleteMessageDialog

@@ -124,7 +124,7 @@ next-route-announcer {
 
 /* Custom styling for sent message bubbles */
 .message-prose-sent {
-  @apply prose text-primary-foreground max-w-md;
+  @apply prose text-primary-foreground;
 }
 
 .message-prose-sent h1,
@@ -159,7 +159,7 @@ next-route-announcer {
 
 /* Custom styling for received message bubbles */
 .message-prose-received {
-  @apply prose text-primary max-w-md;
+  @apply prose text-primary;
 }
 
 .message-prose-received h1,

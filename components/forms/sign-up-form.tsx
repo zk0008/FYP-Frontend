@@ -61,7 +61,6 @@ export function SignUpForm() {
       password: data.password,
       confirmPassword: data.confirmPassword,
     });
-    console.log("we here")
 
     // Unsuccessful sign up
     if (signUpError) {
@@ -142,7 +141,8 @@ export function SignUpForm() {
                 />
               </FormControl>
               <FormDescription>
-                <span className="block">• Email address must be valid; a confirmation email will be sent to this email address</span>
+                <span className="block">• Email address must be valid</span>
+                {/* <span className="block">• Email address must be valid; a confirmation email will be sent to this email address</span> */}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -184,6 +184,9 @@ export function SignUpForm() {
                   { ...field }
                 />
               </FormControl>
+              <FormDescription>
+                <span className="block">• Entered passwords must match</span>
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
