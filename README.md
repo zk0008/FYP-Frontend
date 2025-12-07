@@ -1,78 +1,96 @@
-<p align="center">
-  <a href="https://nextjs-fastapi-starter.vercel.app/">
-    <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" height="96">
-    <h3 align="center">Next.js FastAPI Starter</h3>
-  </a>
-</p>
+# FYP-Frontend
 
-<p align="center">Simple Next.js boilerplate that uses <a href="https://fastapi.tiangolo.com/">FastAPI</a> as the API backend.</p>
+This repository contains the frontend NextJS client for GroupGPT. See [here](https://github.com/nicholasbay/FYP-Backend) for the backend server.
 
-<br/>
+## Contents
 
-## Introduction
+1. [Project Overview](#project-overview)
 
-This is a hybrid Next.js + Python app that uses Next.js as the frontend and FastAPI as the API backend. One great use case of this is to write Next.js apps that use Python AI libraries on the backend.
+2. [Functionality Deep Dive](#functionality-deep-dive)
 
-## How It Works
+3. [Local Development](#local-development)
 
-The Python/FastAPI server is mapped into to Next.js app under `/api/`.
+4. [Deployment](#deployment)
 
-This is implemented using [`next.config.js` rewrites](https://github.com/digitros/nextjs-fastapi/blob/main/next.config.js) to map any request to `/api/:path*` to the FastAPI API, which is hosted in the `/api` folder.
+## Project Overview
 
-On localhost, the rewrite will be made to the `127.0.0.1:8000` port, which is where the FastAPI server is running.
+Chatbots powered by large language models have become valuable tools for individual productivity, but their focus on personal use and tendency to hallucinate hinders their effectiveness in group settings. GroupGPT simplifies knowledge sharing between multiple users by incorporating the chatbot as an additional group member and mitigates hallucinations through retrieval-augmented generation (RAG) and external tool invocations.
 
-In production, the FastAPI server is hosted as [Python serverless functions](https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/python) on Vercel.
+## Functionality Deep Dive
 
-## Demo
+### Real-Time Group Messaging
 
-https://nextjs-fastapi-starter.vercel.app/
+The real-time group messaging functionality is implemented using the Supabase Realtime API, specifically [Postgres Changes](https://supabase.com/docs/guides/realtime/postgres-changes).
 
-## Deploy Your Own
+The client application listens to all insertions and deletions on the `messages` table in the database, filtered by the current chatroom ID. See [`use-realtime-messages.ts`](./hooks/messages/use-realtime-messages.ts) for the implementation details.
 
-You can clone & deploy it to Vercel with one click:
+### Clean Interface
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdigitros%2Fnextjs-fastapi%2Ftree%2Fmain)
+GroupGPT offers a familiar, minimalistic chat interface that ensures a smooth learning curve for users.
 
-## Developing Locally
+![GroupGPT UI](./assets/ai_discussion.jpg)
 
-You can clone & create this repo with the following command
+### Retrieval-Augmented Generation
 
-```bash
-npx create-next-app nextjs-fastapi --example "https://github.com/digitros/nextjs-fastapi"
-```
+> All RAG implementation details can be found in the [backend server](https://github.com/nicholasbay/FYP-Backend).
 
-## Getting Started
+#### File Indexing
 
-First, install the dependencies:
+GroupGPT accepts PDFs and images as inputs to its knowledge base, with separate indexing pipelines for each.
 
-```bash
-npm install
-# or
-yarn
-# or
-pnpm install
-```
+![PDF Indexing Pipeline](./assets/pdf-indexing-pipeline.png)
 
-Then, run the development server:
+![Image Indexing Pipeline](./assets/image-indexing-pipeline.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+#### Chunk Retrieval
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Chunk retrieval is implemented as a hybrid of both full text and vector similarity searches. The rankings from both searches are combined into a single ordered list using reciprocal rank fusion.
 
-The FastApi server will be running on [http://127.0.0.1:8000](http://127.0.0.1:8000) – feel free to change the port in `package.json` (you'll also need to update it in `next.config.js`).
+![Chunk Retrieval Pipeline](./assets/chunk_retrieval_pipeline.png)
 
-## Learn More
+### Chatbot Tools
 
-To learn more about Next.js, take a look at the following resources:
+> All tool implementation details can be found in the [backend server](https://github.com/nicholasbay/FYP-Backend).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [FastAPI Documentation](https://fastapi.tiangolo.com/) - learn about FastAPI features and API.
+The following tools are available to the chatbot.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+| Tool | Description |
+|------|-------------|
+| arXiv Search | Searches the arXiv database for relevant published research. |
+| Chunk Retriever | Searches the knowledge base for specific information related to the user's context. |
+| Python REPL | Executes Python code and returns the printed result; useful for accurate calculations. |
+| Web Search | Searches the web for up-to-date information. |
+
+## Local Development
+
+1. Create a Supabase project. Refer to the setup instructions in the backend server.
+
+2. Create a `.env` file as per the `.env.example`. Update the Supabase project environment variables within.
+
+3. Install project dependencies.
+
+    ```bash
+    npm install
+    # or
+    yarn
+    # or
+    pnpm install
+    ```
+
+4. Start the local development client.
+
+    ```bash
+    npm run dev
+    # or
+    yarn dev
+    # or
+    pnpm dev
+    ```
+
+5. Visit the local development client at `http://localhost:3000`.
+
+## Deployment
+
+The client application was deployed on Vercel. See [here](https://vercel.com/docs/deployments) for the deployment steps.
+
+> Note: The rewrites paths in [`next.config.js`](./next.config.js) must be updated with the new deployment URL.
