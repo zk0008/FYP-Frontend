@@ -94,5 +94,3 @@ The following tools are available to the chatbot.
 The client application was deployed on Vercel. See [here](https://vercel.com/docs/deployments) for the deployment steps.
 
 > Note: The rewrites paths in [`next.config.js`](./next.config.js) must be updated with the new deployment URL.
-
-test
